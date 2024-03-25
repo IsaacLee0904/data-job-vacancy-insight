@@ -1,15 +1,27 @@
 version: '3'
 services:
-  postgres:
+  datawarehouse:
     image: postgres:13
     environment:
-      POSTGRES_DB: job_vacancy_insight
+      POSTGRES_DB: job_vacancy_insight_datawarehouse
       POSTGRES_USER: IsaacLee
       POSTGRES_PASSWORD: job_vacancy_insight
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - datawarehouse_data:/var/lib/postgresql/data
+
+  datamart:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: job_vacancy_insight_datamart
+      POSTGRES_USER: IsaacLee
+      POSTGRES_PASSWORD: job_vacancy_insight
+    ports:
+      - "5433:5432"
+    volumes:
+      - datamart_data:/var/lib/postgresql/data
 
 volumes:
-  postgres_data:
+  datawarehouse_data:
+  datamart_data:
