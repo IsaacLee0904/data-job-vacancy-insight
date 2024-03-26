@@ -2,6 +2,7 @@ import os
 import sys
 import logging
 from logging.handlers import RotatingFileHandler
+import graypy
 
 def set_logger(level=logging.INFO):
     """
@@ -33,5 +34,13 @@ def set_logger(level=logging.INFO):
     console_format = logging.Formatter('%(asctime)s %(levelname)s - %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z')
     console_handler.setFormatter(console_format)
     logger.addHandler(console_handler)
+
+    # setup graylog
+    graylog_host = 'data_vacancy_insight.graylog.server.ip'
+    graylog_port = 12201  # GELF UDP port
+
+    gelf_handler = graypy.GELFUDPHandler(graylog_host, graylog_port)
+    gelf_handler.setLevel(logging.DEBUG) 
+    logger.addHandler(gelf_handler)
 
     return logger
