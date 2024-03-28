@@ -1,5 +1,16 @@
 version: '3'
 services:
+  app:
+    build: .
+    ports:
+      - "80:80"
+    environment:
+      NAME: JobVacancyInsight
+    depends_on:
+      - datawarehouse
+      - datamart
+      - selenium-chrome
+
   datawarehouse:
     image: postgres:13
     environment:
@@ -10,6 +21,8 @@ services:
       - "5432:5432"
     volumes:
       - datawarehouse_data:/var/lib/postgresql/data
+    networks:
+      - graynet 
 
   datamart:
     image: postgres:13
@@ -21,8 +34,21 @@ services:
       - "5433:5432"
     volumes:
       - datamart_data:/var/lib/postgresql/data
+    networks:
+      - graynet  
+
+  selenium-chrome:
+    image: selenium/standalone-chrome:latest
+    ports:
+      - "4444:4444"
+    networks:
+      - graynet  
+
+networks:
+  graynet:
+    external:
+      name: graylog_graynet  
 
 volumes:
   datawarehouse_data:
   datamart_data:
-  
