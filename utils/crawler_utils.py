@@ -1,70 +1,97 @@
-from bs4 import BeautifulSoup
-import requests
+### import package
+import datetime
+from time import sleep
+import sys
+import json
+### web crawling with Selenium
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.common.exceptions import NoSuchElementException
 
-def get_job_link(job_type, page):
+def open_selenium_remote_browser(url):
+    """
+    Initializes a remote Selenium WebDriver session and navigates to the specified URL.
+    
+    Args:
+        url (str): The URL to be visited.
+        
+    Returns:
+        webdriver.Remote: An instance of the remote WebDriver.
+    """
+    # Initialize the remote WebDriver with the specified Selenium Grid server address
+    # and desired browser capabilities for Chrome.
+    driver = webdriver.Remote(
+        command_executor='http://172.17.0.2:4444/wd/hub',  # Using service name as hostname
+        desired_capabilities=DesiredCapabilities.CHROME
+    )
+    
+    # Navigate to the specified URL using the WebDriver.
+    driver.get(url)
+    
+    return driver
 
-    href_list = []
+def fetch_job_links(url, params=None):
+    """
+    Fetch the HTML content from the given URL (104 job listings page) with the specified parameters.
+
+    Parameters:
+    - url: str
+        The URL to fetch the job listings from.
+    - params: dict, optional
+        A dictionary of parameters to pass along with the request.
+
+    Returns:
+    - str
+        The HTML content of the page.
+    """
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) "
                "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36"}
 
-    for i in range(1, page+1):
+    job_links_list = []
 
-        url = f'https://www.104.com.tw/jobs/search/?ro=0&kwop=1&keyword={job_type}&expansionType=job&order=14&asc=0&page={i}&mode=s&langFlag=0' #kwop=1/只抓包含關鍵字相同的工作
-        r = requests.get(url, headers=headers)
-        soup = BeautifulSoup(r.text, "lxml")
-        a_list = soup.find_all('a', 'js-job-link')
-        for j in a_list:
-            href = 'https:'+j['href']
-            if 'relevance' in href:
-                href_list.append(href)
+    response = requests.get(url, headers=headers, params=None)
+    soup = BeautifulSoup(response.text, "lxml")
+    a_list = soup.find_all('a', 'js-job-link')
+    for link in a_list:
+        job_url = 'https:' + link['href']
+        job_links_list.append(job_url)
 
-    return href_list
+    return job_links_list
 
-def get_job_info(job_type, page):
-    href_list = get_href(job_type, page)
-    
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.92 Safari/537.36',
-        'Referer': 'https://www.104.com.tw/job/'  # 必須提供
-    }
+def parse_job_listings(html):
+    """
+    Parse the HTML content to extract job listing information.
 
-    temp = []  # 存放df
-    for href in href_list:
+    Parameters:
+    - html: str
+        The HTML content of the job listings page.
 
-        replace_word = href[-11:-10]  # 替換字元
-        replace__text = 'jobsource=jolist_'+replace_word+'_relevance'
-        id = href.replace('https://www.104.com.tw/job/',
-                          '').replace(replace__text, '')
-        href = f'https://www.104.com.tw/job/ajax/content/{id}'  # 替換成ajax格式
+    Returns:
+    - list of dict
+        A list of dictionaries, each containing the details of a job listing.
+    """
+    soup = BeautifulSoup(html, 'html.parser')
+    jobs = []
+    for listing in soup.find_all('a', class_='jjs-job-link'):
+        # Extract necessary information (e.g., job title, company name, location, etc.)
+        job_info = {
+            'title': listing.find('a', class_='job-title').text.strip(),
+            'company': listing.find('a', class_='company-name').text.strip(),
+            # Add more fields as needed
+        }
+        jobs.append(job_info)
+    return jobs
 
-        r = requests.get(href, headers=headers)
-        soup = BeautifulSoup(r.text, "lxml")
-        json_data = r.json()
+def save_jobs_to_csv(jobs, filename):
+    """
+    Save the extracted job listings to a CSV file.
 
-        category = ''
-        for i in json_data['data']['jobDetail']['jobCategory']:  # 職務類別
-            category += ('、'+i['description'])
-
-        skill = ''
-        for i in json_data['data']['condition']['skill']:  # 工作技能
-            skill += ('、'+i['description'])
-
-        tool = ''
-        for i in json_data['data']['condition']['specialty']:  # 擅長工具
-            tool += ('、'+i['description'])
-
-        df = pd.DataFrame({'職務名稱': json_data['data']['header']['jobName'],
-                           '工作內容': json_data['data']['jobDetail']['jobDescription'],
-                           '職務類別': category[1:],
-                           '學歷要求': json_data['data']['condition']['edu'],
-                           '工作經歷': json_data['data']['condition']['workExp'],
-                           '工作技能': skill[1:],
-                           '擅長工具': tool[1:],
-                           '其他條件': json_data['data']['condition']['other']
-                           }, index=[0])
-        temp.append(df)
-
-    all_df = pd.concat(temp).reset_index(drop=True)
-
-    return all_df
-
+    Parameters:
+    - jobs: list of dict
+        The list of job listing information to save.
+    - filename: str
+        The filename for the CSV file.
+    """
+    df = pd.DataFrame(jobs)
+    df.to_csv(filename, index=False)
