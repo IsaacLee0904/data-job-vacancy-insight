@@ -18,5 +18,3 @@ EXPOSE 80
 # Define an environment variable
 ENV NAME JobVacancyInsight
 
-# Run app.py when the container launches
-# CMD ["python", "main.py"]
