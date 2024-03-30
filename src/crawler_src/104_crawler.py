@@ -8,7 +8,7 @@ project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(_
 sys.path.append(project_root)
 
 from utils.log_utils import set_logger
-from utils.crawler_utils import fetch_job_links, parse_job_listings, save_jobs_to_csv
+from utils.crawler_utils import fetch_job_links, parse_job_listings, save_jobs_to_csv, open_selenium_remote_browser
 
 # setup logger 
 logger = set_logger()
@@ -30,16 +30,17 @@ def main():
 
         first_pag_url = f'https://www.104.com.tw/jobs/search/?ro=0&kwop=1&keyword={keyword}&expansionType=job&order=14&asc=0&page=1&mode=s&langFlag=0' # kwop=1 for exact search 
 
-        # driver = open_selenium_remote_browser(first_pag_url)  # Initialize and open a remote browser 
+        driver = open_selenium_remote_browser(first_pag_url)  # Initialize and open a remote browser 
+        print('OK')
 
-        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36"}
+        # headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) "
+        #     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36"}
         
-        response = requests.get(first_pag_url, headers=headers, params=None)
-        soup = BeautifulSoup(response.text, 'html.parser')
+        # response = requests.get(first_pag_url, headers=headers, params=None)
+        # soup = BeautifulSoup(response.text, 'html.parser')
 
-        page_select_tag  = soup.find('select', class_='page-select')
-        print(page_select_tag)
+        # page_select_tag  = soup.find('select', class_='page-select')
+        # print(page_select_tag)
         # options_tag = page_select_tag.find_all('option')
         # last_option_text = options_tag[-1].text 
 

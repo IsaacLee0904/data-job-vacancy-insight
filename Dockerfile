@@ -18,3 +18,5 @@ EXPOSE 80
 # Define an environment variable
 ENV NAME JobVacancyInsight
 
+CMD ["/bin/bash", "-c", "source activate env && python main.py"]
+
