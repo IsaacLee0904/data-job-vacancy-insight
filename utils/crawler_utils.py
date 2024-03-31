@@ -3,6 +3,7 @@ import datetime
 from time import sleep
 import sys
 import json
+# from lxml import html
 import requests
 from bs4 import BeautifulSoup
 ### web crawling with Selenium
@@ -65,29 +66,52 @@ def fetch_job_links(search_keywords, logger):
     logger.info(f"Finished fetching job listings for keyword: {keyword}")
     return jobs_url_list
 
-def parse_job_listings(html):
+def get_job_info(job_url, logger):
     """
-    Parse the HTML content to extract job listing information.
+    Fetch and parse the job listing AJAX content to extract job details.
 
     Parameters:
-    - html: str
-        The HTML content of the job listings page.
+    - job_url (str): The URL of the job listing.
+    - logger (logging.Logger): A Logger object used for logging information and errors.
 
     Returns:
-    - list of dict
-        A list of dictionaries, each containing the details of a job listing.
+    - dict: A dictionary containing details of a job listing.
     """
-    soup = BeautifulSoup(html, 'html.parser')
-    jobs = []
-    for listing in soup.find_all('a', class_='jjs-job-link'):
-        # Extract necessary information (e.g., job title, company name, location, etc.)
-        job_info = {
-            'title': listing.find('a', class_='job-title').text.strip(),
-            'company': listing.find('a', class_='company-name').text.strip(),
-            # Add more fields as needed
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36",
+        'Referer': 'https://www.104.com.tw/job/'  # Referer header is required
+    }
+
+    # Convert the job URL to an AJAX URL
+    replace_text = 'jobsource=jolist_c_relevance'  # Assuming 'c' is the replace_word, this may need to be dynamic
+    id = job_url.replace('https://www.104.com.tw/job/', '').replace(f'?{replace_text}', '')
+    ajax_url = f'https://www.104.com.tw/job/ajax/content/{id}'
+
+    response = requests.get(ajax_url, headers=headers)
+    job_details = {}
+
+    if response.status_code == 200:
+        json_data = response.json()
+
+        # Extract various details from the JSON data with safety checks
+        job_details = {
+            'job_title': json_data['data']['header'].get('jobName', None),
+            'company_name': json_data['data']['header'].get('custName', None),
+            'salary': json_data['data']['jobDetail'].get('salary', None),
+            'location': json_data['data']['jobDetail'].get('addressRegion', None),
+            'job_description': json_data['data']['jobDetail'].get('jobDescription', None),
+            'job_type': '、'.join(i['description'] for i in json_data['data']['jobDetail'].get('jobCategory', [])),
+            'degree_required': json_data['data']['condition'].get('edu', None),
+            'major_required': '、'.join(json_data['data']['condition'].get('major', [])),
+            'experience': json_data['data']['condition'].get('workExp', None),
+            'skill': '、'.join(i['description'] for i in json_data['data']['condition'].get('skill', [])),
+            'tools': '、'.join(i['description'] for i in json_data['data']['condition'].get('specialty', [])),
+            'others': json_data['data']['condition'].get('other', None),
         }
-        jobs.append(job_info)
-    return jobs
+    else:
+        logger.error(f"Failed to fetch the job details from {ajax_url}: {response.status_code}")
+
+    return job_details
 
 def save_jobs_to_csv(jobs, filename):
     """

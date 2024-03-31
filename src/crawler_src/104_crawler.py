@@ -8,7 +8,7 @@ project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(_
 sys.path.append(project_root)
 
 from utils.log_utils import set_logger
-from utils.crawler_utils import fetch_job_links, parse_job_listings, save_jobs_to_csv
+from utils.crawler_utils import fetch_job_links, get_job_info, save_jobs_to_csv
 
 # setup logger 
 logger = set_logger()
@@ -23,9 +23,14 @@ logger = set_logger()
 
 def main():
 
+    # vacancy keywords
     search_keywords = ['資料工程師']
     job_url_list = fetch_job_links(search_keywords, logger)
+    # get_job_info(search_keywords, logger)
 
+    for job_page in job_url_list:
+        job_info = get_job_info(job_page, logger)
+        print(job_info)
 
 if __name__ == "__main__":
     main()  
