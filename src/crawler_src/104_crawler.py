@@ -14,17 +14,17 @@ from utils.crawler_utils import fetch_job_links, parse_job_listings, save_jobs_t
 logger = set_logger()
 
 # vacancy keywords 
-search_keywords = [ 'Business Analyst', 'BI', 'BA' # BA
-                  , 'Data Analyst', '資料分析師', '數據分析師' # DA
-                  , 'Data Scientist', '資料科學家' # DS
-                  , 'Data Engineer', '資料工程師', '數據工程師', '大數據工程師' # DE
-                  , 'Machine Learning Engineer', 'Machine Learning', '機器學習工程師' # MLE
-                  ]
+# search_keywords = [ 'Business Analyst', 'BI', 'BA' # BA
+#                   , 'Data Analyst', '資料分析師', '數據分析師' # DA
+#                   , 'Data Scientist', '資料科學家' # DS
+#                   , 'Data Engineer', '資料工程師', '數據工程師', '大數據工程師' # DE
+#                   , 'Machine Learning Engineer', 'Machine Learning', '機器學習工程師' # MLE
+#                   ]
 
 def main():
 
-    key = ['資料工程師']
-    job_url_list = fetch_job_links(key, logger)
+    search_keywords = ['資料工程師']
+    job_url_list = fetch_job_links(search_keywords, logger)
 
 
 if __name__ == "__main__":
