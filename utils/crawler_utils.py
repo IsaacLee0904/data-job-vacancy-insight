@@ -11,10 +11,10 @@ def fetch_job_links(search_keywords, logger):
     Fetch job listing URLs from 104.com.tw based on the provided keywords.
 
     This function iterates over a list of keywords, constructing a URL to fetch job listings for each keyword.
-    It paginates through the search results, extracting job listing URLs until there are no more pages left.
+    It paginates through the search results, extracting job listing URLs until there are no more pages left or until reaching page 20.
 
     Parameters:
-    - key: list of str
+    - search_keywords: list of str
         A list of keywords to search for in job listings.
     - logger: logging.Logger
         A Logger object used for logging information and errors.
@@ -32,7 +32,7 @@ def fetch_job_links(search_keywords, logger):
         current_page = 1  # Initialize the page counter for each keyword.
         logger.info(f"Fetching job listings for keyword: {keyword}")
         
-        while True:  # Loop through each page until there are no more job listings.
+        while current_page <= 20:  # Limit the pagination to 20 pages
             logger.info(f"Processing page {current_page} for keyword: {keyword}")
             url = f'https://www.104.com.tw/jobs/search/?ro=0&kwop=1&keyword={keyword}&expansionType=job&order=14&asc=0&page={current_page}&mode=s&langFlag=0'
             
@@ -57,9 +57,9 @@ def fetch_job_links(search_keywords, logger):
                 logger.error(f"Failed to connect to the website: {response.status_code} while fetching {url}")
                 break
 
-    logger.info(f"Finished fetching job listings for keyword: {keyword}")
+    logger.info(f"Finished fetching job listings for keywords.")
     return jobs_url_list
-
+    
 def get_job_info(job_url, logger):
     """
     Fetch and parse the job listing AJAX content to extract job details.
