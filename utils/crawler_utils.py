@@ -1,9 +1,8 @@
 ### import package
+import sys, os
 import datetime
 from time import sleep
-import sys
 import json
-# from lxml import html
 import requests
 from bs4 import BeautifulSoup
 
@@ -108,15 +107,24 @@ def get_job_info(job_url, logger):
 
     return job_details
 
-def save_jobs_to_csv(jobs, filename):
+def save_jobs_to_json(job_info_dict, logger):
     """
-    Save the extracted job listings to a CSV file.
+    Save the job information to a JSON file named with the current date and time in the data/raw_data folder.
 
     Parameters:
-    - jobs: list of dict
-        The list of job listing information to save.
-    - filename: str
-        The filename for the CSV file.
+    - job_info_dict (list of dict): A list of dictionaries, each containing the details of a job listing.
+    - logger (logging.Logger): A Logger object used for logging information and errors.
     """
-    df = pd.DataFrame(jobs)
-    df.to_csv(filename, index=False)
+    current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    directory = "data/raw_data"
+    file_name = f"{directory}/jobs_{current_time}.json"
+
+    # Ensure the directory exists
+    os.makedirs(directory, exist_ok=True)
+
+    try:
+        with open(file_name, 'w', encoding='utf-8') as file:
+            json.dump(job_info_dict, file, ensure_ascii=False, indent=4)
+        logger.info(f"Job information saved to {file_name}")
+    except Exception as e:
+        logger.error(f"Failed to save job information to JSON: {str(e)}")
