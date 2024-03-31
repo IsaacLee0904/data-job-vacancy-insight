@@ -6,11 +6,6 @@ import json
 # from lxml import html
 import requests
 from bs4 import BeautifulSoup
-### web crawling with Selenium
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.common.exceptions import NoSuchElementException
 
 def fetch_job_links(search_keywords, logger):
     """
@@ -125,25 +120,3 @@ def save_jobs_to_csv(jobs, filename):
     """
     df = pd.DataFrame(jobs)
     df.to_csv(filename, index=False)
-
-def open_selenium_remote_browser(url):
-    """
-    Initializes a remote Selenium WebDriver session and navigates to the specified URL.
-    
-    Args:
-        url (str): The URL to be visited.
-        
-    Returns:
-        webdriver.Remote: An instance of the remote WebDriver.
-    """
-    # Initialize the remote WebDriver with the specified Selenium Grid server address
-    # and desired browser capabilities for Chrome.
-    driver = webdriver.Remote(
-        command_executor='http://selenium:4444/wd/hub',  # Using service name as hostname
-        desired_capabilities=DesiredCapabilities.CHROME
-    )
-    
-    # Navigate to the specified URL using the WebDriver.
-    driver.get(url)
-    
-    return driver
