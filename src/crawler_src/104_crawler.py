@@ -24,8 +24,8 @@ search_keywords = [ 'Business Analyst', 'BI', 'BA' # BA
 def main():
 
     key = ['資料工程師']
-    job_url_list = fetch_job_links(key)
-    print(job_url_list)
+    job_url_list = fetch_job_links(key, logger)
+
 
 if __name__ == "__main__":
     main()  

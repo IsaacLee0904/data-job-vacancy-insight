@@ -11,7 +11,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.common.exceptions import NoSuchElementException
 
-def fetch_job_links(key):
+def fetch_job_links(key, logger):
     """
     Fetch job listing URLs from 104.com.tw based on the provided keywords.
 
@@ -21,6 +21,8 @@ def fetch_job_links(key):
     Parameters:
     - key: list of str
         A list of keywords to search for in job listings.
+    - logger: logging.Logger
+        A Logger object used for logging information and errors.
 
     Returns:
     - list of str
@@ -33,36 +35,34 @@ def fetch_job_links(key):
 
     for keyword in key:
         current_page = 1  # Initialize the page counter for each keyword.
+        logger.info(f"Fetching job listings for keyword: {keyword}")
+        
         while True:  # Loop through each page until there are no more job listings.
-            # Construct the URL for the current page of job listings.
-            first_page_url = f'https://www.104.com.tw/jobs/search/?ro=0&kwop=1&keyword={keyword}&expansionType=job&order=14&asc=0&page={current_page}&mode=s&langFlag=0'
+            logger.info(f"Processing page {current_page} for keyword: {keyword}")
+            url = f'https://www.104.com.tw/jobs/search/?ro=0&kwop=1&keyword={keyword}&expansionType=job&order=14&asc=0&page={current_page}&mode=s&langFlag=0'
             
-            # Fetch the content of the page.
-            response = requests.get(first_page_url, headers=headers)
+            response = requests.get(url, headers=headers)
 
-            # If the request is successful, parse the HTML content.
             if response.status_code == 200:
                 soup = BeautifulSoup(response.text, 'html.parser')
                 job_list = soup.find_all('article', class_='js-job-item')
 
-                # If no job listings are found on the current page, exit the loop.
                 if not job_list:
+                    logger.info(f"No more job listings found for keyword: {keyword} on page {current_page}")
                     break
 
-                # Extract and store the URLs of each job listing.
                 for job in job_list:
                     link = job.find('a', class_='js-job-link')
                     if link and 'href' in link.attrs:
                         job_url = f"https:{link['href']}"
                         jobs_url_list.append(job_url)
 
-                # Move to the next page.
                 current_page += 1
             else:
-                # If the request fails, print the status code and exit the loop.
-                print(f"Failed to connect to the website: {response.status_code}")
+                logger.error(f"Failed to connect to the website: {response.status_code} while fetching {url}")
                 break
 
+    logger.info(f"Finished fetching job listings for keyword: {keyword}")
     return jobs_url_list
 
 def parse_job_listings(html):
