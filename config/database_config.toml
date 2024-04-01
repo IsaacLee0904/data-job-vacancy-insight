@@ -3,12 +3,12 @@
 db = "job_vacancy_insight_datawarehouse"
 user = "IsaacLee"
 password = "job_vacancy_insight"
-host = "localhost"
+host = "datawarehouse"
 port = 5432
 
 [datamart]
 db = "job_vacancy_insight_datamart"
 user = "IsaacLee"
 password = "job_vacancy_insight"
-host = "localhost"
+host = "datamart"
 port = 5433
