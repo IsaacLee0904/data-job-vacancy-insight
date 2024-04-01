@@ -1,0 +1,14 @@
+# config.toml
+[datawarehouse]
+db = "job_vacancy_insight_datawarehouse"
+user = "IsaacLee"
+password = "job_vacancy_insight"
+host = "localhost"
+port = 5432
+
+[datamart]
+db = "job_vacancy_insight_datamart"
+user = "IsaacLee"
+password = "job_vacancy_insight"
+host = "localhost"
+port = 5433
