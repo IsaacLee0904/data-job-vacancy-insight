@@ -101,6 +101,8 @@ def get_job_info(job_url, logger):
             'skill': '、'.join(i['description'] for i in json_data['data']['condition'].get('skill', [])),
             'tools': '、'.join(i['description'] for i in json_data['data']['condition'].get('specialty', [])),
             'others': json_data['data']['condition'].get('other', None),
+            'url': job_url,
+            'crawl_date': datetime.datetime.today().strftime('%Y%m%d')
         }
     else:
         logger.error(f"Failed to fetch the job details from {ajax_url}: {response.status_code}")
@@ -115,7 +117,7 @@ def save_jobs_to_json(job_info_dict, logger):
     - job_info_dict (list of dict): A list of dictionaries, each containing the details of a job listing.
     - logger (logging.Logger): A Logger object used for logging information and errors.
     """
-    current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    current_time = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     directory = "data/raw_data"
     file_name = f"{directory}/jobs_{current_time}.json"
 
