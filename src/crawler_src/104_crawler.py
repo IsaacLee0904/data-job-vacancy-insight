@@ -16,7 +16,7 @@ def main():
     logger = set_logger()
 
     # vacancy keywords 
-    search_keywords = [ 'Business Analyst', 'BI', 'BA' # BA
+    search_keywords = ['Business Analyst', 'BI', 'BA' # BA
                   , 'Data Analyst', '資料分析師', '數據分析師' # DA
                   , 'Data Scientist', '資料科學家' # DS
                   , 'Data Engineer', '資料工程師', '數據工程師', '大數據工程師' # DE
