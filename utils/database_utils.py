@@ -95,7 +95,6 @@ class DatabaseOperation:
         cols = ','.join(list(df.columns))
         values = ','.join(['%s'] * len(df.columns))
         
-        # 確保 unique_cols 是一個逗號分隔的字符串
         if isinstance(unique_cols, list):
             conflict_cols = ','.join(unique_cols)
         else:
@@ -113,6 +112,28 @@ class DatabaseOperation:
         except Exception as e:
             self.logger.error(f"Error upserting data into {table_name}: {e}")
             self.connection.rollback()
+
+    def fetch_data(self, table_name):
+        """
+        Fetch data from the specified table and return it as a pandas DataFrame.
+
+        Parameters:
+        - table_name (str): The name of the table to fetch data from.
+
+        Returns:
+        - pd.DataFrame: A DataFrame containing the data fetched from the table.
+        """
+        query = f"SELECT * FROM {table_name};"
+        try:
+            self.cursor.execute(query)
+            rows = self.cursor.fetchall()
+            columns = [desc[0] for desc in self.cursor.description]
+            df = pd.DataFrame(rows, columns=columns)
+            self.logger.info(f"Successfully fetched data from {table_name}.")
+            return df
+        except Exception as e:
+            self.logger.error(f"Error fetching data from {table_name}: {e}")
+            return None
 
 # craete function 
 def create_rawdata_table(logger):
