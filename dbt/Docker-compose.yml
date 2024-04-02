@@ -1,7 +1,0 @@
-services:
-  dbt:
-    build: ./dbt
-    volumes:
-      - ./dbt:/dbt
-    depends_on:
-      - datawarehouse
