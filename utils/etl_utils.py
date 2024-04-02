@@ -31,4 +31,22 @@ def read_json_to_df(directory_path, logger):
 
     return df
 
+def convert_column_type(df, column_name, target_type, format=None):
+    """
+    Convert the data type of a specific column in the DataFrame.
 
+    Parameters:
+    - df (pd.DataFrame): The DataFrame containing the data.
+    - column_name (str): The name of the column to convert.
+    - target_type (type): The target data type.
+    - format (str, optional): The format string if converting to datetime.
+
+    Returns:
+    - pd.DataFrame: The DataFrame with the converted column.
+    """
+    if target_type == 'datetime':
+        df[column_name] = pd.to_datetime(df[column_name], format=format)
+    else:
+        df[column_name] = df[column_name].astype(target_type)
+    
+    return df
