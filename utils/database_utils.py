@@ -1,5 +1,6 @@
 import toml
 import psycopg2
+import psycopg2.extras
 
 class DatabaseConnector:
     def __init__(self, logger):
@@ -80,6 +81,28 @@ class DatabaseOperation:
             self.logger.info(f"Schema '{schema_name}' created successfully.")
         except psycopg2.Error as e:
             self.logger.error(f"An error occurred while creating the schema '{schema_name}': {e}")
+            self.connection.rollback()
+
+    def insert_data(self, table_name, df):
+        """
+        Insert data from a pandas DataFrame into the specified table.
+
+        Parameters:
+        - table_name (str): The name of the table to insert data into.
+        - df (pd.DataFrame): The DataFrame containing the data to be inserted.
+        """
+        cols = ','.join(list(df.columns))
+        values = ','.join(['%s'] * len(df.columns))
+        insert_stmt = f"INSERT INTO {table_name} ({cols}) VALUES ({values})"
+
+        records = [tuple(x) for x in df.to_numpy()]
+
+        try:
+            psycopg2.extras.execute_batch(self.cursor, insert_stmt, records)
+            self.connection.commit()
+            self.logger.info(f"Successfully inserted data into {table_name}.")
+        except Exception as e:
+            self.logger.error(f"Error inserting data into {table_name}: {e}")
             self.connection.rollback()
 
 # craete function 
