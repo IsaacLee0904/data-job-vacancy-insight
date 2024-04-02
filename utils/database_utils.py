@@ -66,13 +66,49 @@ class DatabaseOperation:
             self.logger.error(f"An error occurred while creating the table: {e}")
             self.connection.rollback()
 
+    def create_schema(self, schema_name):
+        """
+        Create a schema in the database if it doesn't already exist.
+
+        Parameters:
+        - schema_name (str): The name of the schema to be created.
+        """
+        create_schema_query = f"CREATE SCHEMA IF NOT EXISTS {schema_name};"
+        try:
+            self.cursor.execute(create_schema_query)
+            self.connection.commit()
+            self.logger.info(f"Schema '{schema_name}' created successfully.")
+        except psycopg2.Error as e:
+            self.logger.error(f"An error occurred while creating the schema '{schema_name}': {e}")
+            self.connection.rollback()
+
+# craete function 
 def create_rawdata_table(logger):
+    """
+    Create a specified schema and a table within that schema in the 'datawarehouse' database.
+
+    This function first establishes a connection to the 'datawarehouse' database, then creates a 
+    schema named 'my_schema'. After the schema is successfully created, it creates a 'job_listings' 
+    table within this schema if it does not already exist.
+
+    Parameters:
+    - logger (logging.Logger): A Logger object for logging information and errors.
+
+    The table 'job_listings' will have various fields such as id, job_title, company_name, etc.,
+    with appropriate data types assigned to each field.
+    """
+    # Establish a connection to the 'datawarehouse' database.
     connector = DatabaseConnector(logger)
     connection = connector.connect_to_db('datawarehouse')
     db_operation = DatabaseOperation(connection, logger)
 
-    job_listings_table_query = """
-    CREATE TABLE IF NOT EXISTS job_listings (
+    # Create a new schema named 'datawarehouse'.
+    schema_name = "source_data"  # Define the schema name to be created.
+    db_operation.create_schema(schema_name)
+
+    # Create the 'job_listings' table within the newly created schema.
+    job_listings_104_table_query = f"""
+    CREATE TABLE IF NOT EXISTS {schema_name}.job_listings_104 (
         id SERIAL PRIMARY KEY,
         job_title VARCHAR(255) NOT NULL,
         company_name VARCHAR(255) NOT NULL,
@@ -90,5 +126,8 @@ def create_rawdata_table(logger):
         crawl_date DATE
     );
     """
-    db_operation.create_table(job_listings_table_query)
+    # Execute the SQL query to create the table.
+    db_operation.create_table(job_listings_104_table_query)
+
+    # Close the database connection.
     connection.close()
