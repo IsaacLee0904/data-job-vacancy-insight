@@ -45,7 +45,16 @@ services:
     volumes:
       - datamart_data:/var/lib/postgresql/data
     networks:
-      - graynet  
+      - graynet
+
+  dbt:
+    build: ./dbt
+    volumes:
+      - ./dbt:/dbt
+    depends_on:
+      - datawarehouse
+    networks:
+      - graynet
 
 networks:
   graynet:
