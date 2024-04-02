@@ -83,26 +83,35 @@ class DatabaseOperation:
             self.logger.error(f"An error occurred while creating the schema '{schema_name}': {e}")
             self.connection.rollback()
 
-    def insert_data(self, table_name, df):
+    def insert_data(self, table_name, df, unique_cols):
         """
-        Insert data from a pandas DataFrame into the specified table.
+        Insert data from a pandas DataFrame into the specified table and handle duplicates.
 
         Parameters:
         - table_name (str): The name of the table to insert data into.
         - df (pd.DataFrame): The DataFrame containing the data to be inserted.
+        - unique_cols (list or str): A column name or a list of column names that together define uniqueness.
         """
         cols = ','.join(list(df.columns))
         values = ','.join(['%s'] * len(df.columns))
-        insert_stmt = f"INSERT INTO {table_name} ({cols}) VALUES ({values})"
+        
+        # 確保 unique_cols 是一個逗號分隔的字符串
+        if isinstance(unique_cols, list):
+            conflict_cols = ','.join(unique_cols)
+        else:
+            conflict_cols = unique_cols
+        
+        update_expr = ','.join([f"{col}=EXCLUDED.{col}" for col in df.columns if col not in unique_cols])
+        insert_stmt = f"INSERT INTO {table_name} ({cols}) VALUES ({values}) ON CONFLICT ({conflict_cols}) DO UPDATE SET {update_expr}"
 
         records = [tuple(x) for x in df.to_numpy()]
 
         try:
             psycopg2.extras.execute_batch(self.cursor, insert_stmt, records)
             self.connection.commit()
-            self.logger.info(f"Successfully inserted data into {table_name}.")
+            self.logger.info(f"Successfully upserted data into {table_name}.")
         except Exception as e:
-            self.logger.error(f"Error inserting data into {table_name}: {e}")
+            self.logger.error(f"Error upserting data into {table_name}: {e}")
             self.connection.rollback()
 
 # craete function 
@@ -131,7 +140,7 @@ def create_rawdata_table(logger):
 
     # Create the 'job_listings' table within the newly created schema.
     job_listings_104_table_query = f"""
-    CREATE TABLE IF NOT EXISTS {schema_name}.job_listings_104 (
+        CREATE TABLE IF NOT EXISTS {schema_name}.job_listings_104 (
         id SERIAL PRIMARY KEY,
         job_title VARCHAR(255) NOT NULL,
         company_name VARCHAR(255) NOT NULL,
@@ -146,8 +155,9 @@ def create_rawdata_table(logger):
         tools TEXT,
         others TEXT,
         url TEXT,
-        crawl_date DATE
-    );
+        crawl_date DATE,
+        unique_col TEXT UNIQUE
+        );
     """
     # Execute the SQL query to create the table.
     db_operation.create_table(job_listings_104_table_query)
