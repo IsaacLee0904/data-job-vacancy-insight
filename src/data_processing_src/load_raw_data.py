@@ -4,11 +4,12 @@ project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(_
 sys.path.append(project_root)
 
 from utils.log_utils import set_logger
-from utils.etl_utils import read_json_to_df, convert_column_type
+from utils.etl_utils import read_json_to_df, move_to_backup_folder, convert_column_type
 from utils.database_utils import DatabaseConnector, DatabaseOperation, create_rawdata_table
 
 def main():
 
+    # setup logger
     logger = set_logger()
     
     try:
@@ -16,13 +17,15 @@ def main():
         connector = DatabaseConnector(logger)
         connection = connector.connect_to_db('datawarehouse')
         db_operation = DatabaseOperation(connection, logger)
-
+        
+        # setup configure
         directory_path = '/app/data/raw_data/'
+        backup_folder_path = '/app/data/backup/'
 
         # load data
-        df = read_json_to_df(directory_path, logger)
+        df, file_path = read_json_to_df(directory_path, logger)
 
-        if df is not None:
+        if df is not None and file_path:
             
             # transform data type 
             df = convert_column_type(df, 'job_title', str)
@@ -44,6 +47,12 @@ def main():
 
             # insert data
             db_operation.insert_data('source_data.job_listings_104', df, 'unique_col')
+
+            # move the file to backup folder
+            if file_path:
+                move_to_backup_folder(file_path, backup_folder_path)
+                logger.info(f"Moved {os.path.basename(file_path)} to {backup_folder_path}")
+
         else:
             logger.warning("No data to insert.")
 
