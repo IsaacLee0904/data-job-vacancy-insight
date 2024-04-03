@@ -1,4 +1,5 @@
 import toml
+import pandas as pd
 import psycopg2
 import psycopg2.extras
 
@@ -113,26 +114,29 @@ class DatabaseOperation:
             self.logger.error(f"Error upserting data into {table_name}: {e}")
             self.connection.rollback()
 
-    def fetch_data(self, table_name):
+    def fetch_data(self, table_name, condition=None):
         """
-        Fetch data from the specified table and return it as a pandas DataFrame.
+        Fetch data from the specified table with an optional condition and return it as a pandas DataFrame.
 
         Parameters:
         - table_name (str): The name of the table to fetch data from.
+        - condition (str, optional): A SQL condition string to be included in the WHERE clause.
 
         Returns:
-        - pd.DataFrame: A DataFrame containing the data fetched from the table.
+        - pd.DataFrame: A DataFrame containing the data fetched from the table. Returns None if an error occurs.
         """
-        query = f"SELECT * FROM {table_name};"
+        base_query = f"SELECT * FROM {table_name}"
+        query = base_query + (f" WHERE {condition}" if condition else "") + ";"
+
         try:
             self.cursor.execute(query)
             rows = self.cursor.fetchall()
             columns = [desc[0] for desc in self.cursor.description]
             df = pd.DataFrame(rows, columns=columns)
-            self.logger.info(f"Successfully fetched data from {table_name}.")
+            self.logger.info(f"Successfully fetched data from {table_name} with condition '{condition}'.")
             return df
         except Exception as e:
-            self.logger.error(f"Error fetching data from {table_name}: {e}")
+            self.logger.error(f"Error fetching data from {table_name} with condition '{condition}': {e}")
             return None
 
 # craete function 
