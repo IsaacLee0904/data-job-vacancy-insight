@@ -76,7 +76,7 @@ class RawDataProcessor:
     def __init__(self, logger):
         self.logger = logger
 
-    def filter_jobs_by_title_and_type(df, title_keywords, type_keywords):
+    def filter_jobs_by_title_and_type(self, df, title_keywords, type_keywords):
         """
         Filter the DataFrame to include only jobs that match specified keywords in both job title and job type.
 
@@ -99,3 +99,26 @@ class RawDataProcessor:
         ]
 
         return filtered_df
+
+    def process_location(self, df):
+        """
+        Process the location column to extract county information or mark as overseas.
+
+        Parameters:
+        - df (pd.DataFrame): The DataFrame containing job data.
+
+        Returns:
+        - pd.DataFrame: The DataFrame with the new 'County' column added.
+        """
+        def extract_county(location):
+            # if info include "市"
+            if '市' in location:
+                return location[:location.index('市') + 1]
+            # if info include "縣"
+            elif '縣' in location:
+                return location[:location.index('縣') + 1]
+            # if non "市" or "縣"
+            return '海外'
+
+        df.loc[:, 'County'] = df['location'].apply(extract_county)
+        return df

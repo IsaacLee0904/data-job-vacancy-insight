@@ -13,6 +13,9 @@ def main():
     # setup logger
     logger = set_logger()
 
+    # create instances of processors
+    raw_data_processor = RawDataProcessor(logger)
+
     # connect to database
     connector = DatabaseConnector(logger)
     connection = connector.connect_to_db('datawarehouse')
@@ -38,13 +41,13 @@ def main():
                         '統計精算人員', '網路管理工程師', '營運管理師／系統整合／ERP專案師', '網站行銷企劃'
                         '專案經理', '雲端工程師', '軟體工程研發高階主管', '顧問師']
                         
-            # Filter the DataFrame based on job title and job type to remove non data related vacancy
-            df_filtered = RawDataProcessor.filter_jobs_by_title_and_type(df, title_keywords, type_keywords)
-            print(df_filtered.head())
-            df_filtered.to_csv('df_filter.csv', index = False)
-
-            logger.info(f"Filtered down to {len(df_filtered)} rows based on keywords. Unfiltered data has {len(df_unfiltered)} rows.")
-            
+            # Filter the DataFrame based on job title and job type
+            df_filtered = raw_data_processor.filter_jobs_by_title_and_type(df, title_keywords, type_keywords)
+            logger.info(f"Filtered down to {len(df_filtered)} rows based on keywords.")
+            # Add county column to deal with location 
+            df_filtered = df_filtered.copy() # to avoid warnings about SettingWithCopyWarning
+            df_filtered = raw_data_processor.process_location(df_filtered)
+         
         else:
             logger.warning("No data retrieved or table is empty.")
 
