@@ -51,28 +51,23 @@ def main():
             df_filtered = raw_data_processor.process_location(df_filtered)
             # Convert multi-string type columns into a list
             df_filtered = raw_data_processor.convert_to_list(df_filtered, ['job_type', 'degree_required', 'major_required', 'skill', 'tools']) 
-            # Transform data type 
+            # Transform data type           
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'job_title', str)
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'company_name', str)
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'salary', str)
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'location', str)
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'job_description', str)
-            df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'job_type', str)
-            df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'degree_required', str)
-            df_filtereddf = GeneralDataProcessor.convert_column_type(df_filtered, 'major_required', str)
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'experience', str)
-            df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'skill', str)
-            df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'tools', str)
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'others', str)
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'url', str)
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'crawl_date', 'datetime', '%Y-%m-%d')
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'unique_col', str)
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'county', str)
             # reorder the columns in dataframe
-            df_filtered = df_filtered.iloc[:,['id', 'job_title', 'company_name', 'salary', 'county', 
-                                              'location', 'job_description', 'job_type', 'degree_required', 'major_required',
-                                              'experience', 'skill', 'tools', 'others', 'url', 
-                                              'crawl_date', 'unique_col']]
+            df_filtered = df_filtered[['id', 'job_title', 'company_name', 'salary', 'county', 
+                                       'location', 'job_description', 'job_type', 'degree_required', 'major_required',
+                                       'experience', 'skill', 'tools', 'others', 'url', 
+                                       'crawl_date', 'unique_col']]
             logger.info('Successfully transformed raw data.')
 
             if df_filtered is not None:
