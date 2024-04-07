@@ -126,6 +126,7 @@ class RawDataProcessor:
     def convert_to_list(self, df, column_names):
         """
         Convert the string values in specified columns to lists, splitting by a specific character.
+        Empty strings are converted to None.
 
         Parameters:
         - df (pd.DataFrame): The DataFrame containing the data.
@@ -136,7 +137,7 @@ class RawDataProcessor:
         """
         for column in column_names:
             if column in df.columns:
-                df[column] = df[column].apply(lambda x: x.split('、') if isinstance(x, str) else x)
+                df[column] = df[column].apply(lambda x: x.split('、') if isinstance(x, str) and x != '' else None)
             else:
                 self.logger.warning(f"Column {column} does not exist in DataFrame")
         return df
