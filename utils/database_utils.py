@@ -220,12 +220,12 @@ def create_stagedata_table(logger):
         county VARCHAR(255),
         location VARCHAR(255),
         job_description TEXT,
-        job_type TEXT,  -- Changed to TEXT to store array as a string
-        degree_required TEXT,  -- Changed to TEXT to store array as a string
-        major_required TEXT,  -- Changed to TEXT to store array as a string
+        job_type TEXT[], 
+        degree_required TEXT[],  
+        major_required TEXT[],  
         experience VARCHAR(255),
-        skill TEXT,  -- Changed to TEXT to store array as a string
-        tools TEXT,  -- Changed to TEXT to store array as a string
+        skill TEXT[],  
+        tools TEXT[],  
         others TEXT,
         url TEXT,
         crawl_date DATE,
