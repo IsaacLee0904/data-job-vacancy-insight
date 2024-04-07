@@ -20,7 +20,7 @@ def main():
     connector = DatabaseConnector(logger)
     connection = connector.connect_to_db('datawarehouse')
     db_operation = DatabaseOperation(connection, logger)
-    # create stagedata table for inserting transform data
+    # create stage data table for inserting transform data
     create_stagedata_table(logger)
 
     try:
@@ -51,7 +51,7 @@ def main():
             df_filtered = raw_data_processor.process_location(df_filtered)
             # Convert multi-string type columns into a list
             df_filtered = raw_data_processor.convert_to_list(df_filtered, ['job_type', 'degree_required', 'major_required', 'skill', 'tools']) 
-            # transform data type 
+            # Transform data type 
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'job_title', str)
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'company_name', str)
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'salary', str)
@@ -68,7 +68,11 @@ def main():
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'crawl_date', 'datetime', '%Y-%m-%d')
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'unique_col', str)
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'county', str)
-
+            # reorder the columns in dataframe
+            df_filtered = df_filtered.iloc[:,['id', 'job_title', 'company_name', 'salary', 'county', 
+                                              'location', 'job_description', 'job_type', 'degree_required', 'major_required',
+                                              'experience', 'skill', 'tools', 'others', 'url', 
+                                              'crawl_date', 'unique_col']]
             logger.info('Successfully transformed raw data.')
 
             if df_filtered is not None:
