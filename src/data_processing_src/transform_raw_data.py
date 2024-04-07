@@ -47,7 +47,11 @@ def main():
             # Add county column to deal with location 
             df_filtered = df_filtered.copy() # to avoid warnings about SettingWithCopyWarning
             df_filtered = raw_data_processor.process_location(df_filtered)
-         
+            # Convert multi-string type columns into a list
+            df_filtered = raw_data_processor.convert_to_list(df_filtered, ['job_type', 'degree_required', 'major_required', 'skill', 'tools']) 
+             
+            logger.info('Successfully transformed raw data.')
+
         else:
             logger.warning("No data retrieved or table is empty.")
 

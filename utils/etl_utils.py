@@ -122,3 +122,21 @@ class RawDataProcessor:
 
         df.loc[:, 'County'] = df['location'].apply(extract_county)
         return df
+
+    def convert_to_list(self, df, column_names):
+        """
+        Convert the string values in specified columns to lists, splitting by a specific character.
+
+        Parameters:
+        - df (pd.DataFrame): The DataFrame containing the data.
+        - column_names (list): A list of column names to be converted.
+
+        Returns:
+        - pd.DataFrame: The DataFrame with the updated columns.
+        """
+        for column in column_names:
+            if column in df.columns:
+                df[column] = df[column].apply(lambda x: x.split('、') if isinstance(x, str) else x)
+            else:
+                self.logger.warning(f"Column {column} does not exist in DataFrame")
+        return df
