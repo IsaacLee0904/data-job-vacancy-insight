@@ -120,7 +120,7 @@ class RawDataProcessor:
             # if non "市" or "縣"
             return '海外'
 
-        df.loc[:, 'County'] = df['location'].apply(extract_county)
+        df.loc[:, 'county'] = df['location'].apply(extract_county)
         return df
 
     def convert_to_list(self, df, column_names):

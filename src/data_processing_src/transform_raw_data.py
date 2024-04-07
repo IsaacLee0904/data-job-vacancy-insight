@@ -5,7 +5,7 @@ project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(_
 sys.path.append(project_root)
 
 from utils.log_utils import set_logger
-from utils.database_utils import DatabaseConnector, DatabaseOperation
+from utils.database_utils import DatabaseConnector, DatabaseOperation, create_stagedata_table
 from utils.etl_utils import GeneralDataProcessor, RawDataProcessor
 
 def main():
@@ -20,6 +20,8 @@ def main():
     connector = DatabaseConnector(logger)
     connection = connector.connect_to_db('datawarehouse')
     db_operation = DatabaseOperation(connection, logger)
+    # create stagedata table for inserting transform data
+    create_stagedata_table(logger)
 
     try:
         # set condition to fetch data from source_data database
@@ -49,9 +51,33 @@ def main():
             df_filtered = raw_data_processor.process_location(df_filtered)
             # Convert multi-string type columns into a list
             df_filtered = raw_data_processor.convert_to_list(df_filtered, ['job_type', 'degree_required', 'major_required', 'skill', 'tools']) 
-             
+            # transform data type 
+            df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'job_title', str)
+            df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'company_name', str)
+            df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'salary', str)
+            df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'location', str)
+            df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'job_description', str)
+            df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'job_type', str)
+            df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'degree_required', str)
+            df_filtereddf = GeneralDataProcessor.convert_column_type(df_filtered, 'major_required', str)
+            df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'experience', str)
+            df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'skill', str)
+            df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'tools', str)
+            df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'others', str)
+            df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'url', str)
+            df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'crawl_date', 'datetime', '%Y-%m-%d')
+            df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'unique_col', str)
+            df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'county', str)
+
             logger.info('Successfully transformed raw data.')
 
+            if df_filtered is not None:
+                # insert data
+                db_operation.insert_data('staging_data.job_listings_104', df_filtered, 'unique_col')
+            
+            else:
+                logger.warning("No data to insert.")
+            
         else:
             logger.warning("No data retrieved or table is empty.")
 

@@ -145,13 +145,13 @@ def create_rawdata_table(logger):
     Create a specified schema and a table within that schema in the 'datawarehouse' database.
 
     This function first establishes a connection to the 'datawarehouse' database, then creates a 
-    schema named 'my_schema'. After the schema is successfully created, it creates a 'job_listings' 
+    schema named 'source_data'. After the schema is successfully created, it creates a 'job_listings_104' 
     table within this schema if it does not already exist.
 
     Parameters:
     - logger (logging.Logger): A Logger object for logging information and errors.
 
-    The table 'job_listings' will have various fields such as id, job_title, company_name, etc.,
+    The table 'job_listings_104' will have various fields such as id, job_title, company_name, etc.,
     with appropriate data types assigned to each field.
     """
     # Establish a connection to the 'datawarehouse' database.
@@ -163,7 +163,7 @@ def create_rawdata_table(logger):
     schema_name = "source_data"  # Define the schema name to be created.
     db_operation.create_schema(schema_name)
 
-    # Create the 'job_listings' table within the newly created schema.
+    # Create the 'job_listings_104' table within the newly created schema.
     job_listings_104_table_query = f"""
         CREATE TABLE IF NOT EXISTS {schema_name}.job_listings_104 (
         id SERIAL PRIMARY KEY,
@@ -178,6 +178,54 @@ def create_rawdata_table(logger):
         experience VARCHAR(255),
         skill TEXT,
         tools TEXT,
+        others TEXT,
+        url TEXT,
+        crawl_date DATE,
+        unique_col TEXT UNIQUE
+        );
+    """
+    # Execute the SQL query to create the table.
+    db_operation.create_table(job_listings_104_table_query)
+
+    # Close the database connection.
+    connection.close()
+
+def create_stagedata_table(logger):
+    """
+    Create a specified schema and a table within that schema in the 'datawarehouse' database.
+
+    This function first establishes a connection to the 'datawarehouse' database, then creates a 
+    schema named 'staging_data'. After the schema is successfully created, it creates a 'job_listings_104' 
+    table within this schema if it does not already exist.
+
+    Parameters:
+    - logger (logging.Logger): A Logger object for logging information and errors.
+    """
+    # Establish a connection to the 'datawarehouse' database.
+    connector = DatabaseConnector(logger)
+    connection = connector.connect_to_db('datawarehouse')
+    db_operation = DatabaseOperation(connection, logger)
+
+    # Create a new schema named 'staging_data'.
+    schema_name = "staging_data"
+    db_operation.create_schema(schema_name)
+
+    # Create the 'job_listings_104' table within the newly created schema.
+    job_listings_104_table_query = f"""
+        CREATE TABLE IF NOT EXISTS {schema_name}.job_listings_104 (
+        id SERIAL PRIMARY KEY,
+        job_title VARCHAR(255) NOT NULL,
+        company_name VARCHAR(255) NOT NULL,
+        salary VARCHAR(255),
+        county VARCHAR(255),
+        location VARCHAR(255),
+        job_description TEXT,
+        job_type TEXT,  -- Changed to TEXT to store array as a string
+        degree_required TEXT,  -- Changed to TEXT to store array as a string
+        major_required TEXT,  -- Changed to TEXT to store array as a string
+        experience VARCHAR(255),
+        skill TEXT,  -- Changed to TEXT to store array as a string
+        tools TEXT,  -- Changed to TEXT to store array as a string
         others TEXT,
         url TEXT,
         crawl_date DATE,
