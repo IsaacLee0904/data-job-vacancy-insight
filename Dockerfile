@@ -7,9 +7,16 @@ WORKDIR /app
 COPY . /app
 
 # Install any necessary packages specified in requirements.txt
+# Also install tzdata for time zone setting
 RUN apt-get update && apt-get install -y \
     build-essential \
-    libatlas-base-dev
+    libatlas-base-dev \
+    tzdata
+
+# Set the time zone
+RUN ln -fs /usr/share/zoneinfo/Asia/Taipei /etc/localtime && dpkg-reconfigure -f noninteractive tzdata
+
+# Install Python packages
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Make port 80 available to the world outside this container
@@ -19,4 +26,3 @@ EXPOSE 80
 ENV NAME JobVacancyInsight
 
 CMD ["/bin/bash", "-c", "source activate env && python main.py"]
-
