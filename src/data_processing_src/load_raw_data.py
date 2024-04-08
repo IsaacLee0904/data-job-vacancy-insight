@@ -7,6 +7,28 @@ from utils.log_utils import set_logger
 from utils.etl_utils import GeneralDataProcessor
 from utils.database_utils import DatabaseConnector, DatabaseOperation, create_rawdata_table
 
+def transform_data_type(df):
+
+    # transform data type 
+    df = GeneralDataProcessor.convert_column_type(df, 'job_title', str)
+    df = GeneralDataProcessor.convert_column_type(df, 'company_name', str)
+    df = GeneralDataProcessor.convert_column_type(df, 'salary', str)
+    df = GeneralDataProcessor.convert_column_type(df, 'location', str)
+    df = GeneralDataProcessor.convert_column_type(df, 'job_description', str)
+    df = GeneralDataProcessor.convert_column_type(df, 'job_type', str)
+    df = GeneralDataProcessor.convert_column_type(df, 'degree_required', str)
+    df = GeneralDataProcessor.convert_column_type(df, 'major_required', str)
+    df = GeneralDataProcessor.convert_column_type(df, 'experience', str)
+    df = GeneralDataProcessor.convert_column_type(df, 'skill', str)
+    df = GeneralDataProcessor.convert_column_type(df, 'tools', str)
+    df = GeneralDataProcessor.convert_column_type(df, 'others', str)
+    df = GeneralDataProcessor.convert_column_type(df, 'url', str)
+    df = GeneralDataProcessor.convert_column_type(df, 'crawl_date', 'datetime', '%Y%m%d')
+    # create uniqule key to aviod duplicate insert 
+    df['unique_col'] = df['job_title'] + '_' + df['crawl_date'].astype(str)
+
+    return df
+
 def main():
 
     # setup logger
@@ -27,23 +49,8 @@ def main():
 
         if df is not None and file_path:
             
-            # transform data type 
-            df = GeneralDataProcessor.convert_column_type(df, 'job_title', str)
-            df = GeneralDataProcessor.convert_column_type(df, 'company_name', str)
-            df = GeneralDataProcessor.convert_column_type(df, 'salary', str)
-            df = GeneralDataProcessor.convert_column_type(df, 'location', str)
-            df = GeneralDataProcessor.convert_column_type(df, 'job_description', str)
-            df = GeneralDataProcessor.convert_column_type(df, 'job_type', str)
-            df = GeneralDataProcessor.convert_column_type(df, 'degree_required', str)
-            df = GeneralDataProcessor.convert_column_type(df, 'major_required', str)
-            df = GeneralDataProcessor.convert_column_type(df, 'experience', str)
-            df = GeneralDataProcessor.convert_column_type(df, 'skill', str)
-            df = GeneralDataProcessor.convert_column_type(df, 'tools', str)
-            df = GeneralDataProcessor.convert_column_type(df, 'others', str)
-            df = GeneralDataProcessor.convert_column_type(df, 'url', str)
-            df = GeneralDataProcessor.convert_column_type(df, 'crawl_date', 'datetime', '%Y%m%d')
-            # create uniqule key to aviod duplicate insert 
-            df['unique_col'] = df['job_title'] + '_' + df['crawl_date'].astype(str)
+            df = transform_data_type(df)
+            logger.info("Finished data type transform.")
 
             # insert data
             db_operation.insert_data('source_data.job_listings_104', df, 'unique_col')
