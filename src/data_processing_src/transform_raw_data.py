@@ -26,7 +26,7 @@ def create_and_filter_data(db_operation, logger):
     logger.info("Stage data table created or verified.")
 
     today_date = datetime.datetime.today().strftime('%Y-%m-%d')
-    condition = f"crawl_date = '{today_date}'"
+    # condition = f"crawl_date = '{today_date}'"
     df = db_operation.fetch_data('source_data.job_listings_104', "crawl_date = '2024-04-01'")
     # df = db_operation.fetch_data('source_data.job_listings_104', condition)
     logger.info(f"Fetched data for the date: {today_date} with {len(df)} rows (if not empty).")

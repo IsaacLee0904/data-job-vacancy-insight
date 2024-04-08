@@ -127,11 +127,11 @@ class RawDataProcessor:
                 return 'Business Analyst'
             elif any(keyword in title for keyword in ['data analyst', '資料分析師', '數據分析師', '數據分析', '資料分析']):
                 return 'Data Analyst'
-            elif any(keyword in title for keyword in ['data scientist', 'data science', '資料科學家', '資料科學工程師']):
+            elif any(keyword in title for keyword in ['data scientist', 'data science', '資料科學家', '資料科學工程師', '資料科學']):
                 return 'Data Scientist'
             elif any(keyword in title for keyword in ['data engineer', 'etl', '資料工程師', '數據工程師', '大數據工程師', '資料處理', '數據處理', '倉儲', '整合', '串流']):
                 return 'Data Engineer'
-            elif any(keyword in title for keyword in ['machine learning engineer', 'machine learning', 'AI', '機器學習工程師', '機器學習', '演算法']):
+            elif any(keyword in title for keyword in ['machine learning engineer', 'machine learning', 'ai engineer', 'deep learning', 'llm', '機器學習工程師', '機器學習', '深度學習', '演算法']):
                 return 'Machine Learning Engineer'
             elif any(keyword in title for keyword in ['bi', '視覺化', '可視化']):
                 return 'BI Engineer'
