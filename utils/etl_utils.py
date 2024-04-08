@@ -123,17 +123,17 @@ class RawDataProcessor:
         """
         def determine_role(title):
             title = title.lower()
-            if any(keyword in title for keyword in ['business analyst', '商業分析師']):
+            if any(keyword in title for keyword in ['business analyst', 'Business Strategy Analyst', '商業分析師']):
                 return 'Business Analyst'
-            elif any(keyword in title for keyword in ['data analyst', '資料分析師', '數據分析師']):
+            elif any(keyword in title for keyword in ['data analyst', '資料分析師', '數據分析師', '數據分析', '資料分析', '分析師']):
                 return 'Data Analyst'
-            elif any(keyword in title for keyword in ['data scientist', '資料科學家']):
+            elif any(keyword in title for keyword in ['data scientist', '資料科學家', '資料科學工程師']):
                 return 'Data Scientist'
-            elif any(keyword in title for keyword in ['data engineer', '資料工程師', '數據工程師', '大數據工程師']):
+            elif any(keyword in title for keyword in ['data engineer', 'etl', '資料工程師', '數據工程師', '大數據工程師', '資料處理工程師']):
                 return 'Data Engineer'
-            elif any(keyword in title for keyword in ['machine learning engineer', 'machine learning', '機器學習工程師', 'ai']):
+            elif any(keyword in title for keyword in ['machine learning engineer', 'machine learning', 'ai', '機器學習工程師', '機器學習', '演算法']):
                 return 'Machine Learning Engineer'
-            elif 'bi' in title:
+            elif any(keyword in title for keyword in ['bi', '視覺化']):
                 return 'BI Engineer'
             else:
                 return 'Others'
