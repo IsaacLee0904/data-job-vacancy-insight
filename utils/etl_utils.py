@@ -111,6 +111,36 @@ class RawDataProcessor:
 
         return filtered_df
 
+    def classify_data_role(self, df):
+        """
+        Assign a data role based on the job title.
+
+        Parameters:
+        - df (pd.DataFrame): The DataFrame containing job data.
+
+        Returns:
+        - pd.DataFrame: The DataFrame with the new 'data_role' column added.
+        """
+        def determine_role(title):
+            title = title.lower()
+            if any(keyword in title for keyword in ['business analyst', '商業分析師']):
+                return 'Business Analyst'
+            elif any(keyword in title for keyword in ['data analyst', '資料分析師', '數據分析師']):
+                return 'Data Analyst'
+            elif any(keyword in title for keyword in ['data scientist', '資料科學家']):
+                return 'Data Scientist'
+            elif any(keyword in title for keyword in ['data engineer', '資料工程師', '數據工程師', '大數據工程師']):
+                return 'Data Engineer'
+            elif any(keyword in title for keyword in ['machine learning engineer', 'machine learning', '機器學習工程師', 'ai']):
+                return 'Machine Learning Engineer'
+            elif 'bi' in title:
+                return 'BI Engineer'
+            else:
+                return 'Others'
+
+        df['data_role'] = df['job_title'].apply(determine_role)
+        return df
+
     def process_location(self, df):
         """
         Process the location column to extract county information or mark as overseas.

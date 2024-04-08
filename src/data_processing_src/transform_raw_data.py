@@ -31,19 +31,20 @@ def main():
         
         # data transform rules
         if df is not None and not df.empty:
-            logger.info(f"Retrieved {len(df)} rows from the database.")
-                    
+
+            logger.info(f"Retrieved {len(df)} rows from the database.")                   
             # Filter the DataFrame based on job title and job type
             df_filtered = raw_data_processor.filter_jobs_by_title_and_type(df)
             logger.info(f"Filtered down to {len(df_filtered)} rows based on keywords.")
             # Add county column to deal with location 
             df_filtered = df_filtered.copy() # to avoid warnings about SettingWithCopyWarning
             # Add data roles category 
-            df_filtered = raw_data_processor
+            df_filtered = raw_data_processor.classify_data_role(df_filtered)
             df_filtered = raw_data_processor.process_location(df_filtered)
             # Convert multi-string type columns into a list
             df_filtered = raw_data_processor.convert_to_list(df_filtered, ['job_type', 'degree_required', 'major_required', 'skill', 'tools']) 
             # Transform data type           
+            df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'data_role', str)
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'job_title', str)
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'company_name', str)
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'salary', str)
@@ -56,18 +57,19 @@ def main():
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'unique_col', str)
             df_filtered = GeneralDataProcessor.convert_column_type(df_filtered, 'county', str)
             # reorder the columns in dataframe
-            df_filtered = df_filtered[['id', 'job_title', 'company_name', 'salary', 'county', 
-                                       'location', 'job_description', 'job_type', 'degree_required', 'major_required',
-                                       'experience', 'skill', 'tools', 'others', 'url', 
-                                       'crawl_date', 'unique_col']]
+            df_filtered = df_filtered[['id', 'data_role', 'job_title', 'company_name', 'salary', 
+                                       'county', 'location', 'job_description', 'job_type', 'degree_required',
+                                       'major_required', 'experience', 'skill', 'tools', 'others', 
+                                       'url', 'crawl_date', 'unique_col']]
             logger.info('Successfully transformed raw data.')
+            print(df_filtered.head())
 
-            if df_filtered is not None:
-                # insert data
-                db_operation.insert_data('staging_data.job_listings_104', df_filtered, 'unique_col')
+            # if df_filtered is not None:
+            #     # insert data
+            #     db_operation.insert_data('staging_data.job_listings_104', df_filtered, 'unique_col')
             
-            else:
-                logger.warning("No data to insert.")
+            # else:
+            #     logger.warning("No data to insert.")
             
         else:
             logger.warning("No data retrieved or table is empty.")

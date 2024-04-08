@@ -214,6 +214,7 @@ def create_stagedata_table(logger):
     job_listings_104_table_query = f"""
         CREATE TABLE IF NOT EXISTS {schema_name}.job_listings_104 (
         id SERIAL PRIMARY KEY,
+        data_role VARCHAR(255) NOT NULL,
         job_title VARCHAR(255) NOT NULL,
         company_name VARCHAR(255) NOT NULL,
         salary VARCHAR(255),
