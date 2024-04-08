@@ -76,7 +76,7 @@ class RawDataProcessor:
     def __init__(self, logger):
         self.logger = logger
 
-    def filter_jobs_by_title_and_type(self, df, title_keywords, type_keywords):
+    def filter_jobs_by_title_and_type(self, df):
         """
         Filter the DataFrame to include only jobs that match specified keywords in both job title and job type.
 
@@ -88,6 +88,17 @@ class RawDataProcessor:
         Returns:
         - pd.DataFrame: A DataFrame containing filtered job data.
         """
+        # set up a job title keywords for data cleaning            
+        title_keywords = ['數據', '資料', '機器學習', 'Data', 'AI', 
+                            'Machine Learning', '演算法', '分析', 'NLP',
+                            'BI', 'Business Analyst']
+        # set up a job type keywords for data cleaning 
+        type_keywords = ['軟體工程師', '演算法工程師', '系統分析師', '資料庫管理人員', '其他資訊專業人員', 
+                    '數據分析師', '資料工程師', '市場調查／市場分析', 'Internet程式設計師', '系統工程師', 
+                    '資料科學家', '其他專案管理師', '軟體專案管理師', '統計學研究員', 'AI工程師',
+                    '統計精算人員', '網路管理工程師', '營運管理師／系統整合／ERP專案師', '網站行銷企劃'
+                    '專案經理', '雲端工程師', '軟體工程研發高階主管', '顧問師']
+
         # Create a regex pattern to match any of the keywords, case insensitive
         title_pattern = '|'.join([f"(?i){re.escape(keyword)}" for keyword in title_keywords])
         type_pattern = '|'.join([f"(?i){re.escape(keyword)}" for keyword in type_keywords])
