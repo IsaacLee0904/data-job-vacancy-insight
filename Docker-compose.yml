@@ -12,14 +12,14 @@ services:
       - .:/app
     networks:
       - graynet
-    command: tail -f /dev/null  
+    command: tail -f /dev/null
 
   selenium:
     image: selenium/standalone-chrome
     ports:
       - "4444:4444"
     networks:
-      - graynet 
+      - graynet
 
   datawarehouse:
     image: postgres:13
@@ -32,7 +32,7 @@ services:
     volumes:
       - datawarehouse_data:/var/lib/postgresql/data
     networks:
-      - graynet 
+      - graynet
 
   datamart:
     image: postgres:13
@@ -47,20 +47,11 @@ services:
     networks:
       - graynet
 
-  dbt:
-    build: ./dbt
-    volumes:
-      - ./dbt:/dbt
-    depends_on:
-      - datawarehouse
-    networks:
-      - graynet
-
 networks:
   graynet:
     name: graylog_graynet
     external: true
-    
+
 volumes:
   datawarehouse_data:
   datamart_data:
