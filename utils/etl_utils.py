@@ -122,8 +122,11 @@ class RawDataProcessor:
         - pd.DataFrame: The DataFrame with the new 'data_role' column added.
         """
         def determine_role(title):
+            original_title = title
             title = title.lower()
-            if any(keyword in title for keyword in ['business analyst', 'Business Strategy Analyst', '商業分析師']):
+            if 'AI' in original_title:
+                return 'Machine Learning Engineer'
+            elif any(keyword in title for keyword in ['business analyst', 'business strategy analyst', '商業分析師']):
                 return 'Business Analyst'
             elif any(keyword in title for keyword in ['data analyst', '資料分析師', '數據分析師', '數據分析', '資料分析']):
                 return 'Data Analyst'
@@ -131,23 +134,26 @@ class RawDataProcessor:
                 return 'Data Scientist'
             elif any(keyword in title for keyword in ['data engineer', 'etl', '資料工程師', '數據工程師', '大數據工程師', '資料處理', '數據處理', '倉儲', '整合', '串流']):
                 return 'Data Engineer'
-            elif any(keyword in title for keyword in ['machine learning engineer', 'machine learning', 'ai engineer', 'deep learning', 'llm', '機器學習工程師', '機器學習', '深度學習', '演算法']):
+            elif any(keyword in title for keyword in ['machine learning engineer', 'machine learning', 'deep learning', 'llm', '機器學習工程師', '機器學習', '深度學習', '演算法']):
                 return 'Machine Learning Engineer'
             elif any(keyword in title for keyword in ['bi', '視覺化', '可視化']):
                 return 'BI Engineer'
             elif any(keyword in title for keyword in ['pm', '專案', '資料庫']):
                 return 'Project Manager'
             elif any(keyword in title for keyword in ['data architect', 'infrastructure', '架構師', '平台', '中台']):
-                return 'Data Architect'           
+                return 'Data Architect'
             elif any(keyword in title for keyword in ['dba', 'project manager', '資料庫管理']):
                 return 'Database Administrator'
             elif any(keyword in title for keyword in ['mis']):
                 return 'MIS'
+            elif any(keyword in title for keyword in ['se', '系統']):
+                return 'System Engineer'
             else:
                 return 'Others'
-
+        
         df['data_role'] = df['job_title'].apply(determine_role)
         return df
+
 
     def process_location(self, df):
         """
