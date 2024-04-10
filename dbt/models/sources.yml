@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: staging
+    database: job_vacancy_insight_datawarehouse
+    schema: staging_data
+    tables:
+      - name: job_listings_104
