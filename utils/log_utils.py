@@ -15,7 +15,7 @@ def set_logger(level=logging.INFO):
     # Get the current script name (without file extension)
     script_name = os.path.splitext(os.path.basename(sys.argv[0]))[0]
     # Create log file path
-    log_directory = "/app/log"  # Adjust the log directory path according to your Docker volume setup
+    log_directory = "/app/logs"  # Adjust the log directory path according to your Docker volume setup
     if not os.path.exists(log_directory):
         os.makedirs(log_directory)
     log_file_path = os.path.join(log_directory, f"{script_name}.log")
