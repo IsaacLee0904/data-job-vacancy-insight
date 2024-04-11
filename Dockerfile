@@ -6,12 +6,12 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY . /app
 
-# Install any necessary packages specified in requirements.txt
-# Also install tzdata for time zone setting
+# Install system packages including git
 RUN apt-get update && apt-get install -y \
     build-essential \
     libatlas-base-dev \
-    tzdata
+    tzdata \
+    git  # Add git here
 
 # Set the time zone
 RUN ln -fs /usr/share/zoneinfo/Asia/Taipei /etc/localtime && dpkg-reconfigure -f noninteractive tzdata
