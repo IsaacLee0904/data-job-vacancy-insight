@@ -1,7 +1,7 @@
 version: 2
 
 sources:
-  - name: staging
+  - name: staging_data
     database: job_vacancy_insight_datawarehouse
     schema: staging_data
     tables:
