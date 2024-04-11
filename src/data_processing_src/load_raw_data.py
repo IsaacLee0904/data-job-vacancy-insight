@@ -25,7 +25,7 @@ def transform_data_type(df):
     df = GeneralDataProcessor.convert_column_type(df, 'url', str)
     df = GeneralDataProcessor.convert_column_type(df, 'crawl_date', 'datetime', '%Y%m%d')
     # create uniqule key to aviod duplicate insert 
-    df['unique_col'] = df['job_title'] + '_' + df['crawl_date'].astype(str)
+    df['unique_col'] = df['job_title'] + '_' + df['company_name'] + '_' + df['crawl_date'].astype(str)
 
     return df
 
