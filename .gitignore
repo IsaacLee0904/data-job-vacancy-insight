@@ -4,3 +4,4 @@ logs/*
 .user.yml
 dbt/logs/*
 dbt/dbt_packages/*
+dbt/target/*
