@@ -2,3 +2,4 @@
 **.DS_Store
 logs/*
 dbt/logs/*
+dbt/dbt_packages/*
