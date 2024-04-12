@@ -1,24 +1,24 @@
-county_id,county
-1,基隆市
-2,台北市
-3,新北市
-4,桃園縣
-5,新竹市
-6,新竹縣
-7,苗栗縣
-8,台中市
-9,彰化縣
-10,南投縣
-11,雲林縣
-12,嘉義市
-13,嘉義縣
-14,台南市
-15,高雄市
-16,屏東縣
-17,台東縣
-18,花蓮縣
-19,宜蘭縣
-20,澎湖縣
-21,金門縣
-22,連江縣
-23,海外
+county_id,county_name_ch,county_name_eng
+1,基隆市,Keelung City
+2,台北市,Taipei City
+3,新北市,New Taipei City
+4,桃園市,Taoyuan City
+5,新竹市,Hsinchu City
+6,新竹縣,Hsinchu County
+7,苗栗縣,Miaoli County
+8,台中市,Taichung City
+9,彰化縣,Changhua County
+10,南投縣,Nantou County
+11,雲林縣,Yunlin County
+12,嘉義市,Chiayi City
+13,嘉義縣,Chiayi County
+14,台南市,Tainan City
+15,高雄市,Kaohsiung City
+16,屏東縣,Pingtung County
+17,台東縣,Taitung County
+18,花蓮縣,Hualien County
+19,宜蘭縣,Yilan County
+20,澎湖縣,Penghu County
+21,金門縣,Kinmen County
+22,連江縣,Lienchiang County
+23,海外,Overseas
