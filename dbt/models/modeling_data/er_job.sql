@@ -1,8 +1,8 @@
--- models/modeling_data/er_job.sql --  AND AA.crawl_date = '{{ dbt.date.current_date() }}'
+-- models/modeling_data/er_job.sql 
 {{ config(materialized='incremental', unique_key='unique_id') }}
 
 SELECT
-    CAST(AA.id AS VARCHAR) || '_' || AA.crawl_date AS unique_id
+    {{ generate_unique_id('AA.id', 'AA.crawl_date') }}
     , AA.data_role
     , AA.job_title
     , AA.salary
@@ -13,7 +13,7 @@ SELECT
     , AA.crawl_date
 FROM {{ source('staging_data', 'job_listings_104') }} AA 
 WHERE 1 = 1
-    AND AA.crawl_date = '2024-04-01'
+    AND AA.crawl_date = '{{modules.datetime.date.today().strftime('%Y-%m-%d')}}'
     AND AA.data_role IN ('Data Analyst', 'Data Scientist', 'Data Engineer', 'Machine Learning Engineer', 'Business Analyst', 'Data Architect', 'BI Engineer')
 
 
