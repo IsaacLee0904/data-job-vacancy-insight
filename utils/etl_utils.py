@@ -154,7 +154,6 @@ class RawDataProcessor:
         df['data_role'] = df['job_title'].apply(determine_role)
         return df
 
-
     def process_location(self, df):
         """
         Process the location column to extract county information or mark as overseas.
@@ -166,12 +165,12 @@ class RawDataProcessor:
         - pd.DataFrame: The DataFrame with the new 'County' column added.
         """
         def extract_county(location):
-            # if info include "市"
-            if '市' in location:
-                return location[:location.index('市') + 1]
             # if info include "縣"
-            elif '縣' in location:
+            if '縣' in location:
                 return location[:location.index('縣') + 1]
+            # else if info include "市"
+            elif '市' in location:
+                return location[:location.index('市') + 1]
             # if non "市" or "縣"
             return '海外'
 
