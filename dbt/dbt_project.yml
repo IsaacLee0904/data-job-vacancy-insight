@@ -11,9 +11,15 @@ profile: 'data_job_vacancy_insight'
 model-paths: ["models"]
 analysis-paths: ["analysis"]
 test-paths: ["tests"]
-seed-paths: ["data"]
+seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
+
+# Configuring seeds 
+# Full documentation: https://docs.getdbt.com/docs/building-a-dbt-project/seeds
+seeds:
+  data_job_vacancy_insight:  
+    er_county: {}
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
@@ -25,7 +31,7 @@ snapshot-paths: ["snapshots"]
 models:
   data_job_vacancy_insight:
     modeling:
-      schema: modeling  # Specify the schema where your final models should be built
+      +schema: modeling_data  
       materialized: table  # Typically, modeling layer models are materialized as tables
-  
+
 

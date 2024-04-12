@@ -19,4 +19,3 @@ data_job_vacancy_insight:
       user: IsaacLee
       pass: job_vacancy_insight
       dbname: job_vacancy_insight_datawarehouse
-      schema: modeling_data
