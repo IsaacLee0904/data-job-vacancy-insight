@@ -6,3 +6,9 @@ sources:
     schema: staging_data
     tables:
       - name: job_listings_104
+
+  - name: modeling_data
+    database: job_vacancy_insight_datawarehouse
+    schema: modeling_data
+    tables:
+      - name: er_company
