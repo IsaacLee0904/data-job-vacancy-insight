@@ -27,8 +27,8 @@ def create_and_filter_data(db_operation, logger):
 
     today_date = datetime.datetime.today().strftime('%Y-%m-%d')
     condition = f"crawl_date = '{today_date}'"
-    df = db_operation.fetch_data('source_data.job_listings_104', "crawl_date = '2024-04-08'")
-    # df = db_operation.fetch_data('source_data.job_listings_104', condition)
+    # df = db_operation.fetch_data('source_data.job_listings_104', "crawl_date = '2024-04-08'")
+    df = db_operation.fetch_data('source_data.job_listings_104', condition)
     logger.info(f"Fetched data for the date: {today_date} with {len(df)} rows (if not empty).")
 
     if df is not None and not df.empty:
