@@ -1,5 +1,4 @@
--- models/modeling_data/er_tools.sql 
--- need to initialize with the first week 
+-- models/modeling_data/er_tools.sql
 {{ config(materialized='table', unique_key='tool_id') }}
 
 SELECT 
