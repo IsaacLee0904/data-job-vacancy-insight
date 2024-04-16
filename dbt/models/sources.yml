@@ -12,3 +12,4 @@ sources:
     schema: modeling_data
     tables:
       - name: er_company
+      - name: er_job_type
