@@ -13,3 +13,4 @@ sources:
     tables:
       - name: er_company
       - name: er_job_type
+      - name: er_tools
