@@ -6,7 +6,7 @@ WITH current_week AS (
     SELECT UNNEST(job_type) AS job_type
     FROM {{ source('staging_data', 'job_listings_104') }}
     WHERE 1 = 1
-        AND crawl_date = '{{modules.datetime.date.today().strftime('%Y-%m-%d')}}'
+        AND crawl_date = '2024-04-08'
         AND data_role IN ('Data Analyst', 'Data Scientist', 'Data Engineer', 'Machine Learning Engineer', 'Business Analyst', 'Data Architect', 'BI Engineer')
     GROUP BY job_type
 ),
@@ -27,17 +27,17 @@ new_job_type AS (
 
 ranked_new_job_type AS (
     SELECT 
-        ROW_NUMBER() OVER (ORDER BY company_name) + (SELECT COALESCE(MAX(company_id), 0) FROM previous_week) AS job_type_id, 
+        ROW_NUMBER() OVER (ORDER BY job_type) + (SELECT COALESCE(MAX(job_type_id), 0) FROM previous_week) AS job_type_id, 
         job_type
     FROM new_job_type
 )
 
 SELECT 
-    company_id
-    , company_name
+    job_type_id
+    , job_type
 FROM previous_week
 UNION ALL
 SELECT 
-    company_id
-    , company_name
-FROM ranked_new_companies
+    job_type_id
+    , job_type
+FROM ranked_new_job_type
