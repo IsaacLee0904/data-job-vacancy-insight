@@ -4,17 +4,72 @@ sources:
   - name: staging_data
     database: job_vacancy_insight_datawarehouse
     schema: staging_data
+    description: "This schema contains raw data from external job listing sources."
     tables:
       - name: job_listings_104
+        description: "Raw job listings data collected from the 104 job platform."
+        tests:
+          - unique:
+              column_name: id
+              description: "Ensures that each job listing has a unique identifier."
+          - not_null:
+              column_name: id
+              description: "Ensures that the job listing ID is never null."
 
   - name: modeling_data
     database: job_vacancy_insight_datawarehouse
     schema: modeling_data
+    description: "This schema contains transformed and structured data for analytical purposes."
     tables:
       - name: er_company
+        description: "Contains unique companies extracted from job listings."
+        tests:
+          - unique:
+              column_name: company_id
+              description: "Ensures each company has a unique ID."
+          - not_null:
+              column_name: company_id
+              description: "Ensures that the company ID is never null."
+
       - name: er_company_location
+        description: "Location details for each company."
+
       - name: er_job_type
-      - name: er_degree     
+        description: "Job types categorized from job listings."
+        tests:
+          - unique:
+              column_name: job_type_id
+              description: "Ensures each job type has a unique ID."
+          - not_null:
+              column_name: job_type_id
+              description: "Ensures that the job type ID is never null."
+
+      - name: er_degree
+        description: "Degree requirements specified in job listings."
+        tests:
+          - unique:
+              column_name: degree_id
+              description: "Ensures each degree level has a unique ID."
+          - not_null:
+              column_name: degree_id
+              description: "Ensures that the degree ID is never null."
+
       - name: er_tools
+        description: "Tools and technologies mentioned in job listings."
+        tests:
+          - unique:
+              column_name: tool_id
+              description: "Ensures each tool has a unique ID."
+          - not_null:
+              column_name: tool_id
+              description: "Ensures that the tool ID is never null."
+
       - name: er_major
-      
+        description: "Academic majors specified in job listings."
+        tests:
+          - unique:
+              column_name: major_id
+              description: "Ensures each major has a unique ID."
+          - not_null:
+              column_name: major_id
+              description: "Ensures that the major ID is never null."
