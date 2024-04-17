@@ -12,6 +12,9 @@ sources:
     schema: modeling_data
     tables:
       - name: er_company
+      - name: er_company_location
       - name: er_job_type
+      - name: er_degree     
       - name: er_tools
       - name: er_major
+      
