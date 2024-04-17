@@ -6,7 +6,7 @@ WITH current_week AS (
     SELECT UNNEST(major_required) AS major
     FROM {{ source('staging_data', 'job_listings_104') }}
     WHERE 1 = 1
-        AND crawl_date = '2024-04-15'
+        AND crawl_date = '{{modules.datetime.date.today().strftime('%Y-%m-%d')}}'
         AND data_role IN ('Data Analyst', 'Data Scientist', 'Data Engineer', 'Machine Learning Engineer', 'Business Analyst', 'Data Architect', 'BI Engineer')
     GROUP BY major
 ),
