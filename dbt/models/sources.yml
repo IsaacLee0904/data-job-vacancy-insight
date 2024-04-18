@@ -10,66 +10,104 @@ sources:
         description: "Raw job listings data collected from the 104 job platform."
         tests:
           - unique:
-              column_name: id
+              column_name: unique_col
               description: "Ensures that each job listing has a unique identifier."
           - not_null:
-              column_name: id
-              description: "Ensures that the job listing ID is never null."
+              column_name: unique_col
+
 
   - name: modeling_data
     database: job_vacancy_insight_datawarehouse
     schema: modeling_data
     description: "This schema contains transformed and structured data for analytical purposes."
     tables:
+      - name: er_job
+        description: "Stores job details including references to company, job types, degrees, majors, and tools."
+        columns:
+          - name: unique_id
+            tests:
+              - unique
+              - not_null
+          - name: company_id
+            tests:
+              - not_null
+              - relationships:
+                  to: ref('er_company')
+                  field: company_id
+          - name: job_types
+            tests:
+              - not_null
+          - name: degree
+            tests:
+              - not_null
+          - name: majors
+            tests:
+              - not_null
+          - name: tools
+            tests:
+              - not_null
+          - name: crawl_date
+            tests:
+              - not_null
+
       - name: er_company
-        description: "Contains unique companies extracted from job listings."
-        tests:
-          - unique:
-              column_name: company_id
-              description: "Ensures each company has a unique ID."
-          - not_null:
-              column_name: company_id
-              description: "Ensures that the company ID is never null."
+        description: "Contains company details."
+        columns:
+          - name: company_id
+            tests:
+              - unique
+              - not_null
 
       - name: er_company_location
-        description: "Location details for each company."
-
-      - name: er_job_type
-        description: "Job types categorized from job listings."
-        tests:
-          - unique:
-              column_name: job_type_id
-              description: "Ensures each job type has a unique ID."
-          - not_null:
-              column_name: job_type_id
-              description: "Ensures that the job type ID is never null."
-
-      - name: er_degree
-        description: "Degree requirements specified in job listings."
-        tests:
-          - unique:
-              column_name: degree_id
-              description: "Ensures each degree level has a unique ID."
-          - not_null:
-              column_name: degree_id
-              description: "Ensures that the degree ID is never null."
+        description: "Details of company locations."
+        columns:
+          - name: company_id
+            tests:
+              - not_null
+              - relationships:
+                  to: ref('er_company')
+                  field: company_id
+          - name: county_id
+            tests:
+              - not_null
+              - relationships:
+                  to: ref('er_county')
+                  field: county_id
+          - name: district_id
+            tests:
+              - not_null
+              - relationships:
+                  to: ref('er_district')
+                  field: district_id
 
       - name: er_tools
-        description: "Tools and technologies mentioned in job listings."
-        tests:
-          - unique:
-              column_name: tool_id
-              description: "Ensures each tool has a unique ID."
-          - not_null:
-              column_name: tool_id
-              description: "Ensures that the tool ID is never null."
+        description: "Tools mentioned in job listings."
+        columns:
+          - name: tool_id
+            tests:
+              - unique
+              - not_null
 
       - name: er_major
-        description: "Academic majors specified in job listings."
-        tests:
-          - unique:
-              column_name: major_id
-              description: "Ensures each major has a unique ID."
-          - not_null:
-              column_name: major_id
-              description: "Ensures that the major ID is never null."
+        description: "Academic majors mentioned in job listings."
+        columns:
+          - name: major_id
+            tests:
+              - unique
+              - not_null
+
+      - name: er_job_type
+        description: "Types of jobs listed."
+        columns:
+          - name: job_type_id
+            tests:
+              - unique
+              - not_null
+
+      - name: er_degree
+        description: "Degrees mentioned in job listings."
+        columns:
+          - name: degree_id
+            tests:
+              - unique
+              - not_null
