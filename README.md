@@ -15,8 +15,15 @@ A system that recommends data-centric jobs and provides insights, featuring a pe
 - **2024-04-12 to 2024-04-19:** Data pipeline - Transform data into the data warehouse (modeling_data layer) with dbt
     - ER model build up in modeling_data layer with dbt model feature
     - ER model tables data quality check setup with dbt test feature
-    - Data warehouse modeling_data layer graph (non-finished)
+    - Data warehouse modeling_data layer graph (http://localhost:80)
     - Data warehouse modeling_data layer change data capture(CDC) setup with dbt snapshot feature (non-finished)
+- Data pipeline deploy with airflow (to-do)
+    - 104 crawler
+    - Data pipeline - load raw data
+    - Data pipeline - transform data
+    - Data pipeline - ER modeling 
+    - Data quality check 
+    - Change data capture
 
 ## Project Overview
 The "Data-Job-Vacancy-Insight" project is designed to streamline the job searching process for data professionals. By aggregating and analyzing job listings from multiple sources, it offers personalized job recommendations and valuable market insights directly through a user-friendly Telegram bot interface.
