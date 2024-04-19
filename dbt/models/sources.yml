@@ -1,3 +1,4 @@
+# define source data and generic test for er model
 version: 2
 
 sources:
@@ -11,10 +12,8 @@ sources:
         tests:
           - unique:
               column_name: unique_col
-              description: "Ensures that each job listing has a unique identifier."
           - not_null:
               column_name: unique_col
-
 
   - name: modeling_data
     database: job_vacancy_insight_datawarehouse
@@ -28,6 +27,11 @@ sources:
             tests:
               - unique
               - not_null
+          - name: data_role
+            tests:
+                - accepted_values:
+                    values: ['Data Analyst', 'Data Scientist', 'Data Engineer', 'Machine Learning Engineer', 'Business Analyst', 'Data Architect', 'BI Engineer']
+                - not_null
           - name: company_id
             tests:
               - not_null
