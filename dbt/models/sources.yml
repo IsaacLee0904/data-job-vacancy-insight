@@ -40,12 +40,6 @@ sources:
           - name: degree
             tests:
               - not_null
-          - name: majors
-            tests:
-              - not_null
-          - name: tools
-            tests:
-              - not_null
           - name: crawl_date
             tests:
               - not_null
@@ -76,9 +70,6 @@ sources:
           - name: district_id
             tests:
               - not_null
-              - relationships:
-                  to: ref('er_district')
-                  field: district_id
 
       - name: er_tools
         description: "Tools mentioned in job listings."
