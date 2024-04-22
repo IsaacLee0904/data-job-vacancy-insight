@@ -16,7 +16,7 @@ This dbt project is designed to transform raw data in datawarehouse staging_data
 Install dbt using Docker by adding this to your Dockerfile:
 
 ```bash
-dbt-postgres==1.3
+dbt-postgres == 1.3
 ```
 
 ### Step 2: Configure Database Connection
@@ -92,11 +92,21 @@ Generic tests in dbt are predefined tests applied to your models, such as `uniqu
 Singular tests or custom tests are specific to your project's requirements. These tests are written as SQL queries and are used to validate business logic or data quality that the generic tests cannot cover. For example, you might write a singular test to check if the total of all transaction amounts equals the reported total for a given period.
 
 To run both types of tests on your models and seeds, use the following command:
+
 ```bash
 dbt test
 ```
 
 ### Snapshot
+Snapshots are a dbt feature that tracks changes to specific data in your data warehouse over time. They are particularly useful for capturing historical data that might otherwise be updated or deleted in the source system. Snapshots help preserve a version history of your data, which can be vital for audits, reporting, or analyzing trends.
+
+To create a snapshot in dbt, you define snapshot models within your dbt project. These models specify the source data to track, the unique keys for identifying records, and the strategy for capturing changes (such as using a timestamp column or a log sequence number).
+
+To execute snapshots and update your historical data tracking, use the following command:
+
+```bash
+dbt snapshot
+```
 
 ### Generate and Serve dbt Docs
 Generate and serve dbt documentation to visualize the data flow and model structures:
