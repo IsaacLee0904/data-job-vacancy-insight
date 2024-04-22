@@ -1,4 +1,4 @@
-{% SNAPSHOT er_company_location_snapshot %}  
+{% snapshot er_company_location_snapshot %}  
 
 {{
   config(
@@ -11,7 +11,7 @@
 }}
 
 SELECT 
-  "company_id||'-'||district_id"
+  company_id||'-'||district_id AS unique_key
   , *
 FROM {{ source('modeling_data', 'er_company_location') }}
 

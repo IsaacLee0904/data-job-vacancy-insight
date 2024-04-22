@@ -1,4 +1,4 @@
-{% SNAPSHOT er_company %}  
+{% snapshot er_company_snapshot %}  
 
 {{
   config(
