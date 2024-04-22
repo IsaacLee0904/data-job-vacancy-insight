@@ -12,12 +12,12 @@ A system that recommends data-centric jobs and provides insights, featuring a pe
 - **2024-04-01 to 2024-04-02:** Data pipeline - Load raw data into the data warehouse (source_data layer)
 - **2024-04-08 to 2024-04-09:** Data pipeline - Transform data in the data warehouse (staging_data layer)
 - **2024-04-09 to 2024-04-10:** Set up DBT (Data Build Tool)
-- **2024-04-12 to 2024-04-19:** Data pipeline - Transform data into the data warehouse (modeling_data layer) with dbt
+- **2024-04-12 to 2024-04-22:** Data pipeline - Transform data into the data warehouse (modeling_data layer) with dbt
     - ER model build up in modeling_data layer with dbt model feature
     - ER model tables data quality check setup with dbt test feature
     - Data warehouse modeling_data layer graph (http://localhost:80)
-    - Data warehouse modeling_data layer change data capture(CDC) setup with dbt snapshot feature (non-finished)
-- Data pipeline deploy with airflow (to-do)
+    - Data warehouse modeling_data layer change data capture(CDC) setup with dbt snapshot feature 
+- Data pipeline deploy with airflow (in progress)
     - 104 crawler
     - Data pipeline - load raw data
     - Data pipeline - transform data
