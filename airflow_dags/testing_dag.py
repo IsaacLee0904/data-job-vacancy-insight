@@ -17,37 +17,25 @@ default_args = {
 dag = DAG(
     'job_vacancy_data_pipeline',
     default_args=default_args,
-    description='A simple DAG to run data pipelines for job vacancy data processing',
+    description='A simple DAG to run data pipelines for job vacancy project testing',
     schedule_interval=timedelta(days=1),
     catchup=False,
 )
 
 # task : load raw data in Docker 
-load_raw_data = DockerOperator(
+buildup_test = DockerOperator(
     task_id='load_raw_data',
     image='data-job-vacancy-insight-app',
     api_version='auto',
     auto_remove=True,
-    command='python src/data_processing_src/load_raw_data.py',
-    docker_url='unix://var/run/docker.sock',  # Docker Daemon socket
-    network_mode='bridge',
-    dag=dag,
-)
-
-# task：transform raw data in Docker
-transform_raw_data = DockerOperator(
-    task_id='transform_raw_data',
-    image='data-job-vacancy-insight-app',
-    api_version='auto',
-    auto_remove=True,
-    command='python src/data_processing_src/transform_raw_data.py',
+    command='python src/buildup_src/package_checker.py',
     docker_url='unix://var/run/docker.sock',  # Docker Daemon socket
     network_mode='bridge',
     dag=dag,
 )
 
 # task：run dbt in Docker
-run_dbt = DockerOperator(
+run_dbt_test = DockerOperator(
     task_id='run_dbt',
     image='data-job-vacancy-insight-app',
     api_version='auto',
@@ -58,4 +46,4 @@ run_dbt = DockerOperator(
     dag=dag,
 )
 
-load_raw_data >> transform_raw_data >> run_dbt
+buildup_test >> run_dbt_test
