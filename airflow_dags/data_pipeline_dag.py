@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2023, 1, 1),
+    'start_date': datetime(2024, 4, 29),  # Set start date to April 29, 2024
     'email': ['hool19965401@gmail.com'],
     'email_on_failure': False,
     'email_on_retry': False,
@@ -18,7 +18,7 @@ dag = DAG(
     'job_vacancy_data_pipeline',
     default_args=default_args,
     description='A simple DAG to run data pipelines for job vacancy data processing',
-    schedule_interval=timedelta(days=1),
+    schedule_interval='0 0 * * 1',  # Set schedule interval to every Monday at midnight
     catchup=False,
 )
 
