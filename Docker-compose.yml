@@ -11,6 +11,7 @@ services:
       - selenium
     volumes:
       - .:/app
+      - /Users/wen/Desktop/Data-Job-Vacancy-Insight/data/raw_data:/app/data/raw_data
     networks:
       - graynet
     command: tail -f /dev/null
