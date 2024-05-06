@@ -6,7 +6,7 @@
     target_schema='modeling_data',
     strategy='check',
     unique_key="job_type_id",
-    check_cols=['status', 'is_cancelled'],
+    check_cols='all',
   )
 }}
 
