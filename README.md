@@ -8,7 +8,7 @@ A system that recommends data-centric jobs and provides insights, featuring a pe
 - **2024-03-25:** Project workflow design
 - **2024-03-26:** Set up development environment with Docker
 - **2024-03-28 to 2024-03-31:** Development of 104 crawler
-- **2024-03-31:** Database design
+- **2024-03-31:** Database design (https://dbdiagram.io/d/job_vacancy_insight_datawarehouse_modeling-66209be403593b6b614a0bda)
 - **2024-04-01 to 2024-04-02:** Data pipeline - Load raw data into the data warehouse (source_data layer)
 - **2024-04-08 to 2024-04-09:** Data pipeline - Transform data in the data warehouse (staging_data layer)
 - **2024-04-09 to 2024-04-10:** Set up DBT (Data Build Tool)
