@@ -2,22 +2,15 @@ name: 'data_job_vacancy_insight'
 version: '1.0.0'
 config-version: 2
 
-profile: 'datawarehouse_job_vacancy_insight'
+# This setting configures which "profile" dbt uses for this project(file with settings configuration with dababase). 
+profile: 'data_job_vacancy_insight' 
 
+# These configurations specify where dbt should look for different types of files.
+# The `source-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You don't need to change these for this project.
 model-paths: ["models"]
 analysis-paths: ["analysis"]
 test-paths: ["tests"]
 seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
-
-models:
-  datawarehouse:
-    +profile: 'datawarehouse_job_vacancy_insight'
-    +schema: 'modeling_data'
-  datamart:
-    +profile: 'datamart_job_vacancy_insight'
-    reporting:
-      +schema: 'reporting_data'
-    model_training:
-      +schema: 'training_data'

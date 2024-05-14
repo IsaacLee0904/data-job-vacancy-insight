@@ -1,10 +1,10 @@
-datawarehouse_job_vacancy_insight:
+data_job_vacancy_insight:
   target: dev
   outputs:
     dev:
       type: postgres
       threads: 1
-      host: datawarehouse
+      host: datawarehouse  
       port: 5432
       user: IsaacLee
       pass: job_vacancy_insight
@@ -14,21 +14,8 @@ datawarehouse_job_vacancy_insight:
     prod:
       type: postgres
       threads: 1
-      host: datawarehouse
+      host: datawarehouse  
       port: 5432
       user: IsaacLee
       pass: job_vacancy_insight
       dbname: job_vacancy_insight_datawarehouse
-
-datamart_job_vacancy_insight:
-  target: dev
-  outputs:
-    dev:
-      type: postgres
-      threads: 1
-      host: datamart  
-      port: 5432
-      user: IsaacLee
-      pass: job_vacancy_insight
-      dbname: job_vacancy_insight_datamart
-      schema: public  
