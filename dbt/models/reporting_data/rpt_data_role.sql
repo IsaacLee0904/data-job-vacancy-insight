@@ -1,5 +1,5 @@
 -- models/reporting_data/rpt_data_role.sql
-{{ config(materialized='table', schema='reporting_data') }}
+{{ config(materialized='incremental', schema='reporting_data') }}
 
 SELECT
     data_role
