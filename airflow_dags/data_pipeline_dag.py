@@ -1,17 +1,36 @@
 from airflow import DAG
 from airflow.operators.bash import BashOperator
+from airflow.providers.telegram.operators.telegram import TelegramOperator
 from datetime import datetime, timedelta
+
+def notify_failure(context):
+    failed_alert = TelegramOperator(
+        task_id='send_failure_alert',
+        telegram_conn_id='telegram_bot',
+        chat_id='*********', # need to replace with your chat_id
+        text=f"Task {context['task_instance_key_str']} failed.",
+        dag=dag
+    )
+    return failed_alert.execute(context=context)
+
+def notify_success(context):
+    success_alert = TelegramOperator(
+        task_id='send_success_alert',
+        telegram_conn_id='telegram_bot',
+        chat_id='*********', # need to replace with your chat_id
+        text="DAG job_vacancy_data_pipeline completed successfully!",
+        dag=dag
+    )
+    return success_alert.execute(context=context)
 
 # DAG settings 
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2023, 1, 1),  # Set start date to April 22, 2024
-    'email': ['hool19965401@gmail.com'],
-    'email_on_failure': True,
-    'email_on_retry': True,
+    'start_date': datetime(2023, 1, 1),
     'retries': 1,
     'retry_delay': timedelta(minutes=5),
+    'on_failure_callback': notify_failure
 }
 
 dag = DAG(
@@ -20,6 +39,7 @@ dag = DAG(
     description='A simple DAG to run data pipelines for job vacancy data processing',
     schedule_interval='0 0 * * 1',  # Set schedule interval to every Monday at midnight
     catchup=False,
+    on_success_callback=notify_success
 )
 
 # task : crawl data from 104 
