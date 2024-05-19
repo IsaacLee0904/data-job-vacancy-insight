@@ -18,7 +18,7 @@ A system that recommends data-centric jobs and provides insights, featuring a pe
     - Data warehouse modeling_data layer graph (http://localhost:80)
     - Data warehouse modeling_data layer change data capture(CDC) setup with dbt snapshot feature 
 - Deploy with airflow 
-    - Error message with telegram alert
+    - Error message with telegram alert (**2024-05-20**)
     - Data pipeline (**2024-05-05**)
         - 104 crawler
         - Data pipeline - load raw data
