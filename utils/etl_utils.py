@@ -153,6 +153,114 @@ class RawDataProcessor:
         
         df['data_role'] = df['job_title'].apply(determine_role)
         return df
+    
+    def integrate_skills_into_tools(self, df):
+        """
+        Check 'job_description' and 'others' fields for specific keywords and add the relevant tools to the 'tools' field in a string format, separated by '、'.
+
+        Parameters:
+        - df (pd.DataFrame): The DataFrame containing job data.
+
+        Returns:
+        - pd.DataFrame: The updated DataFrame with skills added to the 'tools' field.
+        """
+        # Dictionary for skills and tools mapping, in order to have a correct naming
+        keywords_skills = {
+            # Cloud Platforms
+            'aws': 'AWS', 'gcp': 'GCP', 'google cloud storage': 'Google Cloud Storage', 
+            'google cloud pub/sub': 'Google Cloud Pub/Sub', 
+
+            # Big Data Technologies
+            'hadoop': 'Hadoop', 'spark': 'Spark', 'flume': 'Flume', 'storm': 'Storm', 
+            'zookeeper': 'Zookeeper', 'hbase': 'HBase', 'kafka': 'Kafka', 'rabbitMQ': 'RabbitMQ',
+
+            # Database & Storage
+            'redshift': 'Redshift', 'snowflake': 'Snowflake', 'qlik': 'Qlik', 'cognos': 'Cognos', 
+            'bigQuery': 'BigQuery', 'bigTable': 'BigTable', 'bigQueryML': 'BigQueryML', 
+            'bigQuerySQL': 'BigQuerySQL', 'hive': 'Hive', 'pig': 'Pig', 'sql server': 'SQL Server',
+
+            # Data Science & Machine Learning
+            'tensorFlow': 'TensorFlow', 'keras': 'Keras', 'scikit-learn': 'Scikit-learn', 
+            'pyTorch': 'PyTorch', 'pandas': 'Pandas', 'numpy': 'Numpy', 'scipy': 'Scipy', 
+            'matplotlib': 'Matplotlib', 'databricsk': 'Databricks', 'seaborn': 'Seaborn',
+
+            # Business Intelligence
+            'power_bi': 'Power BI', 'tableau': 'Tableau', 'google looker studio': 'Google Looker Studio', 
+            'google data studio': 'Google Data Studio',
+
+            # Monitoring & Visualization
+            'grafana': 'Grafana', 'kibana': 'Kibana',
+
+            # DevOps & Version Control
+            'docker': 'Docker', 'kubernetes': 'Kubernetes', 'jenkins': 'Jenkins', 'git': 'Git', 
+            'gitHub': 'GitHub', 'gitLab': 'GitLab', 'bitbucket': 'Bitbucket',
+
+            # General Software & Tools
+            'excel': 'Excel', 'word': 'Word', 'powerpoint': 'PowerPoint', 'sharepoint': 'SharePoint', 
+            'outlook': 'Outlook', 'visio': 'Visio', 'spreadsheet': 'Spreadsheet',
+
+            # Programming & Scripting Environments
+            'airflow': 'Airflow', 'alteryx': 'Alteryx', 'asp.net': 'ASP.NET', 'atlassian': 'Atlassian', 
+            'srss': 'SRSS', 'ssrs': 'SSRS', 'ssis': 'SSIS',
+
+            # Operating Systems & Platforms
+            'unix': 'Unix', 'linux/unix': 'Linux / Unix', 'linux': 'Linux',
+
+            # Web Development
+            'vue': 'Vue', 'jquery': 'jQuery',
+
+            # Compliance & Security
+            'gdpr': 'GDPR',
+
+            # Statistical Software
+            'spss': 'SPSS', 'microstrategy': 'MicroStrategy',
+        }
+
+        keywords_programming = {
+            # High-level General Purpose Languages
+            'python': 'Python', 'java': 'Java', 'c#': 'C#', 'javascript': 'JavaScript', 'php': 'PHP',
+            'ruby': 'Ruby', 'go': 'Go', 'kotlin': 'Kotlin', 'swift': 'Swift', 'dart': 'Dart', 
+            'r': 'R', 'golang': 'Golang',
+
+            # Low-level & Systems Programming Languages
+            'c': 'C', 'c++': 'C++', 'c/c++': 'C / C++', 'rust': 'Rust', 'assembly': 'Assembly',
+
+            # Functional & Other Languages
+            'scala': 'Scala', 'f#': 'F#', 'haskell': 'Haskell', 'elixir': 'Elixir', 'clojure': 'Clojure',
+            'lisp': 'Lisp', 'ocaml': 'OCaml', 'erlang': 'Erlang', 'fortran': 'Fortran', 'apl': 'APL',
+            'cobol': 'COBOL', 'delphi': 'Delphi', 'groovy': 'Groovy', 'lua': 'Lua', 'pascal': 'Pascal',
+
+            # Web & Markup Languages
+            'html': 'HTML', 'css': 'CSS', 'sass': 'Sass', 'typescript': 'TypeScript', 'javascript/typescript': 'JavaScript / TypeScript',
+
+            # Scripting & Automation
+            'bash': 'Bash', 'shell': 'Shell', 'shell script': 'Shell Script', 'powershell': 'Powershell',
+
+            # Database Query Languages
+            'sql': 'SQL', 't-sql': 'Transact-SQL', 'pl/sql': 'PL/SQL', 'nosql': 'NoSQL', 'no-sql': 'No-SQL', 
+            'mongodb': 'MongoDB', 'mongo': 'Mongo', 
+
+            # Specialized & Miscellaneous
+            'vba': 'VBA', 'matlab': 'MATLAB', 'sas': 'SAS', 'visual_basic': 'Visual Basic', 'vb.net': 'VB.NET', 'mssql': 'MSSQL',
+            'perl': 'Perl', 'solidity': 'Solidity', 'crystal': 'Crystal', 'julia': 'Julia',
+        }
+        def find_skills(text):
+            found_skills = []
+            # Combine both skills and programming keywords into one dictionary
+            all_keywords = {**keywords_skills, **keywords_programming}
+            for keyword, formal_name in all_keywords.items():
+                # Check if the keyword is in text, case insensitive
+                if re.search(r'\b' + re.escape(keyword) + r'\b', text, re.IGNORECASE):
+                    found_skills.append(formal_name)
+            return found_skills
+
+        # Apply find_skills function to 'job_description' and 'others', and add found skills to 'tools'
+        df['tools'] = df.apply(
+            lambda x: '、'.join(sorted(set((x['tools'].split('、') if x['tools'] else []) + find_skills(x['job_description']) + find_skills(x['others'])))),
+            axis=1
+        )
+
+        return df
 
     def process_location(self, df):
         """
