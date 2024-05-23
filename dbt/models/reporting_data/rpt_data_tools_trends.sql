@@ -23,7 +23,7 @@ FROM(
 		    AA.crawl_date
 		FROM {{ source('modeling_data', 'er_job') }} AA
 		WHERE 
-		    AA.crawl_date = '2024-05-20' 
+		    AA.crawl_date = '{{modules.datetime.date.today().strftime('%Y-%m-%d')}}'
 	)AAA
 	left join {{ source('modeling_data', 'er_tools') }}BBB on AAA.tool_lower = regexp_replace(lower(trim(BBB.tool_name)), '[^a-z0-9+#]', '', 'g')
 	GROUP BY BBB.category, AAA.tool, AAA.crawl_date
