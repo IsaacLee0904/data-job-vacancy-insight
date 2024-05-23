@@ -27,7 +27,7 @@ def create_and_filter_data(db_operation, logger):
 
     today_date = datetime.datetime.today().strftime('%Y-%m-%d')
     condition = f"crawl_date = '{today_date}'"
-    # df = db_operation.fetch_data('source_data.job_listings_104', "crawl_date = '2024-04-08'")
+    # df = db_operation.fetch_data('source_data.job_listings_104', "crawl_date = '2024-04-01'")
     df = db_operation.fetch_data('source_data.job_listings_104', condition)
     logger.info(f"Fetched data for the date: {today_date} with {len(df)} rows (if not empty).")
 
@@ -37,6 +37,7 @@ def create_and_filter_data(db_operation, logger):
         df_filtered = raw_data_processor.filter_jobs_by_title_and_type(df)
         df_filtered = df_filtered.copy()
         df_filtered = raw_data_processor.classify_data_role(df_filtered)
+        df_filtered = raw_data_processor.integrate_skills_into_tools(df_filtered)
         df_filtered = raw_data_processor.process_location(df_filtered)
         df_filtered = raw_data_processor.convert_to_list(df_filtered, ['job_type', 'degree_required', 'major_required', 'skill', 'tools']) 
         
