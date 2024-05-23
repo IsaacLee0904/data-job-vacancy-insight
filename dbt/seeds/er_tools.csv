@@ -62,6 +62,13 @@ Programming & Scripting Environments,SSIS
 Operating Systems & Platforms,Unix
 Operating Systems & Platforms,Linux / Unix
 Operating Systems & Platforms,Linux
+Operating Systems & Platforms,Windows
+Operating Systems & Platforms,Mac OS
+Operating Systems & Platforms,Ubuntu
+Operating Systems & Platforms,RedHat
+Operating Systems & Platforms,CentOS
+Operating Systems & Platforms,Fedora
+Operating Systems & Platforms,SUSE
 Web Development,Vue
 Web Development,jQuery
 Compliance & Security,GDPR
@@ -115,6 +122,11 @@ Database Query Languages,NoSQL
 Database Query Languages,No-SQL
 Database Query Languages,MongoDB
 Database Query Languages,Mongo
+Database Query Languages,MySQL
+Database Query Languages,PostgreSQL
+Database Query Languages,SQLite
+Database Query Languages,Oracle
+Database Query Languages,DuckDB
 Specialized & Miscellaneous,VBA
 Specialized & Miscellaneous,MATLAB
 Specialized & Miscellaneous,SAS
@@ -125,3 +137,4 @@ Specialized & Miscellaneous,Perl
 Specialized & Miscellaneous,Solidity
 Specialized & Miscellaneous,Crystal
 Specialized & Miscellaneous,Julia
+Specialized & Miscellaneous,D3.js

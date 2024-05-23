@@ -185,7 +185,7 @@ class RawDataProcessor:
             'matplotlib': 'Matplotlib', 'databricsk': 'Databricks', 'seaborn': 'Seaborn',
 
             # Business Intelligence
-            'power_bi': 'Power BI', 'tableau': 'Tableau', 'google looker studio': 'Google Looker Studio', 
+            'power bi': 'Power BI', 'tableau': 'Tableau', 'google looker studio': 'Google Looker Studio', 
             'google data studio': 'Google Data Studio',
 
             # Monitoring & Visualization
@@ -204,7 +204,8 @@ class RawDataProcessor:
             'srss': 'SRSS', 'ssrs': 'SSRS', 'ssis': 'SSIS',
 
             # Operating Systems & Platforms
-            'unix': 'Unix', 'linux/unix': 'Linux / Unix', 'linux': 'Linux',
+            'unix': 'Unix', 'linux/unix': 'Linux / Unix', 'linux': 'Linux', 'windows': 'Windows', 'mac os': 'Mac OS',
+            'ubnutu': 'Ubuntu', 'centos': 'CentOS', 'redhat': 'RedHat', 'fedora': 'Fedora', 'suse': 'SUSE',
 
             # Web Development
             'vue': 'Vue', 'jquery': 'jQuery',
@@ -238,11 +239,12 @@ class RawDataProcessor:
 
             # Database Query Languages
             'sql': 'SQL', 't-sql': 'Transact-SQL', 'pl/sql': 'PL/SQL', 'nosql': 'NoSQL', 'no-sql': 'No-SQL', 
-            'mongodb': 'MongoDB', 'mongo': 'Mongo', 
+            'mongodb': 'MongoDB', 'mongo': 'Mongo', 'mysql': 'MySQL', 'postgresql': 'PostgreSQL', 'sqlite': 'SQLite',
+            'oracle': 'Oracle', 'duckdb': 'DuckDB', 
 
             # Specialized & Miscellaneous
             'vba': 'VBA', 'matlab': 'MATLAB', 'sas': 'SAS', 'visual_basic': 'Visual Basic', 'vb.net': 'VB.NET', 'mssql': 'MSSQL',
-            'perl': 'Perl', 'solidity': 'Solidity', 'crystal': 'Crystal', 'julia': 'Julia',
+            'perl': 'Perl', 'solidity': 'Solidity', 'crystal': 'Crystal', 'julia': 'Julia', 'd3.js': 'D3.js',
         }
         def find_skills(text):
             found_skills = []
