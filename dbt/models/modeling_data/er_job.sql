@@ -13,7 +13,7 @@ WITH unnset_data AS(
         , DDDD.degree_id
         , EEEE.major_id
         , AAAA.experience
-        , FFFF.tool
+        , FFFF.tool_name AS tool
         , AAAA.others
         , AAAA.url
         , AAAA.crawl_date
@@ -82,7 +82,7 @@ WITH unnset_data AS(
         SELECT FF.*
         FROM {{ source('modeling_data', 'er_tools') }} FF 
     )FFFF ON 1 = 1
-        AND AAAA.tool = FFFF.tool
+        AND AAAA.tool = FFFF.tool_name
     WHERE 1 = 1
         AND AAAA.crawl_date = '{{modules.datetime.date.today().strftime('%Y-%m-%d')}}'
         AND AAAA.data_role IN ('Data Analyst', 'Data Scientist', 'Data Engineer', 'Machine Learning Engineer', 'Business Analyst', 'Data Architect', 'BI Engineer')
