@@ -11,7 +11,7 @@ FROM (
         AA.company_id
         , COUNT(AA.company_id) AS opening_count
         , AA.crawl_date
-    FROM modeling_data.er_job AA
+    FROM {{ source('modeling_data', 'er_job') }} AA
     WHERE AA.crawl_date = '{{modules.datetime.date.today().strftime('%Y-%m-%d')}}'
     GROUP BY AA.company_id, AA.crawl_date
 ) AAA
