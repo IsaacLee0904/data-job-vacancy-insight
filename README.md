@@ -32,7 +32,7 @@ A system that recommends data-centric jobs and provides insights, featuring a pe
         - Home page(**2024-05-22 to 2024-05-23**)
         - Skill page
         - Education page 
-        - Locatioin page
+        - Geograph page
 
 ## Project Overview
 The "Data-Job-Vacancy-Insight" project is designed to streamline the job searching process for data professionals. By aggregating and analyzing job listings from multiple sources, it offers personalized job recommendations and valuable market insights directly through a user-friendly Telegram bot interface.
