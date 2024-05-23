@@ -1,0 +1,127 @@
+category,tool_name
+Cloud Platforms,AWS
+Cloud Platforms,GCP
+Cloud Platforms,Google Cloud Storage
+Cloud Platforms,Google Cloud Pub/Sub
+Big Data Technologies,Hadoop
+Big Data Technologies,Spark
+Big Data Technologies,Flume
+Big Data Technologies,Storm
+Big Data Technologies,Zookeeper
+Big Data Technologies,HBase
+Big Data Technologies,Kafka
+Big Data Technologies,RabbitMQ
+Database & Storage,Redshift
+Database & Storage,Snowflake
+Database & Storage,Qlik
+Database & Storage,Cognos
+Database & Storage,BigQuery
+Database & Storage,BigTable
+Database & Storage,BigQueryML
+Database & Storage,BigQuerySQL
+Database & Storage,Hive
+Database & Storage,Pig
+Database & Storage,SQL Server
+Data Science & Machine Learning,TensorFlow
+Data Science & Machine Learning,Keras
+Data Science & Machine Learning,Scikit-learn
+Data Science & Machine Learning,PyTorch
+Data Science & Machine Learning,Pandas
+Data Science & Machine Learning,Numpy
+Data Science & Machine Learning,Scipy
+Data Science & Machine Learning,Matplotlib
+Data Science & Machine Learning,Databricks
+Data Science & Machine Learning,Seaborn
+Business Intelligence,Power BI
+Business Intelligence,Tableau
+Business Intelligence,Google Looker Studio
+Business Intelligence,Google Data Studio
+Monitoring & Visualization,Grafana
+Monitoring & Visualization,Kibana
+DevOps & Version Control,Docker
+DevOps & Version Control,Kubernetes
+DevOps & Version Control,Jenkins
+DevOps & Version Control,Git
+DevOps & Version Control,GitHub
+DevOps & Version Control,GitLab
+DevOps & Version Control,Bitbucket
+General Software & Tools,Excel
+General Software & Tools,Word
+General Software & Tools,PowerPoint
+General Software & Tools,SharePoint
+General Software & Tools,Outlook
+General Software & Tools,Visio
+General Software & Tools,Spreadsheet
+Programming & Scripting Environments,Airflow
+Programming & Scripting Environments,Alteryx
+Programming & Scripting Environments,ASP.NET
+Programming & Scripting Environments,Atlassian
+Programming & Scripting Environments,SRSS
+Programming & Scripting Environments,SSRS
+Programming & Scripting Environments,SSIS
+Operating Systems & Platforms,Unix
+Operating Systems & Platforms,Linux / Unix
+Operating Systems & Platforms,Linux
+Web Development,Vue
+Web Development,jQuery
+Compliance & Security,GDPR
+Statistical Software,SPSS
+Statistical Software,MicroStrategy
+High-level General Purpose Languages,Python
+High-level General Purpose Languages,Java
+High-level General Purpose Languages,C#
+High-level General Purpose Languages,JavaScript
+High-level General Purpose Languages,PHP
+High-level General Purpose Languages,Ruby
+High-level General Purpose Languages,Go
+High-level General Purpose Languages,Kotlin
+High-level General Purpose Languages,Swift
+High-level General Purpose Languages,Dart
+High-level General Purpose Languages,R
+High-level General Purpose Languages,Golang
+Low-level & Systems Programming Languages,C
+Low-level & Systems Programming Languages,C++
+Low-level & Systems Programming Languages,C / C++
+Low-level & Systems Programming Languages,Rust
+Low-level & Systems Programming Languages,Assembly
+Functional & Other Languages,Scala
+Functional & Other Languages,F#
+Functional & Other Languages,Haskell
+Functional & Other Languages,Elixir
+Functional & Other Languages,Clojure
+Functional & Other Languages,Lisp
+Functional & Other Languages,OCaml
+Functional & Other Languages,Erlang
+Functional & Other Languages,Fortran
+Functional & Other Languages,APL
+Functional & Other Languages,COBOL
+Functional & Other Languages,Delphi
+Functional & Other Languages,Groovy
+Functional & Other Languages,Lua
+Functional & Other Languages,Pascal
+Web & Markup Languages,HTML
+Web & Markup Languages,CSS
+Web & Markup Languages,Sass
+Web & Markup Languages,TypeScript
+Web & Markup Languages,JavaScript / TypeScript
+Scripting & Automation,Bash
+Scripting & Automation,Shell
+Scripting & Automation,Shell Script
+Scripting & Automation,Powershell
+Database Query Languages,SQL
+Database Query Languages,Transact-SQL
+Database Query Languages,PL/SQL
+Database Query Languages,NoSQL
+Database Query Languages,No-SQL
+Database Query Languages,MongoDB
+Database Query Languages,Mongo
+Specialized & Miscellaneous,VBA
+Specialized & Miscellaneous,MATLAB
+Specialized & Miscellaneous,SAS
+Specialized & Miscellaneous,Visual Basic
+Specialized & Miscellaneous,VB.NET
+Specialized & Miscellaneous,MSSQL
+Specialized & Miscellaneous,Perl
+Specialized & Miscellaneous,Solidity
+Specialized & Miscellaneous,Crystal
+Specialized & Miscellaneous,Julia
