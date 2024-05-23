@@ -168,7 +168,7 @@ class RawDataProcessor:
         keywords_skills = {
             # Cloud Platforms
             'aws': 'AWS', 'gcp': 'GCP', 'google cloud storage': 'Google Cloud Storage', 
-            'google cloud pub/sub': 'Google Cloud Pub/Sub', 
+            'google cloud pub/sub': 'Google Cloud Pub/Sub', 'google analytics': 'Google Analytics',
 
             # Big Data Technologies
             'hadoop': 'Hadoop', 'spark': 'Spark', 'flume': 'Flume', 'storm': 'Storm', 
@@ -221,7 +221,7 @@ class RawDataProcessor:
             # High-level General Purpose Languages
             'python': 'Python', 'java': 'Java', 'c#': 'C#', 'javascript': 'JavaScript', 'php': 'PHP',
             'ruby': 'Ruby', 'go': 'Go', 'kotlin': 'Kotlin', 'swift': 'Swift', 'dart': 'Dart', 
-            'r': 'R', 'golang': 'Golang',
+            'r': 'R', 'golang': 'Golang', 'node.js': 'Node.js', 'react.js': 'React.js', 
 
             # Low-level & Systems Programming Languages
             'c': 'C', 'c++': 'C++', 'c/c++': 'C / C++', 'rust': 'Rust', 'assembly': 'Assembly',
@@ -240,7 +240,7 @@ class RawDataProcessor:
             # Database Query Languages
             'sql': 'SQL', 't-sql': 'Transact-SQL', 'pl/sql': 'PL/SQL', 'nosql': 'NoSQL', 'no-sql': 'No-SQL', 
             'mongodb': 'MongoDB', 'mongo': 'Mongo', 'mysql': 'MySQL', 'postgresql': 'PostgreSQL', 'sqlite': 'SQLite',
-            'oracle': 'Oracle', 'duckdb': 'DuckDB', 
+            'oracle': 'Oracle', 'duckdb': 'DuckDB', 'ms sql': 'MS SQL',
 
             # Specialized & Miscellaneous
             'vba': 'VBA', 'matlab': 'MATLAB', 'sas': 'SAS', 'visual_basic': 'Visual Basic', 'vb.net': 'VB.NET', 'mssql': 'MSSQL',

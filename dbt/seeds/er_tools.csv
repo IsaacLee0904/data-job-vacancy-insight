@@ -3,6 +3,7 @@ Cloud Platforms,AWS
 Cloud Platforms,GCP
 Cloud Platforms,Google Cloud Storage
 Cloud Platforms,Google Cloud Pub/Sub
+Cloud Platforms,Google Analytics
 Big Data Technologies,Hadoop
 Big Data Technologies,Spark
 Big Data Technologies,Flume
@@ -86,6 +87,8 @@ High-level General Purpose Languages,Swift
 High-level General Purpose Languages,Dart
 High-level General Purpose Languages,R
 High-level General Purpose Languages,Golang
+High-level General Purpose Languages,Node.js
+High-level General Purpose Languages,React.js
 Low-level & Systems Programming Languages,C
 Low-level & Systems Programming Languages,C++
 Low-level & Systems Programming Languages,C / C++
@@ -123,6 +126,7 @@ Database Query Languages,No-SQL
 Database Query Languages,MongoDB
 Database Query Languages,Mongo
 Database Query Languages,MySQL
+Database Query Languages,MS SQL
 Database Query Languages,PostgreSQL
 Database Query Languages,SQLite
 Database Query Languages,Oracle
