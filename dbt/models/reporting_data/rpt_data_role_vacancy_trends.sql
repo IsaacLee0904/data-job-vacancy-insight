@@ -1,5 +1,5 @@
 -- models/reporting_data/rpt_data_role_vacancy_trends.sql
-{{ config(materialized='incremental', schema='reporting_data') }}
+{{ config(materialized='incremental', schema='reporting_data', unique_key='data_role || crawl_date') }}
 
 SELECT
     data_role

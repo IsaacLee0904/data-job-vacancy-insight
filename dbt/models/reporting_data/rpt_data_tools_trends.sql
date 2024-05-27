@@ -1,5 +1,5 @@
 -- models/reporting_data/rpt_data_tools_trends.sql
-{{ config(materialized='incremental', schema='reporting_data') }}
+{{ config(materialized='incremental', schema='reporting_data', unique_key='tool_name || crawl_date') }}
 
 SELECT 
     RANK() OVER (ORDER BY AAAA.tool_count DESC) AS rank

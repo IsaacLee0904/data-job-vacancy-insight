@@ -1,5 +1,5 @@
 -- models/reporting_data/rpt_weekly_company_job_vacancies.sql
-{{ config(materialized='incremental', schema='reporting_data') }}
+{{ config(materialized='incremental', schema='reporting_data', unique_key='company_name || crawl_date') }}
 
 SELECT 
     RANK() OVER (ORDER BY AAA.opening_count DESC) AS rank

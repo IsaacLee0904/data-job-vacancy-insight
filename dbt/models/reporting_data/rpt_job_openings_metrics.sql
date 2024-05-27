@@ -1,5 +1,5 @@
 -- models/reporting_data/rpt_job_openings_metrics.sql
-{{ config(materialized='incremental', schema='reporting_data') }}
+{{ config(materialized='incremental', schema='reporting_data', unique_key='crawl_date') }}
 
 WITH previous_week AS (
     SELECT url
