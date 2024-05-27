@@ -45,34 +45,34 @@ The "Data-Job-Vacancy-Insight" project is designed to streamline the job searchi
 
 ## Repository structure
 ```
-├── Config
-│   └── database_config.toml
 ├── Docker-compose.yml
 ├── Dockerfile
 ├── README.md
+├── airflow_dags
+│   └── data_pipeline_dag.py
 ├── assets
-│   ├── dbt_entity_relationship_initialize
-│   │   ├── initialize_er_company.sql
-│   │   ├── initialize_er_job_type.sql
-│   │   ├── initialize_er_major.sql
-│   │   └── initialize_er_tools.sql
-│   └── entity_relationship_model
-│       ├── job_vacancy_insight_datawarehouse_entity_relationship.png
-│       └── job_vacancy_insight_datawarehouse_entity_relationship.sql
+│   ├── dbt_entity_relationship_initialize 
+│   ├── entity_relationship_model
+│   └── front_end
+│       ├── assets
+│       │   ├── images
+│       │   └── vectors
+│       ├── css
+│       └── html
+├── config
+│   └── database_config.toml
 ├── data
 │   ├── backup
-│   │   ├── jobs_20240401_065532.json
-│   │   ├── jobs_20240408_135846.json
-│   │   └── jobs_20240415_012649.json
 │   ├── database
 │   └── raw_data
 ├── dbt
-│   ├── dbt_packages
 │   ├── dbt_project.yml
 │   ├── logs
-│   │   └── dbt.log
 │   ├── macros
-│   │   └── er_function.sql
+│   │   ├── er_function.sql
+│   │   ├── get_custom_schema.sql
+│   │   ├── get_last_monday.sql
+│   │   └── regex_match.sql
 │   ├── models
 │   │   ├── modeling_data
 │   │   │   ├── er_company.sql
@@ -80,26 +80,34 @@ The "Data-Job-Vacancy-Insight" project is designed to streamline the job searchi
 │   │   │   ├── er_degree.sql
 │   │   │   ├── er_job.sql
 │   │   │   ├── er_job_type.sql
-│   │   │   ├── er_major.sql
-│   │   │   └── er_tools.sql
+│   │   │   └── er_major.sql
+│   │   ├── reporting_data
+│   │   │   ├── rpt_data_role_vacancy_trends.sql
+│   │   │   ├── rpt_data_tools_trends.sql
+│   │   │   ├── rpt_job_fill_time_statistics.sql
+│   │   │   ├── rpt_job_openings_geograph.sql
+│   │   │   ├── rpt_job_openings_metrics.sql
+│   │   │   └── rpt_weekly_company_job_vacancies.sql
+│   │   ├── staging_data
 │   │   ├── source_data
 │   │   ├── sources.yml
-│   │   └── staging_data
-│   ├── packages.yml
+│   │   └── schema.yml
 │   ├── profiles.yml
 │   ├── seeds
 │   │   ├── er_county.csv
-│   │   └── er_district.csv
+│   │   ├── er_district.csv
+│   │   └── er_tools.csv
 │   ├── snapshots
-│   └── target
+│   └── tests
+│       ├── er_job_crawl_date.sql
+│       ├── seeds_generic_test.yml
+│       ├── test_data_role_count_greater_than_zero.sql
+│       ├── test_data_tools_count_greater_than_zero.sql
+│       ├── test_openings_by_company_greater_than_zero.sql
+│       ├── test_openings_by_geograph_greater_than_zero.sql
+│       └── test_openings_metrics.sql
 ├── docs
-├── logs
-│   ├── 104_crawler.log
-│   ├── dbt.log
-│   ├── graylog_checker.log
-│   ├── load_raw_data.log
-│   ├── test.log
-│   └── transform_raw_data.log
+│   └── dbt.md
 ├── main.py
 ├── model
 ├── references
@@ -112,6 +120,8 @@ The "Data-Job-Vacancy-Insight" project is designed to streamline the job searchi
 │   │   └── package_checker.py
 │   ├── crawler_src
 │   │   └── 104_crawler.py
+│   ├── dashboard_src
+│   │   └── dashboard_app.py
 │   └── data_processing_src
 │       ├── load_raw_data.py
 │       └── transform_raw_data.py
