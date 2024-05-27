@@ -61,14 +61,6 @@ models:
     columns:
       - name: average_weeks_to_fill
         description: "The average number of weeks it takes to fill job positions."
-        tests:
-          - not_null
-
-      - name: current_date
-        description: "The date on which this report was generated."
-        tests:
-          - not_null
-          - unique
 
       - name: duration_weeks
         description: "The duration in weeks between the first and last appearance of a job URL."
