@@ -1,5 +1,5 @@
 -- models/reporting_data/rpt_job_fill_time_statistics.sql
-{{ config(materialized='incremental', schema='reporting_data', unique_key='current_date') }}
+{{ config(materialized='incremental', schema='reporting_data') }}
 
 WITH job_url_appearance AS (
     SELECT
