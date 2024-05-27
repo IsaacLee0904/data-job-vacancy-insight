@@ -11,3 +11,5 @@ piperider==0.41.0
 python-telegram-bot==13.7
 graypy==2.1.0
 toml==0.10.2
+dash==2.0.0
+plotly==5.1.0
