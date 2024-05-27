@@ -101,3 +101,9 @@ sources:
             tests:
               - unique
               - not_null
+      
+      - name: er_county
+        description: "List of county of Taiwan."
+
+      - name: er_district
+        description: "List of district of Taiwan."
