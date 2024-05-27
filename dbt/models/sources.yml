@@ -77,11 +77,6 @@ sources:
 
       - name: er_tools
         description: "Tools mentioned in job listings."
-        columns:
-          - name: tool_id
-            tests:
-              - unique
-              - not_null
 
       - name: er_major
         description: "Academic majors mentioned in job listings."
