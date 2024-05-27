@@ -1,0 +1,140 @@
+version: 2
+
+models:
+  - name: rpt_data_role_vacancy_trends
+    description: "A report showing the count of job vacancies by data role and date."
+    columns:
+      - name: data_role
+        description: "The specific role within the data job sector."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Data Scientist', 'Data Engineer', 'Machine Learning Engineer', 'Data Analyst', 'Business Analyst', 'BI Engineer', 'Data Architect']  # 調整為實際的角色列表
+
+      - name: crawl_date
+        description: "The date on which the data was crawled."
+        tests:
+          - not_null
+
+      - name: count
+        description: "The count of job vacancies for the specific data role on the given crawl date."
+        tests:
+          - not_null
+
+    tests:
+      - unique:
+          column_name: data_role || crawl_date
+
+  - name: rpt_data_tools_trends
+    description: "Tracks the trend and rank of various data-related tools by their usage count on job postings collected on specific crawl dates."
+    columns:
+      - name: rank
+        description: "The rank of the tool based on its count."
+        tests:
+          - not_null
+
+      - name: category
+        description: "The category of the tool. 'Other' if the specific category is not available."
+        tests:
+          - not_null
+
+      - name: tool_name
+        description: "The name of the tool."
+        tests:
+          - not_null
+
+      - name: tool_count
+        description: "The count of how often the tool is mentioned in job postings."
+        tests:
+          - not_null
+      - name: crawl_date
+        description: "The date on which the data was crawled."
+        tests:
+          - not_null
+
+    tests:
+      - unique:
+          column_name: tool_name || crawl_date
+
+  - name: rpt_job_fill_time_statistics
+    description: "Calculates the average weeks required to fill job positions based on their first and last appearance dates."
+    columns:
+      - name: average_weeks_to_fill
+        description: "The average number of weeks it takes to fill job positions."
+        tests:
+          - not_null
+
+      - name: current_date
+        description: "The date on which this report was generated."
+        tests:
+          - not_null
+          - unique
+
+      - name: duration_weeks
+        description: "The duration in weeks between the first and last appearance of a job URL."
+
+  - name: rpt_job_openings_geograph
+    description: "Calculates the total job openings by county and district based on the highest job count within each company's locations."
+    columns:
+      - name: county_name_eng
+        description: "The English name of the county."
+        tests:
+          - not_null
+
+      - name: district_name_eng
+        description: "The English name of the district."
+
+      - name: openings_count
+        description: "The total number of job openings in the respective county and district."
+
+      - name: crawl_date
+        description: "The date on which the data was extracted."
+        tests:
+          - not_null
+
+  - name: rpt_job_openings_metrics
+    description: "Reports metrics related to job openings, including total openings, closed openings, new openings, and the fill rate for a specific date."
+    columns:
+      - name: total_openings
+        description: "The total number of job openings."
+        tests:
+          - not_null
+
+      - name: closed_openings_count
+        description: "The number of job openings that were closed."
+        tests:
+          - not_null
+
+      - name: new_openings_count
+        description: "The number of new job openings."
+        tests:
+          - not_null
+
+      - name: fill_rate
+        description: "The rate at which job openings are being filled."
+        tests:
+          - not_null
+
+      - name: crawl_date
+        description: "The date on which the metrics were calculated."
+        tests:
+          - not_null
+          - unique
+  
+  - name: rpt_weekly_company_job_vacancies
+    description: "Calculates the number of job vacancies per company on a given date and ranks companies by the number of openings."
+    columns:
+      - name: company_name
+        description: "The name of the company."
+        tests:
+          - not_null
+
+      - name: opening_count
+        description: "The count of job openings for the company."
+        tests:
+          - not_null
+
+      - name: crawl_date
+        description: "The date on which the job openings were counted."
+        tests:
+          - not_null
