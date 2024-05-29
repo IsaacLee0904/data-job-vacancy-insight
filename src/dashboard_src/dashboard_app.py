@@ -105,24 +105,6 @@ def create_dash_application(flask_app):
         else:
             return home_page_layout()
 
-    def stack_page_layout():
-        return html.Div([
-            html.H2('Stack Page'),
-            html.Iframe(src='/assets/front_end/html/stack.html', style={'width': '1440px', 'height': '960px'})
-        ])
-
-    def education_page_layout():
-        return html.Div([
-            html.H2('Education Page'),
-            html.Iframe(src='/assets/front_end/html/education.html', style={'width': '1440px', 'height': '960px'})
-        ])
-
-    def geography_page_layout():
-        return html.Div([
-            html.H2('Geography Page'),
-            html.Iframe(src='/assets/front_end/html/geography.html', style={'width': '1440px', 'height': '960px'})
-        ])
-
     def project_source_layout():
         return html.Div([
             html.H2('Project Source Page'),
