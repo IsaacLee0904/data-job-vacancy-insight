@@ -46,6 +46,9 @@ def load_home_page_data():
         # load data for data tools top 3 
         data_tools = fetch_data_tools_for_dashboard(fetcher, newest_crawl_date)
         print(data_tools.head())
+        # load data for openings company top 5
+        openings_company = fetch_openings_company_for_dashboard(fetcher, newest_crawl_date)
+        print(openings_company.head())
         
     else:
         logger.info("No newest crawl date available.")
@@ -131,6 +134,29 @@ def fetch_data_tools_for_dashboard(fetcher, crawl_date):
             return consistent_data if not consistent_data.empty else pd.DataFrame()
     else:
         fetcher.logger.info(f"No data tools information available for the crawl date: {crawl_date}.")
+        return pd.DataFrame()
+
+def fetch_openings_company_for_dashboard(fetcher, crawl_date):
+    """
+    Fetch job vacancy data from the database for a given crawl date and verify if the data matches the crawl date.
+    """
+    data = fetcher.fetch_openings_company(crawl_date)
+    if not data.empty:
+        # Ensure date formats are consistent for comparison
+        data['crawl_date'] = pd.to_datetime(data['crawl_date']).dt.date
+        provided_date = pd.to_datetime(crawl_date).date()
+
+        # Verify that all records have the correct crawl date
+        if all(data['crawl_date'] == provided_date):
+            fetcher.logger.info("Job vacancy information successfully validated for the provided crawl date.")
+            return data
+        else:
+            fetcher.logger.error("Data inconsistency detected: 'crawl_date' does not match the provided date in job vacancy data.")
+            # Optionally, return only consistent data or handle inconsistency here
+            consistent_data = data[data['crawl_date'] == provided_date]
+            return consistent_data if not consistent_data.empty else pd.DataFrame()
+    else:
+        fetcher.logger.info(f"No job vacancy data available for the crawl date: {crawl_date}.")
         return pd.DataFrame()
 
 # Run the server

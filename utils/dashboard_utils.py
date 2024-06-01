@@ -238,3 +238,31 @@ class FetchReportData:
         except Exception as e:
             self.logger.error(f"Error fetching data tools information: {str(e)}")
             return pd.DataFrame()  # Return an empty DataFrame in case of an error
+
+    def fetch_openings_company(self, crawl_date):
+        """
+        Fetch job vacancy data for the top five companies from the 'reporting_data' schema for a specific crawl date.
+        """
+        try:
+            # Prepare the SQL query to fetch the required data
+            query = f"""
+                SELECT rank, company_name, opening_count, crawl_date
+                FROM reporting_data.rpt_weekly_company_job_vacancies
+                WHERE crawl_date = '{crawl_date}'
+                ORDER BY opening_count DESC
+                LIMIT 5;
+            """
+            # Execute the query and fetch the result
+            data = self.execute_query(query)  # Use self.execute_query to call the local method
+
+            # Convert the data into a DataFrame if not empty
+            if data:
+                df = pd.DataFrame(data, columns=['rank', 'company_name', 'opening_count', 'crawl_date'])
+                self.logger.info("Job vacancy data for the top five companies converted to DataFrame successfully.")
+                return df
+            else:
+                self.logger.info("No job vacancy data found for the specified crawl date.")
+                return pd.DataFrame()  # Return an empty DataFrame if no data
+        except Exception as e:
+            self.logger.error(f"Error fetching job vacancy data: {str(e)}")
+        return pd.DataFrame()  # Return an empty DataFrame in case of an error
