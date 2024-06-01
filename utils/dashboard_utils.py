@@ -134,38 +134,35 @@ class FetchReportData:
             self.logger.error(f"Error fetching openings statistics metrics for crawl date {crawl_date}: {str(e)}")
             return pd.DataFrame()  # Return an empty DataFrame in case of an error
 
-    def fetch_openings_history(self, crawl_date):
+    def fetch_openings_history(self):
         """
-        Fetch data for history total openings statistics metrics within the 'reporting_data' schema using a given crawl date.
+        Fetch data for history total openings statistics metrics within the 'reporting_data' schema.
         """
         try:
             # Prepare the SQL query to fetch the required data
-            query = f"""
+            query = """
                 SELECT 
-                    AAA.total_openings, 
-                    AAA.closed_openings_count, 
-                    AAA.new_openings_count, 
-                    AAA.fill_rate, 
-                    BBB.average_weeks_to_fill
-                FROM reporting_data.rpt_job_openings_metrics AAA
-                LEFT JOIN (
-                    SELECT BB.*
-                    FROM reporting_data.rpt_job_fill_time_statistics BB
-                    WHERE BB.current_date = '{crawl_date}'  
-                ) BBB ON AAA.crawl_date = BBB.current_date
-                WHERE AAA.crawl_date = '{crawl_date}'
+                    AAA.total_openings
+                    , AAA.crawl_date
+                FROM(
+                    SELECT AA.total_openings, AA.crawl_date 
+                    FROM reporting_data.rpt_job_openings_metrics AA 
+                    ORDER BY AA.crawl_date 
+                    LIMIT 12
+                )AAA
+                ORDER BY AAA.crawl_date ASC 
             """
             # Execute the query and fetch the result
             data = self.execute_query(query)  # Use self.execute_query to call the local method
-            
+
             # Convert the data into a DataFrame if not empty
             if data:
-                df = pd.DataFrame(data, columns=['total_openings', 'closed_openings_count', 'new_openings_count', 'fill_rate', 'average_weeks_to_fill'])
-                self.logger.info("Data converted to DataFrame successfully.")
+                df = pd.DataFrame(data, columns=['total_openings', 'crawl_date'])
+                self.logger.info("Historical total openings data converted to DataFrame successfully.")
                 return df
             else:
-                self.logger.info("No data found for the given crawl date.")
+                self.logger.info("No historical total openingsdata found for openings statistics.")
                 return pd.DataFrame()  # Return an empty DataFrame if no data
         except Exception as e:
-            self.logger.error(f"Error fetching openings statistics metrics for crawl date {crawl_date}: {str(e)}")
+            self.logger.error("Error fetching historical openings statistics metrics: {error}".format(error=str(e)))
             return pd.DataFrame()  # Return an empty DataFrame in case of an error

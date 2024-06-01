@@ -35,14 +35,25 @@ def load_home_page_data():
     if newest_crawl_date:
         logger.info(f"Fetching data for the date: {newest_crawl_date}")
         openings_statistics = fetch_openings_statistics(fetcher, newest_crawl_date)
-        # Add additional fetch functions as needed
-        # Example: another_metrics = fetch_another_metrics(fetcher, newest_crawl_date)
+        historical_total_openings = fetch_historical_total_openings(fetcher)
         
-        # Example of handling fetched data
+        # Check if data is available
         if not openings_statistics.empty:
-            print(openings_statistics.head())
-        else:
-            logger.info("No data available for openings statistics.")
+            # Verify that the 'crawl_date' column matches the 'newest_crawl_date'
+            if all(openings_statistics['crawl_date'] == newest_crawl_date):
+                print("All records match the newest crawl date.")
+                # print(openings_statistics.head()
+                print(historical_total_openings.head())
+            else:
+                logger.error("Data inconsistency detected: 'crawl_date' does not match 'newest_crawl_date'.")
+                # Optionally, handle the inconsistency by filtering or other means
+                consistent_data = openings_statistics[openings_statistics['crawl_date'] == newest_crawl_date]
+                if not consistent_data.empty:
+                    print(consistent_data.head())
+                else:
+                    logger.info("No consistent data available after filtering.")
+    else:
+        logger.info("No data available for openings statistics.")
 
     # Close the database connection safely
     if fetcher.connection:
@@ -54,6 +65,12 @@ def fetch_openings_statistics(fetcher, crawl_date):
     Fetch openings statistics metrics from the database.
     """
     return fetcher.fetch_openings_statistics_metrics(crawl_date)
+
+def fetch_historical_total_openings(fetcher):
+    """
+    Fetch openings statistics metrics from the database.
+    """
+    return fetcher.fetch_openings_history()
 
 # Additional fetch functions can be defined here as needed
 # def fetch_another_metrics(fetcher, crawl_date):
