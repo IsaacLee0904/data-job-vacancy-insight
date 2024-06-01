@@ -265,4 +265,34 @@ class FetchReportData:
                 return pd.DataFrame()  # Return an empty DataFrame if no data
         except Exception as e:
             self.logger.error(f"Error fetching job vacancy data: {str(e)}")
-        return pd.DataFrame()  # Return an empty DataFrame in case of an error
+            return pd.DataFrame()  # Return an empty DataFrame in case of an error
+
+    def fetch_taiepi_area_openings(self, crawl_date):
+        """
+        Fetch job vacancy data for specified areas from the 'reporting_data' schema for a specific crawl date.
+        """
+        try:
+            # Prepare the SQL query to fetch the required data
+            query = f"""
+                SELECT 
+                    county_name_eng, 
+                    district_name_eng, 
+                    openings_count, 
+                    crawl_date 
+                FROM reporting_data.rpt_job_openings_geograph  
+                WHERE crawl_date = '{crawl_date}' AND county_name_eng IN ('Taipei City', 'New Taipei City');
+            """
+            # Execute the query and fetch the result
+            data = self.execute_query(query)  # Use self.execute_query to call the local method
+
+            # Convert the data into a DataFrame if not empty
+            if data:
+                df = pd.DataFrame(data, columns=['county_name_eng', 'district_name_eng', 'openings_count', 'crawl_date'])
+                self.logger.info("Job vacancy data for specified areas converted to DataFrame successfully.")
+                return df
+            else:
+                self.logger.info("No job vacancy data found for the specified crawl date.")
+                return pd.DataFrame()  # Return an empty DataFrame if no data
+        except Exception as e:
+            self.logger.error(f"Error fetching job vacancy data: {str(e)}")
+            return pd.DataFrame()  # Return an empty DataFrame in case of an error
