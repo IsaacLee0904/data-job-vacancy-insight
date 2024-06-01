@@ -34,26 +34,13 @@ def load_home_page_data():
     # Fetch the data for different metrics from the home page
     if newest_crawl_date:
         logger.info(f"Fetching data for the date: {newest_crawl_date}")
+        # load data for openings statistics metrics
         openings_statistics = fetch_openings_statistics(fetcher, newest_crawl_date)
+        # load data for historical total openings line chart
         historical_total_openings = fetch_historical_total_openings(fetcher)
         
-        # Check if data is available
-        if not openings_statistics.empty:
-            # Verify that the 'crawl_date' column matches the 'newest_crawl_date'
-            if all(openings_statistics['crawl_date'] == newest_crawl_date):
-                print("All records match the newest crawl date.")
-                # print(openings_statistics.head()
-                print(historical_total_openings.head())
-            else:
-                logger.error("Data inconsistency detected: 'crawl_date' does not match 'newest_crawl_date'.")
-                # Optionally, handle the inconsistency by filtering or other means
-                consistent_data = openings_statistics[openings_statistics['crawl_date'] == newest_crawl_date]
-                if not consistent_data.empty:
-                    print(consistent_data.head())
-                else:
-                    logger.info("No consistent data available after filtering.")
     else:
-        logger.info("No data available for openings statistics.")
+        logger.info("No newest crawl date available.")
 
     # Close the database connection safely
     if fetcher.connection:
@@ -62,15 +49,37 @@ def load_home_page_data():
 
 def fetch_openings_statistics(fetcher, crawl_date):
     """
-    Fetch openings statistics metrics from the database.
+    Fetch openings statistics metrics from the database for a given crawl date and verify if the data matches the crawl date.
     """
-    return fetcher.fetch_openings_statistics_metrics(crawl_date)
+    data = fetcher.fetch_openings_statistics_metrics(crawl_date)
+    if not data.empty:
+        # Verify that all records have the correct crawl date
+        if all(data['crawl_date'] == crawl_date):
+            return data
+        else:
+            fetcher.logger.error("Data inconsistency detected: 'crawl_date' does not match the provided date.")
+            # Return only consistent data or handle inconsistency here
+            return pd.DataFrame()
+    else:
+        fetcher.logger.info("No data available for openings statistics on the provided crawl date.")
+        return pd.DataFrame()
 
 def fetch_historical_total_openings(fetcher):
     """
-    Fetch openings statistics metrics from the database.
+    Fetch historical total openings data and ensure it includes the newest crawl date.
     """
-    return fetcher.fetch_openings_history()
+    data = fetcher.fetch_openings_history()
+    if not data.empty:
+        newest_crawl_date = fetcher.get_newest_crawl_date()
+        max_crawl_date = data['crawl_date'].max()
+        if pd.to_datetime(max_crawl_date) == pd.to_datetime(newest_crawl_date):
+            return data
+        else:
+            fetcher.logger.error(f"Data inconsistency detected: The newest data in historical openings (date: {max_crawl_date}) does not match the newest crawl date ({newest_crawl_date}).")
+            return pd.DataFrame()  # Return empty DataFrame in case of inconsistency
+    else:
+        fetcher.logger.info("No historical data available for total openings.")
+        return pd.DataFrame()
 
 # Additional fetch functions can be defined here as needed
 # def fetch_another_metrics(fetcher, crawl_date):

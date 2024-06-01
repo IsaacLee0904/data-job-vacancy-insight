@@ -67,7 +67,6 @@ class FetchReportData:
             # Check if any result is returned
             if crawl_date_result and crawl_date_result[0][0] is not None:
                 newest_crawl_date = crawl_date_result[0][0]  # Assume it's already a string
-                self.logger.info(f"Fetched the newest crawl date successfully: {newest_crawl_date}")
                 return newest_crawl_date
             else:
                 self.logger.info("No crawl dates found.")
@@ -125,7 +124,7 @@ class FetchReportData:
             # Convert the data into a DataFrame if not empty
             if data:
                 df = pd.DataFrame(data, columns=['total_openings', 'total_openings_change_pct', 'closed_openings_count', 'closed_openings_change_pct', 'new_openings_count', 'new_openings_change_pct', 'fill_rate', 'fill_rate_change_pct', 'average_weeks_to_fill', 'average_weeks_to_fill_change_pct', 'crawl_date'])
-                self.logger.info("Data converted to DataFrame successfully.")
+                self.logger.info("Openings statistics metrics data converted to DataFrame successfully.")
                 return df
             else:
                 self.logger.info("No data found for the given crawl date.")
