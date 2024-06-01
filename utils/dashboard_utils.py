@@ -200,3 +200,41 @@ class FetchReportData:
         except Exception as e:
             self.logger.error(f"Error fetching data role information: {str(e)}")
             return pd.DataFrame()  # Return an empty DataFrame in case of an error
+
+    def fetch_data_tool(self, crawl_date):
+        """
+        Fetch data for top three data tools within the 'reporting_data' schema for a specific crawl date.
+        """
+        try:
+            # Prepare the SQL query to fetch the required data
+            query = f"""
+                SELECT 
+                    AAA."rank",
+                    AAA.category,
+                    AAA.tool_name,
+                    COALESCE(AAA.tool_count::float / NULLIF(BBB.total_openings, 0) * 100, 0) AS percentage_of_tool,
+                    AAA.crawl_date
+                FROM reporting_data.rpt_data_tools_trends AAA
+                LEFT JOIN (
+                    SELECT BB.total_openings, BB.crawl_date
+                    FROM reporting_data.rpt_job_openings_metrics BB
+                    WHERE BB.crawl_date = '{crawl_date}'
+                ) BBB ON CAST(AAA.crawl_date AS date) = CAST(BBB.crawl_date AS date)
+                WHERE AAA.crawl_date = '{crawl_date}'
+                ORDER BY AAA."rank"
+                LIMIT 3;
+            """
+            # Execute the query and fetch the result
+            data = self.execute_query(query)  # Use self.execute_query to call the local method
+
+            # Convert the data into a DataFrame if not empty
+            if data:
+                df = pd.DataFrame(data, columns=['rank', 'category', 'tool_name', 'percentage_of_tool', 'crawl_date'])
+                self.logger.info("Top three data tools information converted to DataFrame successfully.")
+                return df
+            else:
+                self.logger.info("No data tools information found for the specified crawl date.")
+                return pd.DataFrame()  # Return an empty DataFrame if no data
+        except Exception as e:
+            self.logger.error(f"Error fetching data tools information: {str(e)}")
+            return pd.DataFrame()  # Return an empty DataFrame in case of an error

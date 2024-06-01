@@ -43,6 +43,9 @@ def load_home_page_data():
         # load data for data role pie plot
         data_role = fetch_data_role_for_dashboard(fetcher, newest_crawl_date)
         print(data_role.head())
+        # load data for data tools top 3 
+        data_tools = fetch_data_tools_for_dashboard(fetcher, newest_crawl_date)
+        print(data_tools.head())
         
     else:
         logger.info("No newest crawl date available.")
@@ -105,6 +108,29 @@ def fetch_data_role_for_dashboard(fetcher, crawl_date):
             return pd.DataFrame()
     else:
         fetcher.logger.info("No data available for data roles on the provided crawl date.")
+        return pd.DataFrame()
+
+def fetch_data_tools_for_dashboard(fetcher, crawl_date):
+    """
+    Fetch data tools data from the database for a given crawl date and verify if the data matches the crawl date.
+    """
+    data = fetcher.fetch_data_tool(crawl_date)
+    if not data.empty:
+        # Ensure date formats are consistent for comparison
+        data['crawl_date'] = pd.to_datetime(data['crawl_date']).dt.date
+        provided_date = pd.to_datetime(crawl_date).date()
+
+        # Verify that all records have the correct crawl date
+        if all(data['crawl_date'] == provided_date):
+            fetcher.logger.info("Data tools information successfully validated for the provided crawl date.")
+            return data
+        else:
+            fetcher.logger.error("Data inconsistency detected: 'crawl_date' does not match the provided date in data tools information.")
+            # Optionally, return only consistent data or handle inconsistency here
+            consistent_data = data[data['crawl_date'] == provided_date]
+            return consistent_data if not consistent_data.empty else pd.DataFrame()
+    else:
+        fetcher.logger.info(f"No data tools information available for the crawl date: {crawl_date}.")
         return pd.DataFrame()
 
 # Run the server
