@@ -35,9 +35,14 @@ def load_home_page_data():
     if newest_crawl_date:
         logger.info(f"Fetching data for the date: {newest_crawl_date}")
         # load data for openings statistics metrics
-        openings_statistics = fetch_openings_statistics(fetcher, newest_crawl_date)
+        openings_statistics = fetch_openings_statistics_for_dashboard(fetcher, newest_crawl_date)
+        print(openings_statistics.head())
         # load data for historical total openings line chart
-        historical_total_openings = fetch_historical_total_openings(fetcher)
+        historical_total_openings = fetch_historical_total_openings_for_dashboard(fetcher)
+        print(historical_total_openings.head())
+        # load data for data role pie plot
+        data_role = fetch_data_role_for_dashboard(fetcher, newest_crawl_date)
+        print(data_role.head())
         
     else:
         logger.info("No newest crawl date available.")
@@ -47,7 +52,7 @@ def load_home_page_data():
         fetcher.connection.close()
         logger.info("Database connection closed.")
 
-def fetch_openings_statistics(fetcher, crawl_date):
+def fetch_openings_statistics_for_dashboard(fetcher, crawl_date):
     """
     Fetch openings statistics metrics from the database for a given crawl date and verify if the data matches the crawl date.
     """
@@ -64,7 +69,7 @@ def fetch_openings_statistics(fetcher, crawl_date):
         fetcher.logger.info("No data available for openings statistics on the provided crawl date.")
         return pd.DataFrame()
 
-def fetch_historical_total_openings(fetcher):
+def fetch_historical_total_openings_for_dashboard(fetcher):
     """
     Fetch historical total openings data and ensure it includes the newest crawl date.
     """
@@ -81,9 +86,26 @@ def fetch_historical_total_openings(fetcher):
         fetcher.logger.info("No historical data available for total openings.")
         return pd.DataFrame()
 
-# Additional fetch functions can be defined here as needed
-# def fetch_another_metrics(fetcher, crawl_date):
-#     ...
+def fetch_data_role_for_dashboard(fetcher, crawl_date):
+    """
+    Fetch data role data from the database for a given crawl date and verify if the data matches the crawl date.
+    """
+    data = fetcher.fetch_data_role(crawl_date)
+    if not data.empty:
+        # Ensure date formats are consistent for comparison
+        data['crawl_date'] = pd.to_datetime(data['crawl_date']).dt.date
+        provided_date = pd.to_datetime(crawl_date).date()
+
+        # Verify that all records have the correct crawl date
+        if all(data['crawl_date'] == provided_date):
+            return data
+        else:
+            fetcher.logger.error("Data inconsistency detected: 'crawl_date' does not match the provided date.")
+            # Return only consistent data or handle inconsistency here
+            return pd.DataFrame()
+    else:
+        fetcher.logger.info("No data available for data roles on the provided crawl date.")
+        return pd.DataFrame()
 
 # Run the server
 if __name__ == '__main__':

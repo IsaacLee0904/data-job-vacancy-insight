@@ -59,7 +59,7 @@ class FetchReportData:
         """
         try:
             # Prepare the SQL query to fetch the maximum crawl date
-            query = "SELECT MAX(crawl_date) AS newest_crawl_date FROM reporting_data.rpt_job_openings_metrics"
+            query = "SELECT MAX(crawl_date) AS newest_crawl_date FROM reporting_data.rpt_job_openings_metrics;"
             
             # Execute the query and fetch the result
             crawl_date_result = self.execute_query(query)  # Use self.execute_query to call the local method
@@ -116,7 +116,7 @@ class FetchReportData:
                     WHERE AAA.crawl_date BETWEEN TO_CHAR(CAST('{crawl_date}' AS date) - INTERVAL '7 days', 'YYYY-MM-DD') AND '{crawl_date}'
                     ORDER BY AAA.crawl_date DESC
                 )AAAA
-                WHERE AAAA.crawl_date = '{crawl_date}'
+                WHERE AAAA.crawl_date = '{crawl_date}';
             """
             # Execute the query and fetch the result
             data = self.execute_query(query)  # Use self.execute_query to call the local method
@@ -135,7 +135,7 @@ class FetchReportData:
 
     def fetch_openings_history(self):
         """
-        Fetch data for history total openings statistics metrics within the 'reporting_data' schema.
+        Fetch data for history total openings within the 'reporting_data' schema.
         """
         try:
             # Prepare the SQL query to fetch the required data
@@ -149,7 +149,7 @@ class FetchReportData:
                     ORDER BY AA.crawl_date 
                     LIMIT 12
                 )AAA
-                ORDER BY AAA.crawl_date ASC 
+                ORDER BY AAA.crawl_date ASC;
             """
             # Execute the query and fetch the result
             data = self.execute_query(query)  # Use self.execute_query to call the local method
@@ -164,4 +164,39 @@ class FetchReportData:
                 return pd.DataFrame()  # Return an empty DataFrame if no data
         except Exception as e:
             self.logger.error("Error fetching historical openings statistics metrics: {error}".format(error=str(e)))
+            return pd.DataFrame()  # Return an empty DataFrame in case of an error
+
+    def fetch_data_role(self, crawl_date):
+        """
+        Fetch data for data role pie plot within the 'reporting_data' schema for a specific crawl date.
+        """
+        try:
+            # Prepare the SQL query to fetch the required data
+            query = f"""
+                SELECT 
+                    AA.data_role,
+                    AA.count,
+                    (AA.count::float / total.total_count) * 100 AS percentage_of_total,
+                    AA.crawl_date
+                FROM 
+                    reporting_data.rpt_data_role_vacancy_trends AA,
+                    (SELECT SUM(count) AS total_count
+                    FROM reporting_data.rpt_data_role_vacancy_trends
+                    WHERE crawl_date = '{crawl_date}') AS total
+                WHERE 
+                    AA.crawl_date = '{crawl_date}';
+            """
+            # Execute the query and fetch the result
+            data = self.execute_query(query)  # Use self.execute_query to call the local method
+
+            # Convert the data into a DataFrame if not empty
+            if data:
+                df = pd.DataFrame(data, columns=['data_role', 'count', 'percentage_of_total', 'crawl_date'])
+                self.logger.info("Data role information for the pie plot converted to DataFrame successfully.")
+                return df
+            else:
+                self.logger.info("No data role information found for the specified crawl date.")
+                return pd.DataFrame()  # Return an empty DataFrame if no data
+        except Exception as e:
+            self.logger.error(f"Error fetching data role information: {str(e)}")
             return pd.DataFrame()  # Return an empty DataFrame in case of an error
