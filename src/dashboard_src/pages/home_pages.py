@@ -224,59 +224,59 @@ layout = html.Div([
                 html.Img(src="/assets/icons/email.svg", className="connection-icon"),
                 html.A("email", href="hool19965401@gmail.com", className="connection-link"),
             ], className="connection-item"),
-        ], className="connections"),
+        ], className="connections connection-info"),
     ], className="sidebar"),
     
     # Main Content
-    html.Div([
-        html.H1("Dashboard", className="main-title"),
-        html.Div([
-            html.Div([
-                html.H3("Total Openings"),
-                html.P("vs last week"),
-            ], className="metric"),
-            html.Div([
-                html.H3("New Openings"),
-                html.P("vs last week"),
-            ], className="metric"),
-            html.Div([
-                html.H3("Fill Rate"),
-                html.P("vs last week"),
-            ], className="metric"),
-            html.Div([
-                html.H3("ATTF"),
-                html.P("vs last week"),
-            ], className="metric"),
-        ], className="metrics-row"),
-        html.Div([
-            html.H3("Openings Metrics in the Last 3 Month"),
-            # Placeholder for graph
-            html.Div(id="openings-metrics-graph", className="graph-placeholder"),
-        ], className="section"),
-        html.Div([
-            html.Div([
-                html.H3("Stacks of the week"),
-                # Placeholder for bubble chart
-                html.Div(id="stacks-of-week-chart", className="bubble-chart-placeholder"),
-            ], className="chart-section"),
-            html.Div([
-                html.H3("Top 5 Companies with Most Openings"),
-                html.Table([
-                    html.Tr([html.Th("#"), html.Th("Company"), html.Th("Openings")]),
-                    html.Tr([html.Td("01"), html.Td("Company A"), html.Td("100")]),
-                    html.Tr([html.Td("02"), html.Td("Company B"), html.Td("90")]),
-                    html.Tr([html.Td("03"), html.Td("Company C"), html.Td("80")]),
-                    html.Tr([html.Td("04"), html.Td("Company D"), html.Td("70")]),
-                    html.Tr([html.Td("05"), html.Td("Company E"), html.Td("60")]),
-                ], className="openings-table"),
-            ], className="table-section"),
-            html.Div([
-                html.H3("Openings in Taipei"),
-                # Placeholder for map/chart
-                html.Div(id="openings-in-taipei-chart", className="map-placeholder"),
-            ], className="chart-section"),
-        ], className="bottom-section"),
-    ], className="main-content"),
+    # html.Div([
+    #     html.H1("Dashboard", className="main-title"),
+    #     html.Div([
+    #         html.Div([
+    #             html.H3("Total Openings"),
+    #             html.P("vs last week"),
+    #         ], className="metric"),
+    #         html.Div([
+    #             html.H3("New Openings"),
+    #             html.P("vs last week"),
+    #         ], className="metric"),
+    #         html.Div([
+    #             html.H3("Fill Rate"),
+    #             html.P("vs last week"),
+    #         ], className="metric"),
+    #         html.Div([
+    #             html.H3("ATTF"),
+    #             html.P("vs last week"),
+    #         ], className="metric"),
+    #     ], className="metrics-row"),
+    #     html.Div([
+    #         html.H3("Openings Metrics in the Last 3 Month"),
+    #         # Placeholder for graph
+    #         html.Div(id="openings-metrics-graph", className="graph-placeholder"),
+    #     ], className="section"),
+    #     html.Div([
+    #         html.Div([
+    #             html.H3("Stacks of the week"),
+    #             # Placeholder for bubble chart
+    #             html.Div(id="stacks-of-week-chart", className="bubble-chart-placeholder"),
+    #         ], className="chart-section"),
+    #         html.Div([
+    #             html.H3("Top 5 Companies with Most Openings"),
+    #             html.Table([
+    #                 html.Tr([html.Th("#"), html.Th("Company"), html.Th("Openings")]),
+    #                 html.Tr([html.Td("01"), html.Td("Company A"), html.Td("100")]),
+    #                 html.Tr([html.Td("02"), html.Td("Company B"), html.Td("90")]),
+    #                 html.Tr([html.Td("03"), html.Td("Company C"), html.Td("80")]),
+    #                 html.Tr([html.Td("04"), html.Td("Company D"), html.Td("70")]),
+    #                 html.Tr([html.Td("05"), html.Td("Company E"), html.Td("60")]),
+    #             ], className="openings-table"),
+    #         ], className="table-section"),
+    #         html.Div([
+    #             html.H3("Openings in Taipei"),
+    #             # Placeholder for map/chart
+    #             html.Div(id="openings-in-taipei-chart", className="map-placeholder"),
+    #         ], className="chart-section"),
+    #     ], className="bottom-section"),
+    # ], className="main-content"),
 ], className="container")
 
 # Run the server
