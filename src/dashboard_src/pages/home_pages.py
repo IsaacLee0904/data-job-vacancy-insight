@@ -17,9 +17,6 @@ from utils.log_utils import set_logger
 from utils.front_end_utils import load_css_files
 from utils.dashboard_utils import FetchReportData
 
-css_directory = os.path.join(project_root, 'assets', 'front_end', 'css')
-external_stylesheets = load_css_files(css_directory)
-
 ## Load data
 # define fetch functions
 def fetch_openings_statistics_for_dashboard(fetcher, crawl_date):
@@ -186,9 +183,102 @@ def load_home_page_data():
     
     return openings_statistics, historical_total_openings, data_role, data_tools, openings_company, taiepi_area_openings
 
+layout = html.Div([
+    # Sidebar
+    html.Div([
+        html.Div([
+            html.Img(src="/assets/profile.jpeg", className="profile-pic"),
+            html.H2("MidnightGuy", className="username"),
+            html.P("Isaac Lee", className="user-title"),
+            html.P("Data Engineer", className="user-role"),
+        ], className="profile-info"),
+        html.Nav([
+            html.Div([
+                html.Img(src="/assets/icons/home.svg", className="nav-icon"),
+                html.A("Home", href="/", className="nav-link"),
+            ], className="nav-item"),
+            html.Div([
+                html.Img(src="/assets/icons/stack.svg", className="nav-icon"),
+                html.A("Stack", href="/stack", className="nav-link"),
+            ], className="nav-item"),
+            html.Div([
+                html.Img(src="/assets/icons/education.svg", className="nav-icon"),
+                html.A("Education", href="/education", className="nav-link"),
+            ], className="nav-item"),
+            html.Div([
+                html.Img(src="/assets/icons/geography.svg", className="nav-icon"),
+                html.A("Geography", href="/geography", className="nav-link"),
+            ], className="nav-item"),
+        ], className="nav"),
+        html.Div([
+            html.P("About Author :", className="connection-title"),
+            html.Div([
+                html.Img(src="/assets/icons/github.svg", className="connection-icon"),
+                html.A("Github", href="https://github.com/IsaacLee0904", className="connection-link"),
+            ], className="connection-item"),
+            html.Div([
+                html.Img(src="/assets/icons/linkedin.svg", className="connection-icon"),
+                html.A("Linkedin", href="https://www.linkedin.com/in/isaac-lee-459a15143/", className="connection-link"),
+            ], className="connection-item"),
+            html.Div([
+                html.Img(src="/assets/icons/email.svg", className="connection-icon"),
+                html.A("email", href="hool19965401@gmail.com", className="connection-link"),
+            ], className="connection-item"),
+        ], className="connections"),
+    ], className="sidebar"),
+    
+    # Main Content
+    html.Div([
+        html.H1("Dashboard", className="main-title"),
+        html.Div([
+            html.Div([
+                html.H3("Total Openings"),
+                html.P("vs last week"),
+            ], className="metric"),
+            html.Div([
+                html.H3("New Openings"),
+                html.P("vs last week"),
+            ], className="metric"),
+            html.Div([
+                html.H3("Fill Rate"),
+                html.P("vs last week"),
+            ], className="metric"),
+            html.Div([
+                html.H3("ATTF"),
+                html.P("vs last week"),
+            ], className="metric"),
+        ], className="metrics-row"),
+        html.Div([
+            html.H3("Openings Metrics in the Last 3 Month"),
+            # Placeholder for graph
+            html.Div(id="openings-metrics-graph", className="graph-placeholder"),
+        ], className="section"),
+        html.Div([
+            html.Div([
+                html.H3("Stacks of the week"),
+                # Placeholder for bubble chart
+                html.Div(id="stacks-of-week-chart", className="bubble-chart-placeholder"),
+            ], className="chart-section"),
+            html.Div([
+                html.H3("Top 5 Companies with Most Openings"),
+                html.Table([
+                    html.Tr([html.Th("#"), html.Th("Company"), html.Th("Openings")]),
+                    html.Tr([html.Td("01"), html.Td("Company A"), html.Td("100")]),
+                    html.Tr([html.Td("02"), html.Td("Company B"), html.Td("90")]),
+                    html.Tr([html.Td("03"), html.Td("Company C"), html.Td("80")]),
+                    html.Tr([html.Td("04"), html.Td("Company D"), html.Td("70")]),
+                    html.Tr([html.Td("05"), html.Td("Company E"), html.Td("60")]),
+                ], className="openings-table"),
+            ], className="table-section"),
+            html.Div([
+                html.H3("Openings in Taipei"),
+                # Placeholder for map/chart
+                html.Div(id="openings-in-taipei-chart", className="map-placeholder"),
+            ], className="chart-section"),
+        ], className="bottom-section"),
+    ], className="main-content"),
+], className="container")
 
 # Run the server
 if __name__ == '__main__':
     openings_statistics, historical_total_openings, data_role, data_tools, openings_company, taiepi_area_openings = load_home_page_data()
-    
-    # app.run_server(debug=True, host='0.0.0.0', port=9100)
