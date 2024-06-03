@@ -220,7 +220,7 @@ layout = html.Div(
                         html.Div(
                             className="group-4",
                             children=[
-                                html.Div("Home", className="text-wrapper-4"),
+                                html.A("Home", href="/", className="text-wrapper-4"),
                                 html.Img(src="assets/icons/home.svg", className="img"),
                             ],
                         ),
@@ -234,7 +234,7 @@ layout = html.Div(
                         html.Div(
                             className="div-wrapper",
                             children=[
-                                html.Div("Geography", className="text-wrapper-5"),
+                                html.A("Geography", href="/geography", className="text-wrapper-5"),
                             ],
                         ),
                         html.Img(src="assets/icons/geography.svg", className="img"),
@@ -246,7 +246,7 @@ layout = html.Div(
                         html.Div(
                             className="group-5",
                             children=[
-                                html.Div("Education", className="text-wrapper-6"),
+                                html.A("Education", href="/education", className="text-wrapper-6"),
                             ],
                         ),
                         html.Img(src="assets/icons/education.svg", className="img-2"),
@@ -258,7 +258,7 @@ layout = html.Div(
                         html.Div(
                             className="group-6",
                             children=[
-                                html.Div("Stack", className="text-wrapper-7"),
+                                html.A("Stack", href="/stack", className="text-wrapper-7"),
                             ],
                         ),
                         html.Img(src="assets/icons/stack.svg", className="img-2"),
