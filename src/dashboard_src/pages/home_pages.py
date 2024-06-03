@@ -183,101 +183,156 @@ def load_home_page_data():
     
     return openings_statistics, historical_total_openings, data_role, data_tools, openings_company, taiepi_area_openings
 
-layout = html.Div([
-    # Sidebar
-    html.Div([
-        html.Div([
-            html.Img(src="/assets/profile.jpeg", className="profile-pic"),
-            html.H2("MidnightGuy", className="username"),
-            html.P("Isaac Lee", className="user-title"),
-            html.P("Data Engineer", className="user-role"),
-        ], className="profile-info"),
-        html.Nav([
-            html.Div([
-                html.Img(src="/assets/icons/home.svg", className="nav-icon"),
-                html.A("Home", href="/", className="nav-link"),
-            ], className="nav-item"),
-            html.Div([
-                html.Img(src="/assets/icons/stack.svg", className="nav-icon"),
-                html.A("Stack", href="/stack", className="nav-link"),
-            ], className="nav-item"),
-            html.Div([
-                html.Img(src="/assets/icons/education.svg", className="nav-icon"),
-                html.A("Education", href="/education", className="nav-link"),
-            ], className="nav-item"),
-            html.Div([
-                html.Img(src="/assets/icons/geography.svg", className="nav-icon"),
-                html.A("Geography", href="/geography", className="nav-link"),
-            ], className="nav-item"),
-        ], className="nav"),
-        html.Div([
-            html.P("About Author :", className="connection-title"),
-            html.Div([
-                html.Img(src="/assets/icons/github.svg", className="connection-icon"),
-                html.A("Github", href="https://github.com/IsaacLee0904", className="connection-link"),
-            ], className="connection-item"),
-            html.Div([
-                html.Img(src="/assets/icons/linkedin.svg", className="connection-icon"),
-                html.A("Linkedin", href="https://www.linkedin.com/in/isaac-lee-459a15143/", className="connection-link"),
-            ], className="connection-item"),
-            html.Div([
-                html.Img(src="/assets/icons/email.svg", className="connection-icon"),
-                html.A("email", href="hool19965401@gmail.com", className="connection-link"),
-            ], className="connection-item"),
-        ], className="connections connection-info"),
-    ], className="sidebar"),
+layout = html.Div(
+    className="frame",
+    children=[
+        html.Div(
+            className="div",
+            children=[
+                html.Div(
+                    className="group",
+                    children=[
+                        html.Div("MidnightGuy", className="text-wrapper"),
+                        html.Div(
+                            className="overlap-group-wrapper",
+                            children=[
+                                html.Div(
+                                    className="overlap-group",
+                                    children=[
+                                        html.Div(className="ellipse"),
+                                        html.Div(className="ellipse-2"),
+                                    ],
+                                )
+                            ],
+                        ),
+                    ],
+                ),
+                html.Div(
+                    className="group-2",
+                    children=[
+                        html.Div("Isaac Lee", className="text-wrapper-2"),
+                        html.Div("Data Engineer", className="text-wrapper-3"),
+                    ],
+                ),
+                html.Div(
+                    className="group-3",
+                    children=[
+                        html.Div(
+                            className="group-4",
+                            children=[
+                                html.Div("Home", className="text-wrapper-4"),
+                                html.Img(src="assets/icons/home.svg", className="img"),
+                            ],
+                        ),
+                        html.Div(className="rectangle"),
+                    ],
+                ),
+                html.Div(className="rectangle-2"),
+                html.Div(
+                    className="component",
+                    children=[
+                        html.Div(
+                            className="div-wrapper",
+                            children=[
+                                html.Div("Geography", className="text-wrapper-5"),
+                            ],
+                        ),
+                        html.Img(src="assets/icons/geography.svg", className="img"),
+                    ],
+                ),
+                html.Div(
+                    className="component-2",
+                    children=[
+                        html.Div(
+                            className="group-5",
+                            children=[
+                                html.Div("Education", className="text-wrapper-6"),
+                            ],
+                        ),
+                        html.Img(src="assets/icons/education.svg", className="img-2"),
+                    ],
+                ),
+                html.Div(
+                    className="component-3",
+                    children=[
+                        html.Div(
+                            className="group-6",
+                            children=[
+                                html.Div("Stack", className="text-wrapper-7"),
+                            ],
+                        ),
+                        html.Img(src="assets/icons/stack.svg", className="img-2"),
+                    ],
+                ),
+                html.Div(
+                    className="overlap",
+                    children=[
+                        html.Div(
+                            className="chart",
+                            children=[
+                                html.Img(src="assets/img/profile.png", className="s"),
+                                html.Img(src="assets/img/ellipse-17.svg", className="ellipse-3"),
+                            ],
+                        ),
+                    ],
+                ),
+                html.Img(src="assets/img/ellipse-18.png", className="ellipse-4"),
+            ],
+        ),
+    ],
+),
     
     # Main Content
-    # html.Div([
-    #     html.H1("Dashboard", className="main-title"),
-    #     html.Div([
-    #         html.Div([
-    #             html.H3("Total Openings"),
-    #             html.P("vs last week"),
-    #         ], className="metric"),
-    #         html.Div([
-    #             html.H3("New Openings"),
-    #             html.P("vs last week"),
-    #         ], className="metric"),
-    #         html.Div([
-    #             html.H3("Fill Rate"),
-    #             html.P("vs last week"),
-    #         ], className="metric"),
-    #         html.Div([
-    #             html.H3("ATTF"),
-    #             html.P("vs last week"),
-    #         ], className="metric"),
-    #     ], className="metrics-row"),
-    #     html.Div([
-    #         html.H3("Openings Metrics in the Last 3 Month"),
-    #         # Placeholder for graph
-    #         html.Div(id="openings-metrics-graph", className="graph-placeholder"),
-    #     ], className="section"),
-    #     html.Div([
-    #         html.Div([
-    #             html.H3("Stacks of the week"),
-    #             # Placeholder for bubble chart
-    #             html.Div(id="stacks-of-week-chart", className="bubble-chart-placeholder"),
-    #         ], className="chart-section"),
-    #         html.Div([
-    #             html.H3("Top 5 Companies with Most Openings"),
-    #             html.Table([
-    #                 html.Tr([html.Th("#"), html.Th("Company"), html.Th("Openings")]),
-    #                 html.Tr([html.Td("01"), html.Td("Company A"), html.Td("100")]),
-    #                 html.Tr([html.Td("02"), html.Td("Company B"), html.Td("90")]),
-    #                 html.Tr([html.Td("03"), html.Td("Company C"), html.Td("80")]),
-    #                 html.Tr([html.Td("04"), html.Td("Company D"), html.Td("70")]),
-    #                 html.Tr([html.Td("05"), html.Td("Company E"), html.Td("60")]),
-    #             ], className="openings-table"),
-    #         ], className="table-section"),
-    #         html.Div([
-    #             html.H3("Openings in Taipei"),
-    #             # Placeholder for map/chart
-    #             html.Div(id="openings-in-taipei-chart", className="map-placeholder"),
-    #         ], className="chart-section"),
-    #     ], className="bottom-section"),
-    # ], className="main-content"),
-], className="container")
+#     html.Div([
+#         html.H1("Dashboard", className="main-title"),
+#         html.Div([
+#             html.Div([
+#                 html.H3("Total Openings"),
+#                 html.P("vs last week"),
+#             ], className="metric"),
+#             html.Div([
+#                 html.H3("New Openings"),
+#                 html.P("vs last week"),
+#             ], className="metric"),
+#             html.Div([
+#                 html.H3("Fill Rate"),
+#                 html.P("vs last week"),
+#             ], className="metric"),
+#             html.Div([
+#                 html.H3("ATTF"),
+#                 html.P("vs last week"),
+#             ], className="metric"),
+#         ], className="metrics-row"),
+#         html.Div([
+#             html.H3("Openings Metrics in the Last 3 Month"),
+#             # Placeholder for graph
+#             html.Div(id="openings-metrics-graph", className="graph-placeholder"),
+#         ], className="section"),
+#         html.Div([
+#             html.Div([
+#                 html.H3("Stacks of the week"),
+#                 # Placeholder for bubble chart
+#                 html.Div(id="stacks-of-week-chart", className="bubble-chart-placeholder"),
+#             ], className="chart-section"),
+#             html.Div([
+#                 html.H3("Top 5 Companies with Most Openings"),
+#                 html.Table([
+#                     html.Tr([html.Th("#"), html.Th("Company"), html.Th("Openings")]),
+#                     html.Tr([html.Td("01"), html.Td("Company A"), html.Td("100")]),
+#                     html.Tr([html.Td("02"), html.Td("Company B"), html.Td("90")]),
+#                     html.Tr([html.Td("03"), html.Td("Company C"), html.Td("80")]),
+#                     html.Tr([html.Td("04"), html.Td("Company D"), html.Td("70")]),
+#                     html.Tr([html.Td("05"), html.Td("Company E"), html.Td("60")]),
+#                 ], className="openings-table"),
+#             ], className="table-section"),
+#             html.Div([
+#                 html.H3("Openings in Taipei"),
+#                 # Placeholder for map/chart
+#                 html.Div(id="openings-in-taipei-chart", className="map-placeholder"),
+#             ], className="chart-section"),
+#         ], className="bottom-section"),
+#     ], className="main-content"),
+# ], className="container")
 
 # Run the server
 if __name__ == '__main__':
