@@ -207,6 +207,7 @@ layout = html.Div(
                         ),
                     ],
                 ),
+                # author
                 html.Div(
                     className="group-2",
                     children=[
@@ -214,6 +215,7 @@ layout = html.Div(
                         html.Div("Data Engineer", className="text-wrapper-3"),
                     ],
                 ),
+                # navigation menu
                 html.Div(
                     className="group-3",
                     children=[
@@ -270,7 +272,7 @@ layout = html.Div(
                         html.Div(
                             className="chart",
                             children=[
-                                html.Img(src="assets/img/profile.png", className="s"),
+                                # html.Img(src="assets/img/profile.png", className="s"),
                                 html.Img(src="assets/img/ellipse-17.svg", className="ellipse-3"),
                             ],
                         ),
