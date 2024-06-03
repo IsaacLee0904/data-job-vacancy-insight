@@ -1,3 +1,4 @@
+/* navigation menu CSS */
 .frame {
     background-color: #2e2e48;
     display: flex;
@@ -11,6 +12,11 @@
     overflow: hidden;
     width: 234px;
     height: 960px;
+    display: inline-grid;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-top: 20px;
+    padding-bottom: 20px;
     position: relative;
 }
 
@@ -286,7 +292,9 @@
     height: 122px;
     top: 3px;
     left: 0;
+    border-radius: 50%;
     object-fit: cover;
+    margin-bottom: 10px;
     z-index: 1;
 }
 
@@ -296,4 +304,126 @@
     height: 122px;
     top: 590px;
     left: 766px;
+}
+
+/* add hover feature */
+.text-wrapper-4:hover,
+.text-wrapper-5:hover,
+.text-wrapper-6:hover,
+.text-wrapper-7:hover {
+    color: #FFA726;
+    cursor: pointer;
+}
+
+/* connection-info CSS */
+.connection-info {
+    width: 182px;
+    height: 179px;
+    align-self: center;
+    margin-top: auto;
+    margin-left: 25px;
+    margin-right: auto;
+    margin-bottom: 40px;
+}
+
+.connection-info .overlap-group {
+    position: relative;
+    width: 184px;
+    height: 179px;
+}
+
+.connection-info .rectangle {
+    position: absolute;
+    width: 180px;
+    height: 179px;
+    top: 0;
+    left: 0;
+    border-radius: 30.82px;
+    border: 0.77px solid;
+    border-color: transparent;
+    box-shadow: 0px 3.08px 25.43px #00000040;
+    border-image: linear-gradient(to bottom, rgb(124, 113, 255), rgba(0, 0, 0, 0)) 1;
+    background: linear-gradient(180deg, rgb(72.48, 62.57, 189.13) 0%, rgba(46, 46, 72, 0) 100%);
+}
+
+.connection-info .group {
+    width: 122px;
+    top: 24px;
+    left: 15px;
+    position: absolute;
+    height: 21px;
+}
+
+.connection-info .text-wrapper {
+    position: absolute;
+    width: 120px;
+    top: 0;
+    left: 0;
+    font-family: "Poppins", Helvetica;
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 15px;
+    letter-spacing: 0;
+    line-height: normal;
+}
+
+.connection-info .div-wrapper {
+    width: 105px;
+    top: 65px;
+    left: 79px;
+    position: absolute;
+    height: 21px;
+}
+
+.connection-info .div {
+    position: absolute;
+    width: 103px;
+    top: 0;
+    left: 0;
+    font-family: "Poppins", Helvetica;
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 13.9px;
+    letter-spacing: 0;
+    line-height: normal;
+}
+
+.connection-info .group-2 {
+    width: 105px;
+    top: 101px;
+    left: 79px;
+    position: absolute;
+    height: 21px;
+}
+
+.connection-info .group-3 {
+    width: 105px;
+    top: 137px;
+    left: 79px;
+    position: absolute;
+    height: 21px;
+}
+
+.connection-info .social-icon {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    top: 64px;
+    left: 31px;
+}
+
+.connection-info .img {
+    top: 101px;
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    left: 31px;
+}
+
+.connection-info .social-icon-2 {
+    top: 137px;
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    left: 31px;
 }
