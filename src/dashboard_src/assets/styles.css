@@ -286,7 +286,9 @@
     height: 122px;
     top: 3px;
     left: 0;
+    border-radius: 50%;
     object-fit: cover;
+    margin-bottom: 10px;
     z-index: 1;
   }
   
@@ -298,12 +300,12 @@
     left: 766px;
   }
   
-  /* 新增的 hover 效果 */
+  /* add hover feature */
   .text-wrapper-4:hover,
   .text-wrapper-5:hover,
   .text-wrapper-6:hover,
   .text-wrapper-7:hover {
-    color: #FFA726;  /* 可以根據需要更改顏色 */
+    color: #FFA726; 
     cursor: pointer;
   }
   

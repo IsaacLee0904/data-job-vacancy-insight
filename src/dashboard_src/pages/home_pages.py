@@ -272,7 +272,7 @@ layout = html.Div(
                         html.Div(
                             className="chart",
                             children=[
-                                # html.Img(src="assets/img/profile.png", className="s"),
+                                html.Img(src="assets/img/profile.png", className="s"),
                                 html.Img(src="assets/img/ellipse-17.svg", className="ellipse-3"),
                             ],
                         ),
