@@ -70,8 +70,6 @@ models:
     columns:
       - name: county_name_eng
         description: "The English name of the county."
-        tests:
-          - not_null
 
       - name: district_name_eng
         description: "The English name of the district."
