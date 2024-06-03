@@ -3,8 +3,8 @@ services:
   app:
     build: .
     ports:
-      - "80:80" # for dbt web server
-      - "9100:9100" # for piperider web report server
+      - "80:80" # for dbt documentation
+      - "9100:9100" # for online dashboard
     environment:
       NAME: JobVacancyInsight
     depends_on:

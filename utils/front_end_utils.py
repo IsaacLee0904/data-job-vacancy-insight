@@ -18,7 +18,7 @@ def load_css_files(directory):
             # Check if the file is a CSS file
             if file.endswith(".css"):
                 # Construct the file path and add it to the list
-                css_files.append(os.path.join(directory, file))
+                css_files.append(os.path.join("/assets", os.path.relpath(os.path.join(directory, file), 'assets')))
     else:
         print(f"Directory '{directory}' does not exist.")
 
