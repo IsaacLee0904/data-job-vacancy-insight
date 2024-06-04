@@ -207,6 +207,7 @@ layout = html.Div(
                         ),
                     ],
                 ),
+                # author
                 html.Div(
                     className="group-2",
                     children=[
@@ -214,13 +215,14 @@ layout = html.Div(
                         html.Div("Data Engineer", className="text-wrapper-3"),
                     ],
                 ),
+                # navigation menu
                 html.Div(
                     className="group-3",
                     children=[
                         html.Div(
                             className="group-4",
                             children=[
-                                html.Div("Home", className="text-wrapper-4"),
+                                html.A("Home", href="/", className="text-wrapper-4"),
                                 html.Img(src="assets/icons/home.svg", className="img"),
                             ],
                         ),
@@ -234,7 +236,7 @@ layout = html.Div(
                         html.Div(
                             className="div-wrapper",
                             children=[
-                                html.Div("Geography", className="text-wrapper-5"),
+                                html.A("Geography", href="/geography", className="text-wrapper-5"),
                             ],
                         ),
                         html.Img(src="assets/icons/geography.svg", className="img"),
@@ -246,7 +248,7 @@ layout = html.Div(
                         html.Div(
                             className="group-5",
                             children=[
-                                html.Div("Education", className="text-wrapper-6"),
+                                html.A("Education", href="/education", className="text-wrapper-6"),
                             ],
                         ),
                         html.Img(src="assets/icons/education.svg", className="img-2"),
@@ -258,7 +260,7 @@ layout = html.Div(
                         html.Div(
                             className="group-6",
                             children=[
-                                html.Div("Stack", className="text-wrapper-7"),
+                                html.A("Stack", href="/stack", className="text-wrapper-7"),
                             ],
                         ),
                         html.Img(src="assets/icons/stack.svg", className="img-2"),
@@ -277,11 +279,52 @@ layout = html.Div(
                     ],
                 ),
                 html.Img(src="assets/img/ellipse-18.png", className="ellipse-4"),
+                # connection-info 
+                html.Div(
+                    className="connection-info",
+                    children=[
+                        html.Div(
+                            className="overlap-group",
+                            children=[
+                                html.Div(className="rectangle"),
+                                html.Div(
+                                    className="group",
+                                    children=[
+                                        html.A("About Author :", className="text-wrapper")
+                                    ],
+                                ),
+                                html.Div(
+                                    className="div-wrapper",
+                                    children=[
+                                        html.A("Github", href="https://github.com/IsaacLee0904", className="div")
+                                    ],
+                                ),
+                                html.Div(
+                                    className="group-2",
+                                    children=[
+                                        html.A("Linkedin", href="https://www.linkedin.com/in/isaac-lee-459a15143/", className="div")
+                                    ],
+                                ),
+                                html.Div(
+                                    className="group-3",
+                                    children=[
+                                        html.A("Email", href="hool19965401@gmail.com", className="div")
+                                    ],
+                                ),
+                                html.Img(src="assets/icons/github.svg", className="social-icon"),
+                                html.Img(src="assets/icons/linkedin.svg", className="img"),
+                                html.Img(src="assets/icons/email.svg", className="social-icon-2"),
+                            ],
+                        ),
+                    ],
+                ),
             ],
         ),
     ],
-),
-    
+)
+
+# Define the layout of connection-info
+  
     # Main Content
 #     html.Div([
 #         html.H1("Dashboard", className="main-title"),
