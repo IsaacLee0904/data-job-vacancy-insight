@@ -171,7 +171,7 @@ class RawDataProcessor:
             'google cloud pub/sub': 'Google Cloud Pub/Sub', 'google analytics': 'Google Analytics',
 
             # Big Data Technologies
-            'hadoop': 'Hadoop', 'spark': 'Spark', 'flume': 'Flume', 'storm': 'Storm', 
+            'hadoop': 'Hadoop', 'spark': 'Spark', 'flume': 'Flume', 'storm': 'Storm', 'dbt': 'DBT',
             'zookeeper': 'Zookeeper', 'hbase': 'HBase', 'kafka': 'Kafka', 'rabbitMQ': 'RabbitMQ',
 
             # Database & Storage
