@@ -11,22 +11,22 @@
     background-color: #2e2e48;
     overflow: hidden;
     width: 234px;
-    height: 960px;
-    display: inline-grid;
+    height: 100vh; 
+    display: flex; 
     flex-direction: column;
-    justify-content: space-between;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    justify-content: space-between; 
+    padding-top: 20px; 
+    padding-bottom: 20px; 
     position: relative;
-  }
+}
   
-  .frame .group {
-    position: absolute;
-    width: 177px;
-    height: 28px;
-    top: 37px;
-    left: 31px;
-  }
+.frame .group {
+  position: relative;
+  width: 177px;
+  height: 28px;
+  margin-bottom: 20px;
+  align-self: center;
+}
   
   .frame .text-wrapper {
     position: absolute;
