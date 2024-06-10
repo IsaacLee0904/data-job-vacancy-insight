@@ -222,7 +222,7 @@ def sidebar():
                             html.Img(src="assets/icons/home.svg", className="selection-icon")
                         ]
                     ),
-                    html.Div(className="selected-rectangle")
+                    # html.Div(className="selected-rectangle")
                 ]
             ),
             html.Div(
