@@ -1,0 +1,584 @@
+.page {
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.page .div {
+  background-color: #ffffff;
+  width: 1440px;
+  height: 960px;
+  position: relative;
+}
+
+.page .overlap {
+  position: absolute;
+  width: 1136px;
+  height: 836px;
+  top: 55px;
+  left: 264px;
+}
+
+.page .overlap-group {
+  position: absolute;
+  width: 1120px;
+  height: 836px;
+  top: 0;
+  left: 16px;
+}
+
+.page .separator {
+  position: absolute;
+  width: 3px;
+  height: 836px;
+  top: 0;
+  left: 718px;
+}
+
+.page .img {
+  position: absolute;
+  width: 1120px;
+  height: 1px;
+  top: 461px;
+  left: 0;
+}
+
+.page .separator-2 {
+  position: absolute;
+  width: 1px;
+  height: 362px;
+  top: 474px;
+  left: 375px;
+}
+
+.page .order-stats {
+  width: 140px;
+  top: 498px;
+  left: 774px;
+  position: absolute;
+  height: 22px;
+}
+
+.page .title-data {
+  top: 0;
+  left: 0;
+  font-weight: 400;
+  color: #000000;
+  font-size: 14px;
+  line-height: 22px;
+  position: absolute;
+  font-family: "Poppins", Helvetica;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.page .most-ordered {
+  position: absolute;
+  width: 316px;
+  height: 96px;
+  top: 502px;
+  left: 413px;
+}
+
+.page .desc {
+  top: 30px;
+  position: absolute;
+  width: 312px;
+  left: 0;
+  opacity: 0.5;
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  line-height: 22px;
+}
+
+.page .rating {
+  position: absolute;
+  width: 317px;
+  height: 328px;
+  top: 507px;
+  left: 16px;
+}
+
+.page .overlap-2 {
+  position: absolute;
+  width: 304px;
+  height: 241px;
+  top: 87px;
+  left: 9px;
+}
+
+.page .overlap-3 {
+  position: absolute;
+  width: 255px;
+  height: 199px;
+  top: 0;
+  left: 49px;
+}
+
+.page .chart {
+  position: absolute;
+  width: 174px;
+  height: 179px;
+  top: 20px;
+  left: 81px;
+}
+
+.page .overlap-group-2 {
+  position: relative;
+  width: 175px;
+  height: 181px;
+  top: -1px;
+}
+
+.page .ellipse {
+  position: absolute;
+  width: 169px;
+  height: 169px;
+  top: 6px;
+  left: 0;
+  background-color: #ffa726;
+  border-radius: 84.36px;
+  opacity: 0.9;
+}
+
+.page .ellipse-2 {
+  position: absolute;
+  width: 170px;
+  height: 181px;
+  top: 0;
+  left: 5px;
+}
+
+.page .overlap-wrapper {
+  position: absolute;
+  width: 107px;
+  height: 110px;
+  top: 0;
+  left: 0;
+}
+
+.page .overlap-4 {
+  position: relative;
+  width: 108px;
+  height: 112px;
+  top: -1px;
+}
+
+.page .ellipse-3 {
+  width: 104px;
+  height: 104px;
+  top: 4px;
+  background-color: #ce93d8;
+  border-radius: 51.88px;
+  opacity: 0.8;
+  position: absolute;
+  left: 0;
+}
+
+.page .ellipse-4 {
+  width: 105px;
+  height: 112px;
+  left: 3px;
+  position: absolute;
+  top: 0;
+}
+
+.page .overlap-group-wrapper {
+  position: absolute;
+  width: 126px;
+  height: 130px;
+  top: 111px;
+  left: 0;
+}
+
+.page .overlap-5 {
+  position: relative;
+  width: 127px;
+  height: 132px;
+  top: -1px;
+}
+
+.page .ellipse-5 {
+  width: 122px;
+  height: 122px;
+  top: 5px;
+  background-color: #81d4fa;
+  border-radius: 61.18px;
+  opacity: 0.9;
+  position: absolute;
+  left: 0;
+}
+
+.page .ellipse-6 {
+  width: 123px;
+  height: 132px;
+  left: 4px;
+  position: absolute;
+  top: 0;
+}
+
+.page .text-wrapper {
+  top: 29px;
+  position: absolute;
+  width: 312px;
+  left: 0;
+  opacity: 0.5;
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  line-height: 22px;
+}
+
+.page .order-time {
+  width: 74px;
+  top: 41px;
+  left: 772px;
+  position: absolute;
+  height: 22px;
+}
+
+.page .overlap-6 {
+  position: absolute;
+  width: 659px;
+  height: 131px;
+  top: 41px;
+  left: 0;
+}
+
+.page .revenue {
+  position: absolute;
+  width: 659px;
+  height: 131px;
+  top: 0;
+  left: 0;
+}
+
+.page .percentage-info {
+  position: absolute;
+  width: 84px;
+  height: 12px;
+  top: 68px;
+  left: 16px;
+}
+
+.page .element-vs-last-days {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #737b8b;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  line-height: 12px;
+  white-space: nowrap;
+}
+
+.page .title-data-2 {
+  left: 186px;
+  position: absolute;
+  top: 0;
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  line-height: 22px;
+  white-space: nowrap;
+}
+
+.page .element-vs-last-days-wrapper {
+  width: 80px;
+  left: 202px;
+  position: absolute;
+  height: 12px;
+  top: 68px;
+}
+
+.page .title-data-3 {
+  left: 374px;
+  position: absolute;
+  top: 0;
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  line-height: 22px;
+  white-space: nowrap;
+}
+
+.page .div-wrapper {
+  width: 80px;
+  left: 390px;
+  position: absolute;
+  height: 12px;
+  top: 68px;
+}
+
+.page .title-data-4 {
+  left: 552px;
+  position: absolute;
+  top: 0;
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  line-height: 22px;
+  white-space: nowrap;
+}
+
+.page .percentage-info-2 {
+  width: 84px;
+  left: 567px;
+  position: absolute;
+  height: 12px;
+  top: 68px;
+}
+
+.page .sales-info {
+  position: absolute;
+  top: 110px;
+  left: 1px;
+  opacity: 0.5;
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 20px;
+  letter-spacing: 0.5px;
+  line-height: 21px;
+  white-space: nowrap;
+}
+
+.page .iconly-bold-profile {
+  position: absolute;
+  width: 27px;
+  height: 27px;
+  top: 31px;
+  left: 2px;
+}
+
+.page .iconly-bold-profile-2 {
+  position: absolute;
+  width: 27px;
+  height: 27px;
+  top: 31px;
+  left: 180px;
+}
+
+.page .text-wrapper-2 {
+  position: absolute;
+  top: 606px;
+  left: 456px;
+  font-family: "Inter", Helvetica;
+  font-weight: 500;
+  color: #87888c;
+  font-size: 13px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.page .text-wrapper-3 {
+  position: absolute;
+  top: 606px;
+  left: 649px;
+  font-family: "Inter", Helvetica;
+  font-weight: 500;
+  color: #87888c;
+  font-size: 13px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.page .text-wrapper-4 {
+  position: absolute;
+  top: 606px;
+  left: 403px;
+  font-family: "Inter", Helvetica;
+  font-weight: 500;
+  color: #87888c;
+  font-size: 13px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.page .line {
+  top: 636px;
+  left: 386px;
+  position: absolute;
+  width: 334px;
+  height: 3px;
+}
+
+.page .line-2 {
+  top: 677px;
+  left: 384px;
+  position: absolute;
+  width: 334px;
+  height: 3px;
+}
+
+.page .line-3 {
+  top: 718px;
+  left: 385px;
+  position: absolute;
+  width: 334px;
+  height: 3px;
+}
+
+.page .line-4 {
+  top: 759px;
+  left: 386px;
+  position: absolute;
+  width: 334px;
+  height: 3px;
+}
+
+.page .line-5 {
+  top: 800px;
+  left: 387px;
+  position: absolute;
+  width: 334px;
+  height: 3px;
+}
+
+.page .text-wrapper-5 {
+  top: 649px;
+  position: absolute;
+  left: 399px;
+  font-family: "Inter", Helvetica;
+  font-weight: 500;
+  color: #87888c;
+  font-size: 13px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.page .text-wrapper-6 {
+  top: 690px;
+  position: absolute;
+  left: 399px;
+  font-family: "Inter", Helvetica;
+  font-weight: 500;
+  color: #87888c;
+  font-size: 13px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.page .text-wrapper-7 {
+  top: 731px;
+  position: absolute;
+  left: 399px;
+  font-family: "Inter", Helvetica;
+  font-weight: 500;
+  color: #87888c;
+  font-size: 13px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.page .text-wrapper-8 {
+  top: 770px;
+  position: absolute;
+  left: 399px;
+  font-family: "Inter", Helvetica;
+  font-weight: 500;
+  color: #87888c;
+  font-size: 13px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.page .text-wrapper-9 {
+  top: 811px;
+  position: absolute;
+  left: 399px;
+  font-family: "Inter", Helvetica;
+  font-weight: 500;
+  color: #87888c;
+  font-size: 13px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.page .group {
+  top: 648px;
+  background-color: #ffa7261f;
+  border-color: #ffa726;
+  position: absolute;
+  width: 38px;
+  height: 22px;
+  left: 667px;
+  border-radius: 4px;
+  border: 0.5px solid;
+}
+
+.page .group-2 {
+  top: 688px;
+  background-color: #81d4fa1f;
+  border-color: #81d4fa;
+  position: absolute;
+  width: 38px;
+  height: 22px;
+  left: 667px;
+  border-radius: 4px;
+  border: 0.5px solid;
+}
+
+.page .group-3 {
+  top: 729px;
+  background-color: #ce93d81f;
+  border-color: #ce93d8;
+  position: absolute;
+  width: 38px;
+  height: 22px;
+  left: 667px;
+  border-radius: 4px;
+  border: 0.5px solid;
+}
+
+.page .group-4 {
+  top: 769px;
+  background-color: #78909c1f;
+  border-color: #78909c;
+  position: absolute;
+  width: 38px;
+  height: 22px;
+  left: 667px;
+  border-radius: 4px;
+  border: 0.5px solid;
+}
+
+.page .group-5 {
+  top: 809px;
+  background-color: #78909c1f;
+  border-color: #78909c;
+  position: absolute;
+  width: 38px;
+  height: 22px;
+  left: 667px;
+  border-radius: 4px;
+  border: 0.5px solid;
+}
+
+.page .title-page {
+  top: 31px;
+  left: 258px;
+  font-weight: 500;
+  color: #1f384c;
+  font-size: 35px;
+  line-height: 23px;
+  position: absolute;
+  font-family: "Poppins", Helvetica;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
