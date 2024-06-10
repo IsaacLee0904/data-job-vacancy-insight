@@ -141,14 +141,14 @@
   left: 0;
 }
 
-.sidebar .selected-rectangle {
+/* .sidebar .selected-rectangle {
   position: absolute;
   width: 7px;
   height: 45px;
   top: 0;
   left: 0;
   background: linear-gradient(180deg, rgb(126, 115, 255) 0%, rgb(91, 77, 255) 100%);
-}
+} */
 
 .sidebar .stack-component {
   width: 108px;
