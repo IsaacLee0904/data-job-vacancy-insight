@@ -311,6 +311,10 @@ def sidebar():
     )
 
 def page_content():
+
+    openings_statistics, historical_total_openings, data_role, data_tools, openings_company, taiepi_area_openings = load_home_page_data()
+
+    
     return html.Div(
         className="page",
         children=[
@@ -476,4 +480,4 @@ layout = html.Div(
 
 # Run the server
 if __name__ == '__main__':
-    openings_statistics, historical_total_openings, data_role, data_tools, openings_company, taiepi_area_openings = load_home_page_data()
+    app.run_server(debug=True)
