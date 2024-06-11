@@ -1,12 +1,14 @@
 ## import packages
 # import necessary libraries
 import sys, os 
+from datetime import datetime, timedelta
 import pandas as pd
 import dash
 from dash import html, dcc
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 from flask import Flask, send_from_directory
+import plotly.express as px
 
 # set up project root path
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
@@ -311,10 +313,62 @@ def sidebar():
     )
 
 def page_content():
-
     openings_statistics, historical_total_openings, data_role, data_tools, openings_company, taiepi_area_openings = load_home_page_data()
-
     
+    data_role_pie = px.pie(
+        data_role, 
+        values='count', 
+        names='data_role', 
+        hole=0.75,
+        color='data_role',  
+        color_discrete_map={
+            'Data Analyst': '2E2E48',  
+            'Data Engineer': '3C4A8A',  
+            'Machine Learning Engineer': '5A6ACF',
+            'Data Scientist': '8593ED',
+            'Business Analyst': 'A5B3FF',
+            'BI Engineer': 'C7CEFF',
+            'Data Architect': 'E6ECFF',
+        },
+        custom_data=data_role[['data_role', 'count']]
+    )
+
+    data_role_pie.update_traces(textinfo='none', 
+                                hovertemplate='<span style="font-size:12px; color:whie; font-weight:bold;">%{customdata[0][0]}</span><br>' +
+                                              '</br>'+
+                                              '<span style="font-size:15px; color:whie; font-weight:bold;">%{percent} (%{customdata[0][1]})</span><extra></extra>')
+
+    # count date for the pie chart title
+    crawl_date = data_role['crawl_date'][0]
+    next_monday = crawl_date + timedelta(days=(7 - crawl_date.weekday()))
+
+    title_text = f"From {crawl_date.strftime('%d')} - {next_monday.strftime('%d %B, %Y')}"
+    data_role_pie.update_layout(
+        width=350,  # setup chart width
+        height=350,  # setup chart height
+        margin=dict(l=20, r=20, t=30, b=20),  # setup chart margin
+        paper_bgcolor='rgba(0,0,0,0)',  # setup chart paper background color as transparent
+        plot_bgcolor='rgba(0,0,0,0)',  # setup chart plot background color as transparent
+        showlegend=False,  # hide legend
+        title={
+            'text': title_text,  # setup chart title
+            'font': {
+                'size': 14,  # setup chart title font size
+                'color': '#737b8b'  # setup chart title font color
+            },
+            'x': 0.25,  # setup chart title horizontal position
+            'y': 0.98,  # setup chart title vertical position
+            'xanchor': 'center',  # setup chart title horizontal alignment
+            'yanchor': 'top'  # setup chart title vertical alignment
+        },
+        hoverlabel=dict(
+            bgcolor="#2E2E48", # setup hover label background color
+            font_size=12,      # setup hover label font size
+            font_color="white",# setup hover label font color
+            bordercolor="#2E2E48" # setup hover label border color
+        )
+    )
+
     return html.Div(
         className="page",
         children=[
@@ -401,7 +455,8 @@ def page_content():
                             html.Div(
                                 className="order-time",
                                 children=[
-                                    html.Div("Data Role", className="title-data")
+                                    html.Div("Data Role", className="title-data"),
+                                    dcc.Graph(figure=data_role_pie, className="data-role-pie-chart")
                                 ]
                             ),
                             html.Div(
