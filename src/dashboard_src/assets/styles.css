@@ -96,6 +96,11 @@
   white-space: nowrap;
 }
 
+.homepage-text, .stack-text, .education-text, .geography-text {
+  transition: color 0.3s ease;
+  color: #ffffff; 
+}
+
 /* add hover feature */
 .homepage-text:hover,
 .stack-text:hover,
