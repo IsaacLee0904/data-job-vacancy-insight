@@ -96,6 +96,14 @@
   white-space: nowrap;
 }
 
+.homepage-text,
+.stack-text,
+.education-text,
+.geography-text {
+  transition: color 0.3s ease;
+  color: #ffffff;
+}
+
 /* add hover feature */
 .homepage-text:hover,
 .stack-text:hover,
@@ -1038,4 +1046,10 @@ Copy code .page .separator,
   font-family: "Poppins", Helvetica;
   letter-spacing: 0.5px;
   white-space: nowrap;
+}
+
+.data-role-pie-chart {
+  width: 100%;
+  height: auto;
+  margin-top: 20px;
 }
