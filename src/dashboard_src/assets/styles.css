@@ -901,7 +901,17 @@ Copy code .page .separator,
   letter-spacing: 0.5px;
   line-height: 12px;
   white-space: nowrap;
-  margin-left: -10px;
+  margin-left: -16px;
+}
+
+.page .change-icon {
+  width: 12px;
+  height: 12px;
+  vertical-align: middle;
+  margin-right: 5px;
+  position: relative;
+  top: -1px;
+  font-weight: bold;
 }
 
 .page .div-wrapper {

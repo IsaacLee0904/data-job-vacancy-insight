@@ -466,6 +466,13 @@ def sidebar():
         ]
     )
 
+# Change Icon
+def get_change_icon(value):
+        if value > 0:
+            return html.Img(src="/assets/icons/arrow_up.svg", className="change-icon")
+        else:
+            return html.Img(src="/assets/icons/arrow_down.svg", className="change-icon")
+
 # Page Content Configuration
 def page_content():
     # Load data for the home page
@@ -589,6 +596,7 @@ def page_content():
                                                 children=[
                                                     html.Span(
                                                         [
+                                                            get_change_icon(stats['total_openings_change']),
                                                             html.Span(f"{stats['total_openings_change']:.1f}%", style={"color": "red" if stats['total_openings_change'] > 0 else "green"}),
                                                             html.Span(" vs last week")
                                                         ], 
@@ -609,6 +617,7 @@ def page_content():
                                                 children=[
                                                     html.Span(
                                                         [
+                                                            get_change_icon(stats['new_openings_change']),
                                                             html.Span(f"{stats['new_openings_change']:.1f}%", style={"color": "red" if stats['new_openings_change'] > 0 else "green"}),
                                                             html.Span(" vs last week")
                                                         ], 
@@ -623,6 +632,7 @@ def page_content():
                                                 children=[
                                                     html.Span(
                                                         [
+                                                            get_change_icon(stats['fill_rate_change']),
                                                             html.Span(f"{stats['fill_rate_change']:.1f}%", style={"color": "red" if stats['fill_rate_change'] > 0 else "green"}),
                                                             html.Span(" vs last week")
                                                         ], 
@@ -637,6 +647,7 @@ def page_content():
                                                 children=[
                                                     html.Span(
                                                         [
+                                                            get_change_icon(stats['attf_change']),
                                                             html.Span(f"{stats['attf_change']:.1f}%", style={"color": "red" if stats['attf_change'] > 0 else "green"}),
                                                             html.Span(" vs last week")
                                                         ], 
