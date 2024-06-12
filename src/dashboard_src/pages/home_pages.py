@@ -315,6 +315,28 @@ def create_historical_total_openings_line_chart(historical_total_openings):
 
     return historical_total_openings_line
 
+# Extract openings statistics
+def extract_openings_statistics(openings_statistics):
+    total_openings = openings_statistics['total_openings'].values[0]
+    total_openings_change = openings_statistics['total_openings_change_pct'].values[0]
+    new_openings = openings_statistics['new_openings_count'].values[0]
+    new_openings_change = openings_statistics['new_openings_change_pct'].values[0]
+    fill_rate = openings_statistics['fill_rate'].values[0]
+    fill_rate_change = openings_statistics['fill_rate_change_pct'].values[0]
+    attf = openings_statistics['average_weeks_to_fill'].values[0]
+    attf_change = openings_statistics['average_weeks_to_fill_change_pct'].values[0]
+
+    return {
+        'total_openings': total_openings,
+        'total_openings_change': total_openings_change,
+        'new_openings': new_openings,
+        'new_openings_change': new_openings_change,
+        'fill_rate': fill_rate,
+        'fill_rate_change': fill_rate_change,
+        'attf': attf,
+        'attf_change': attf_change,
+    }
+
 ## Web Application Configuration
 # Sidebar Configuration
 def sidebar():
@@ -449,12 +471,14 @@ def page_content():
 
     # Load data for the home page
     openings_statistics, historical_total_openings, data_role, data_tools, openings_company, taiepi_area_openings = load_home_page_data()
-
+    print(openings_statistics.columns)
     ## Create figure for the dashboard
     # Create the data role pie chart
     data_role_pie = create_data_role_pie(data_role)
     # Create the historical total openings line chart
     historical_total_openings_line = create_historical_total_openings_line_chart(historical_total_openings)
+    # Extract openings statistics 
+    stats = extract_openings_statistics(openings_statistics)
 
     return html.Div(
         className="page",
