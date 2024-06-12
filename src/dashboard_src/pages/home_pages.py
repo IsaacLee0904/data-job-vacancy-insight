@@ -207,9 +207,9 @@ def create_data_role_pie(data_role):
     )
 
     data_role_pie.update_traces(textinfo='none', 
-                                hovertemplate='<span style="font-size:12px; color:whie; font-weight:bold;">%{customdata[0][0]}</span><br>' +
+                                hovertemplate='<span style="font-size:12px; color:white; font-weight:bold;">%{customdata[0][0]}</span><br>' +
                                               '</br>'+
-                                              '<span style="font-size:15px; color:whie; font-weight:bold;">%{percent} (%{customdata[0][1]})</span><extra></extra>')
+                                              '<span style="font-size:15px; color:white; font-weight:bold;">%{percent} (%{customdata[0][1]})</span><extra></extra>')
 
     # count date for the pie chart title
     crawl_date = data_role['crawl_date'][0]
@@ -274,7 +274,16 @@ def create_historical_total_openings_line_chart(historical_total_openings):
         mode='lines', 
         line={'width': 2.5}, 
         hoverinfo='all',  # Ensure hover information is shown
-        hovertemplate='%{x|%Y-%m-%d}<br>Total openings: %{y}<extra></extra>'  # Custom hover template
+        hovertemplate='<span style="font-size:15px; font-weight:bold;">%{x|%Y-%m-%d}<br><br>Total openings : %{y}<extra></extra>'  # Custom hover template
+    )
+
+    historical_total_openings_line.update_layout(
+        hoverlabel=dict(
+            bgcolor="#ffa726",  
+            font_size=12,      
+            font_color="white",
+            bordercolor="#ffa726" 
+        )
     )
 
     # Generate tick values for x-axis (e.g., every 2 weeks)
