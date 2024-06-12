@@ -257,15 +257,14 @@ def create_historical_total_openings_line_chart(historical_total_openings):
     historical_total_openings_line.update_layout(
         width=750,  # setup chart width
         height=400,  # setup chart height
-        margin=dict(l=95, r=20, t=143, b=20),  # setup chart margin
+        margin=dict(l=95, r=20, t=143, b=50),  # setup chart margin
         paper_bgcolor='rgba(0,0,0,0)',  # setup chart paper background color as transparent
         plot_bgcolor='rgba(0,0,0,0)',  # setup chart plot background color as transparent
-        showlegend=True,  # show legend
         legend=dict(
             orientation="h",  # Horizontal orientation
-            x=0.5,  # Horizontal position (centered)
-            y=-0.3,  # Vertical position (below the chart)
-            xanchor="center",  # Anchor the legend horizontally at the center
+            x=-0.05,  # Horizontal position (left of the chart)
+            y=-0.2,  # Vertical position (below the chart)
+            xanchor="left",  # Anchor the legend horizontally at the left
             yanchor="top"  # Anchor the legend vertically at the top
         )
     )
@@ -273,6 +272,8 @@ def create_historical_total_openings_line_chart(historical_total_openings):
     historical_total_openings_line.update_traces(
         mode='lines', 
         line={'width': 2.5}, 
+        showlegend=True,  # Show legend
+        name='Total Openings',  # Set legend name
         hoverinfo='all',  # Ensure hover information is shown
         hovertemplate='<span style="font-size:15px; font-weight:bold;">%{x|%Y-%m-%d}<br><br>Total openings : %{y}<extra></extra>'  # Custom hover template
     )
@@ -453,10 +454,6 @@ def page_content():
     # Create the data role pie chart
     data_role_pie = create_data_role_pie(data_role)
     # Create the historical total openings line chart
-    testing_total_openings = pd.DataFrame({
-        'crawl_date': ['2024-03-25', '2024-04-01', '2024-04-08', '2024-04-15', '2024-04-22', '2024-04-29', '2024-05-06', '2024-05-13', '2024-05-20', '2024-05-27', '2024-06-03', '2024-06-10'],
-        'total_openings': [940, 914, 859, 827, 910, 960, 963, 1000, 1020, 1050, 1080, 1062]
-    })
     historical_total_openings_line = create_historical_total_openings_line_chart(historical_total_openings)
 
     return html.Div(
