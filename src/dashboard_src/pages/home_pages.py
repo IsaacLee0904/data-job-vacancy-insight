@@ -409,7 +409,7 @@ def sidebar():
                             ),
                             html.Div(
                                 className="email",
-                                children=[html.A("Email", href="hool19965401@gmail.com", className="connection-info-content")]
+                                children=[html.A("Email", href="mailto:hool19965401@gmail.com", className="connection-info-content")]
                             ),
                             html.Img(src="assets/icons/github.svg", className="github-icon"),
                             html.Img(src="assets/icons/linkedin.svg", className="linkedin-icon"),
@@ -457,7 +457,7 @@ def page_content():
         'crawl_date': ['2024-03-25', '2024-04-01', '2024-04-08', '2024-04-15', '2024-04-22', '2024-04-29', '2024-05-06', '2024-05-13', '2024-05-20', '2024-05-27', '2024-06-03', '2024-06-10'],
         'total_openings': [940, 914, 859, 827, 910, 960, 963, 1000, 1020, 1050, 1080, 1062]
     })
-    historical_total_openings_line = create_historical_total_openings_line_chart(testing_total_openings)
+    historical_total_openings_line = create_historical_total_openings_line_chart(historical_total_openings)
 
     return html.Div(
         className="page",
