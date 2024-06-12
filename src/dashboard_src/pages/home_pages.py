@@ -254,25 +254,6 @@ def create_historical_total_openings_line_chart(historical_total_openings):
         template='plotly_white',
     )
 
-    historical_total_openings_line.update_traces(
-        mode='lines+markers', 
-        marker=dict(
-            size=8, 
-            line=dict(
-                width=2, 
-                color='DarkSlateGrey'
-            )
-        ), 
-        line=dict(
-            width=15  # Set the line width here to make the line thicker
-        ),
-        hoverinfo='all',  # Ensure hover information is shown
-        selector=dict(
-            type='scatter', 
-            mode='lines+markers'
-        ),
-    )
-
     historical_total_openings_line.update_layout(
         width=750,  # setup chart width
         height=400,  # setup chart height
@@ -287,6 +268,13 @@ def create_historical_total_openings_line_chart(historical_total_openings):
             xanchor="center",  # Anchor the legend horizontally at the center
             yanchor="top"  # Anchor the legend vertically at the top
         )
+    )
+
+    historical_total_openings_line.update_traces(
+        mode='lines', 
+        line={'width': 2.5}, 
+        hoverinfo='all',  # Ensure hover information is shown
+        hovertemplate='%{x|%Y-%m-%d}<br>Total openings: %{y}<extra></extra>'  # Custom hover template
     )
 
     # Generate tick values for x-axis (e.g., every 2 weeks)
