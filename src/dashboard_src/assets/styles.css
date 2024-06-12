@@ -894,9 +894,6 @@ Copy code .page .separator,
 }
 
 .page .element-vs-last-days {
-  position: absolute;
-  top: 0;
-  left: 0;
   font-family: "Poppins", Helvetica;
   font-weight: 400;
   color: #737b8b;
@@ -904,7 +901,37 @@ Copy code .page .separator,
   letter-spacing: 0.5px;
   line-height: 12px;
   white-space: nowrap;
+  margin-left: -10px;
 }
+
+.page .div-wrapper {
+  width: 80px;
+  left: 390px;
+  position: absolute;
+  height: 12px;
+  top: 68px;
+}
+
+.page .percentage-info-2 {
+  width: 84px;
+  left: 567px;
+  position: absolute;
+  height: 12px;
+  top: 68px;
+}
+
+/* .page .change-value {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  line-height: 12px;
+  white-space: nowrap;
+  margin-left: 20px;
+} */
 
 .page .title-data-2 {
   left: 186px;
@@ -940,14 +967,6 @@ Copy code .page .separator,
   white-space: nowrap;
 }
 
-.page .div-wrapper {
-  width: 80px;
-  left: 390px;
-  position: absolute;
-  height: 12px;
-  top: 68px;
-}
-
 .page .title-data-4 {
   left: 552px;
   position: absolute;
@@ -959,14 +978,6 @@ Copy code .page .separator,
   letter-spacing: 0.5px;
   line-height: 22px;
   white-space: nowrap;
-}
-
-.page .percentage-info-2 {
-  width: 84px;
-  left: 567px;
-  position: absolute;
-  height: 12px;
-  top: 68px;
 }
 
 .page .sales-info {
@@ -1055,8 +1066,8 @@ Copy code .page .separator,
 }
 
 .historical-total-openings-line-chart {
-  width: 100%; 
-  height: auto; 
-  margin-top: 27px; 
+  width: 100%;
+  height: auto;
+  margin-top: 27px;
   margin-left: -50px;
 }
