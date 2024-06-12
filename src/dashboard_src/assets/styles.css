@@ -1054,8 +1054,9 @@ Copy code .page .separator,
   margin-top: 20px;
 }
 
-/* .historical-total-openings-line-chart {
+.historical-total-openings-line-chart {
   width: 100%; 
   height: auto; 
-  margin-top: 20px; 
-} */
+  margin-top: 27px; 
+  margin-left: -50px;
+}

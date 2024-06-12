@@ -263,6 +263,9 @@ def create_historical_total_openings_line_chart(historical_total_openings):
                 color='DarkSlateGrey'
             )
         ), 
+        line=dict(
+            width=15  # Set the line width here to make the line thicker
+        ),
         hoverinfo='all',  # Ensure hover information is shown
         selector=dict(
             type='scatter', 
@@ -271,7 +274,7 @@ def create_historical_total_openings_line_chart(historical_total_openings):
     )
 
     historical_total_openings_line.update_layout(
-        width=700,  # setup chart width
+        width=750,  # setup chart width
         height=400,  # setup chart height
         margin=dict(l=95, r=20, t=143, b=20),  # setup chart margin
         paper_bgcolor='rgba(0,0,0,0)',  # setup chart paper background color as transparent
@@ -286,16 +289,23 @@ def create_historical_total_openings_line_chart(historical_total_openings):
         )
     )
 
+    # Generate tick values for x-axis (e.g., every 2 weeks)
+    tickvals = historical_total_openings['crawl_date'][::1]
+
     # Update x-axis to show every week and only show 12 points
     historical_total_openings_line.update_xaxes(
-        dtick="W1",  # Set dtick to "M1" for monthly ticks or "W1" for weekly
+        dtick="W1",  # Set dtick to "W1" for weekly ticks
         tickformat="%b %d",  # Format to show month and day
-        tickmode='linear',  # Use linear mode to ensure all ticks are shown
-        nticks=12,  # Set the number of ticks to 12
+        tickmode='array',  # Use array mode to specify tick values
+        title='',  # Hide x-axis title
+        tickvals=tickvals,  # Specify tick values
         showgrid=False,  # Hide grid lines for x-axis
         showline=True,  # Show x-axis line
         linewidth=1,  # Set the width of the x-axis line
-        linecolor='lightgrey'  # Set the color of the x-axis line
+        linecolor='lightgrey',  # Set the color of the x-axis line
+        tickfont=dict(
+            color='#737b8b'  # Set the color of the date labels
+        )
     )
 
     # Update y-axis to hide grid lines
@@ -446,7 +456,11 @@ def page_content():
     # Create the data role pie chart
     data_role_pie = create_data_role_pie(data_role)
     # Create the historical total openings line chart
-    historical_total_openings_line = create_historical_total_openings_line_chart(historical_total_openings)
+    testing_total_openings = pd.DataFrame({
+        'crawl_date': ['2024-03-25', '2024-04-01', '2024-04-08', '2024-04-15', '2024-04-22', '2024-04-29', '2024-05-06', '2024-05-13', '2024-05-20', '2024-05-27', '2024-06-03', '2024-06-10'],
+        'total_openings': [940, 914, 859, 827, 910, 960, 963, 1000, 1020, 1050, 1080, 1062]
+    })
+    historical_total_openings_line = create_historical_total_openings_line_chart(testing_total_openings)
 
     return html.Div(
         className="page",
