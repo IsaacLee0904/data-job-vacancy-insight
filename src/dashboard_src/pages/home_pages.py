@@ -185,7 +185,8 @@ def load_home_page_data():
     
     return openings_statistics, historical_total_openings, data_role, data_tools, openings_company, taiepi_area_openings
 
-# Create plotly figures for the dashboard
+## Plotting Data
+# Create the data role pie chart
 def create_data_role_pie(data_role):
     data_role_pie = px.pie(
         data_role, 
@@ -242,6 +243,72 @@ def create_data_role_pie(data_role):
     )
     return data_role_pie
 
+# Create the historical total openings line chart
+def create_historical_total_openings_line_chart(historical_total_openings):
+    historical_total_openings_line = px.line(
+        historical_total_openings, 
+        x='crawl_date', 
+        y='total_openings', 
+        labels={'crawl_date': 'Date', 'total_openings': 'Total Openings'},
+        color_discrete_sequence=['#ffa726'],
+        template='plotly_white',
+    )
+
+    historical_total_openings_line.update_traces(
+        mode='lines+markers', 
+        marker=dict(
+            size=8, 
+            line=dict(
+                width=2, 
+                color='DarkSlateGrey'
+            )
+        ), 
+        hoverinfo='all',  # Ensure hover information is shown
+        selector=dict(
+            type='scatter', 
+            mode='lines+markers'
+        ),
+    )
+
+    historical_total_openings_line.update_layout(
+        width=700,  # setup chart width
+        height=400,  # setup chart height
+        margin=dict(l=95, r=20, t=143, b=20),  # setup chart margin
+        paper_bgcolor='rgba(0,0,0,0)',  # setup chart paper background color as transparent
+        plot_bgcolor='rgba(0,0,0,0)',  # setup chart plot background color as transparent
+        showlegend=True,  # show legend
+        legend=dict(
+            orientation="h",  # Horizontal orientation
+            x=0.5,  # Horizontal position (centered)
+            y=-0.3,  # Vertical position (below the chart)
+            xanchor="center",  # Anchor the legend horizontally at the center
+            yanchor="top"  # Anchor the legend vertically at the top
+        )
+    )
+
+    # Update x-axis to show every week and only show 12 points
+    historical_total_openings_line.update_xaxes(
+        dtick="W1",  # Set dtick to "M1" for monthly ticks or "W1" for weekly
+        tickformat="%b %d",  # Format to show month and day
+        tickmode='linear',  # Use linear mode to ensure all ticks are shown
+        nticks=12,  # Set the number of ticks to 12
+        showgrid=False,  # Hide grid lines for x-axis
+        showline=True,  # Show x-axis line
+        linewidth=1,  # Set the width of the x-axis line
+        linecolor='lightgrey'  # Set the color of the x-axis line
+    )
+
+    # Update y-axis to hide grid lines
+    historical_total_openings_line.update_yaxes(
+        showgrid=True,  # Show grid lines for y-axis
+        title='',  # Hide y-axis title
+        showticklabels=False  # Hide y-axis tick labels
+    )
+
+    return historical_total_openings_line
+
+## Web Application Configuration
+# Sidebar Configuration
 def sidebar():
     return html.Div(
         className="sidebar",
@@ -369,6 +436,7 @@ def sidebar():
         ]
     )
 
+# Page Content Configuration
 def page_content():
 
     # Load data for the home page
@@ -377,6 +445,8 @@ def page_content():
     ## Create figure for the dashboard
     # Create the data role pie chart
     data_role_pie = create_data_role_pie(data_role)
+    # Create the historical total openings line chart
+    historical_total_openings_line = create_historical_total_openings_line_chart(historical_total_openings)
 
     return html.Div(
         className="page",
@@ -502,7 +572,8 @@ def page_content():
                                                     html.Div("vs last week", className="element-vs-last-days")
                                                 ]
                                             ),
-                                            html.P("Openings Metrics in the Last 3 Month", className="sales-info")
+                                            html.P("Openings Metrics in the Last 3 Month", className="sales-info"),
+                                            dcc.Graph(figure=historical_total_openings_line, className="historical-total-openings-line-chart")
                                         ]
                                     ),
                                     html.Img(className="iconly-bold-profile", src="/assets/icons/person.svg"),
