@@ -270,12 +270,14 @@ def create_historical_total_openings_line_chart(historical_total_openings):
     )
 
     historical_total_openings_line.update_traces(
-        mode='lines', 
+        mode='lines+text',  # Add 'text' to show data labels
         line={'width': 2.5}, 
         showlegend=True,  # Show legend
         name='Total Openings',  # Set legend name
         hoverinfo='all',  # Ensure hover information is shown
-        hovertemplate='<span style="font-size:15px; font-weight:bold;">%{x|%Y-%m-%d}<br><br>Total openings : %{y}<extra></extra>'  # Custom hover template
+        hovertemplate='<span style="font-size:15px; font-weight:bold;">%{x|%Y-%m-%d}<br><br>Total openings : %{y}<extra></extra>',  # Custom hover template
+        text=historical_total_openings['total_openings'],  # Add data labels
+        textposition='middle left'  # Position data labels above the points
     )
 
     historical_total_openings_line.update_layout(
