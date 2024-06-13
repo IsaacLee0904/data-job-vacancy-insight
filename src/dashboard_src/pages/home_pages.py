@@ -339,6 +339,23 @@ def extract_openings_statistics(openings_statistics):
         'attf_change': attf_change,
     }
 
+def extract_tools_ranker(data_tools):
+    rank_1_tool_name = data_tools['tool_name'].values[0]
+    rank_1_tool_percentage = data_tools['percentage_of_tool'].values[0]
+    rank_2_tool_name = data_tools['tool_name'].values[1]
+    rank_2_tool_percentage = data_tools['percentage_of_tool'].values[1]
+    rank_3_tool_name = data_tools['tool_name'].values[2]
+    rank_3_tool_percentage = data_tools['percentage_of_tool'].values[2]
+
+    return {
+        'rank_1_tool_name': rank_1_tool_name,
+        'rank_1_tool_percentage': rank_1_tool_percentage,
+        'rank_2_tool_name': rank_2_tool_name,
+        'rank_2_tool_percentage': rank_2_tool_percentage,
+        'rank_3_tool_name': rank_3_tool_name,
+        'rank_3_tool_percentage': rank_3_tool_percentage
+    }
+
 ## Web Application Configuration
 # Sidebar Configuration
 def sidebar():
@@ -482,6 +499,7 @@ def page_content():
 
     # Extract statistics
     stats = extract_openings_statistics(openings_statistics)
+    tools_ranker = extract_tools_ranker(data_tools)
 
     ## Create figure for the dashboard
     # Create the data role pie chart
