@@ -552,7 +552,10 @@ def page_content():
                                                             html.Div(
                                                                 className="overlap-group-2",
                                                                 children=[
-                                                                    html.Div(className="ellipse"),
+                                                                    html.Div(className="ellipse", children=[
+                                                                        html.Div(f"{tools_ranker['rank_1_tool_name']}", className="ellipse-text-1"),
+                                                                        html.Div(f"{tools_ranker['rank_1_tool_percentage']:.1f}%", className="ellipse-pt-1"),
+                                                                    ]),
                                                                     html.Img(className="ellipse-2", src="/assets/img/ellipse-17.svg")
                                                                 ]
                                                             )
@@ -564,7 +567,10 @@ def page_content():
                                                             html.Div(
                                                                 className="overlap-4",
                                                                 children=[
-                                                                    html.Div(className="ellipse-3"),
+                                                                    html.Div(className="ellipse-3", children=[
+                                                                        html.Div(f"{tools_ranker['rank_3_tool_name']}", className="ellipse-text-3"),
+                                                                        html.Div(f"{tools_ranker['rank_3_tool_percentage']:.1f}%", className="ellipse-pt-3"),
+                                                                    ]),
                                                                     html.Img(className="ellipse-4", src="/assets/img/ellipse-17-1.svg")
                                                                 ]
                                                             )
@@ -578,7 +584,10 @@ def page_content():
                                                     html.Div(
                                                         className="overlap-5",
                                                         children=[
-                                                            html.Div(className="ellipse-5"),
+                                                            html.Div(className="ellipse-5", children=[
+                                                                html.Div(f"{tools_ranker['rank_2_tool_name']}", className="ellipse-text-2"),
+                                                                html.Div(f"{tools_ranker['rank_2_tool_percentage']:.1f}%", className="ellipse-pt-2"),
+                                                            ]),
                                                             html.Img(className="ellipse-6", src="/assets/img/ellipse-17-2.svg")
                                                         ]
                                                     )

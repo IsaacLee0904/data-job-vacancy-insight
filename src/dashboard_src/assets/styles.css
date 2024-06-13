@@ -1128,3 +1128,69 @@ Copy code .page .separator,
   margin-top: 27px;
   margin-left: -50px;
 }
+
+.page .ellipse-text-1 {
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 24px;
+  text-align: center;
+  color: #ffffff;
+  position: relative;
+  top: 65px;
+  transform: translateY(-50%);
+}
+
+.page .ellipse-pt-1 {
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 24px;
+  text-align: center;
+  color: #ffffff;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.page .ellipse-text-2 {
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 19px;
+  text-align: center;
+  color: #ffffff;
+  position: relative;
+  top: 47px;
+  transform: translateY(-50%);
+}
+
+.page .ellipse-pt-2 {
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 19px;
+  text-align: center;
+  color: #ffffff;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.page .ellipse-text-3 {
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 14px;
+  text-align: center;
+  color: #ffffff;
+  position: relative;
+  top: 45px;
+  transform: translateY(-50%);
+}
+
+.page .ellipse-pt-3 {
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 14px;
+  text-align: center;
+  color: #ffffff;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
