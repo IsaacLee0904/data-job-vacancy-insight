@@ -27,12 +27,14 @@ A system that recommends data-centric jobs and provides insights, featuring a pe
         - Data quality check 
         - Change data capture
 - Dashboard
-    - Design Dashboard with Figma (in-progress)
-    - Data pipeline - Transfrom data in the data warehouse (reporting_data layer) for dashboard (in-progress)
-        - Home page(**2024-05-22 to 2024-05-23**)
-        - Skill page
-        - Education page 
-        - Geograph page
+    - Home page
+        - Design Dashboard with Figma (**2024-05-21 to 2024-05-22**)
+        - Data pipeline - Transfrom data in the data warehouse (reporting_data layer) for dashboard (**2024-05-22 to 2024-05-23**)
+        - Dash page content setup include html and CSS (**2024-05-24 to 2024-06-11**)
+        - Dashboard figure creating (inprogress)
+    - Stack page
+    - Education page 
+    - Geograph page
 
 ## Project Overview
 The "Data-Job-Vacancy-Insight" project is designed to streamline the job searching process for data professionals. By aggregating and analyzing job listings from multiple sources, it offers personalized job recommendations and valuable market insights directly through a user-friendly Telegram bot interface.

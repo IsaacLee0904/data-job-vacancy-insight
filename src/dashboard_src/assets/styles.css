@@ -894,9 +894,6 @@ Copy code .page .separator,
 }
 
 .page .element-vs-last-days {
-  position: absolute;
-  top: 0;
-  left: 0;
   font-family: "Poppins", Helvetica;
   font-weight: 400;
   color: #737b8b;
@@ -904,6 +901,33 @@ Copy code .page .separator,
   letter-spacing: 0.5px;
   line-height: 12px;
   white-space: nowrap;
+  margin-left: -16px;
+}
+
+.page .change-icon {
+  width: 12px;
+  height: 12px;
+  vertical-align: middle;
+  margin-right: 5px;
+  position: relative;
+  top: -1px;
+  font-weight: bold;
+}
+
+.page .div-wrapper {
+  width: 80px;
+  left: 390px;
+  position: absolute;
+  height: 12px;
+  top: 68px;
+}
+
+.page .percentage-info-2 {
+  width: 84px;
+  left: 567px;
+  position: absolute;
+  height: 12px;
+  top: 68px;
 }
 
 .page .title-data-2 {
@@ -940,14 +964,6 @@ Copy code .page .separator,
   white-space: nowrap;
 }
 
-.page .div-wrapper {
-  width: 80px;
-  left: 390px;
-  position: absolute;
-  height: 12px;
-  top: 68px;
-}
-
 .page .title-data-4 {
   left: 552px;
   position: absolute;
@@ -959,14 +975,6 @@ Copy code .page .separator,
   letter-spacing: 0.5px;
   line-height: 22px;
   white-space: nowrap;
-}
-
-.page .percentage-info-2 {
-  width: 84px;
-  left: 567px;
-  position: absolute;
-  height: 12px;
-  top: 68px;
 }
 
 .page .sales-info {
@@ -989,6 +997,66 @@ Copy code .page .separator,
   height: 27px;
   top: 31px;
   left: 2px;
+}
+
+.page .total-openings-value {
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 24px;
+  position: absolute;
+  width: 27px;
+  height: 27px;
+  top: 34px;
+  /* Adjust this value to move the element down */
+  left: 50px;
+  /* Adjust this value to move the element to the right */
+}
+
+.page .new-openings-value {
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 24px;
+  position: absolute;
+  width: 27px;
+  height: 27px;
+  top: 34px;
+  /* Adjust this value to move the element down */
+  left: 233px;
+  /* Adjust this value to move the element to the right */
+}
+
+.page .fill-rate-value {
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 24px;
+  position: absolute;
+  width: auto;
+  /* Adjust to auto to fit content */
+  height: auto;
+  /* Adjust to auto to fit content */
+  top: 34px;
+  /* Adjust this value to move the element down */
+  left: 374px;
+  /* Adjust this value to move the element to the right */
+  white-space: nowrap;
+  /* Prevent line break */
+}
+
+.page .attf-value {
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 24px;
+  position: absolute;
+  width: auto;
+  /* Adjust to auto to fit content */
+  height: auto;
+  /* Adjust to auto to fit content */
+  top: 34px;
+  /* Adjust this value to move the element down */
+  left: 550px;
+  /* Adjust this value to move the element to the right */
+  white-space: nowrap;
+  /* Prevent line break */
 }
 
 .page .iconly-bold-profile-2 {
@@ -1052,4 +1120,77 @@ Copy code .page .separator,
   width: 100%;
   height: auto;
   margin-top: 20px;
+}
+
+.historical-total-openings-line-chart {
+  width: 100%;
+  height: auto;
+  margin-top: 27px;
+  margin-left: -50px;
+}
+
+.page .ellipse-text-1 {
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 24px;
+  text-align: center;
+  color: #ffffff;
+  position: relative;
+  top: 65px;
+  transform: translateY(-50%);
+}
+
+.page .ellipse-pt-1 {
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 24px;
+  text-align: center;
+  color: #ffffff;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.page .ellipse-text-2 {
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 19px;
+  text-align: center;
+  color: #ffffff;
+  position: relative;
+  top: 47px;
+  transform: translateY(-50%);
+}
+
+.page .ellipse-pt-2 {
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 19px;
+  text-align: center;
+  color: #ffffff;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.page .ellipse-text-3 {
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 14px;
+  text-align: center;
+  color: #ffffff;
+  position: relative;
+  top: 45px;
+  transform: translateY(-50%);
+}
+
+.page .ellipse-pt-3 {
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 14px;
+  text-align: center;
+  color: #ffffff;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 }

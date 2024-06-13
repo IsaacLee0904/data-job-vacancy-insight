@@ -185,7 +185,8 @@ def load_home_page_data():
     
     return openings_statistics, historical_total_openings, data_role, data_tools, openings_company, taiepi_area_openings
 
-# Create plotly figures for the dashboard
+## Plotting Data
+# Create the data role pie chart
 def create_data_role_pie(data_role):
     data_role_pie = px.pie(
         data_role, 
@@ -206,9 +207,9 @@ def create_data_role_pie(data_role):
     )
 
     data_role_pie.update_traces(textinfo='none', 
-                                hovertemplate='<span style="font-size:12px; color:whie; font-weight:bold;">%{customdata[0][0]}</span><br>' +
+                                hovertemplate='<span style="font-size:12px; color:white; font-weight:bold;">%{customdata[0][0]}</span><br>' +
                                               '</br>'+
-                                              '<span style="font-size:15px; color:whie; font-weight:bold;">%{percent} (%{customdata[0][1]})</span><extra></extra>')
+                                              '<span style="font-size:15px; color:white; font-weight:bold;">%{percent} (%{customdata[0][1]})</span><extra></extra>')
 
     # count date for the pie chart title
     crawl_date = data_role['crawl_date'][0]
@@ -242,6 +243,121 @@ def create_data_role_pie(data_role):
     )
     return data_role_pie
 
+# Create the historical total openings line chart
+def create_historical_total_openings_line_chart(historical_total_openings):
+    historical_total_openings_line = px.line(
+        historical_total_openings, 
+        x='crawl_date', 
+        y='total_openings', 
+        labels={'crawl_date': 'Date', 'total_openings': 'Total Openings'},
+        color_discrete_sequence=['#ffa726'],
+        template='plotly_white',
+    )
+
+    historical_total_openings_line.update_layout(
+        width=750,  # setup chart width
+        height=400,  # setup chart height
+        margin=dict(l=95, r=20, t=143, b=50),  # setup chart margin
+        paper_bgcolor='rgba(0,0,0,0)',  # setup chart paper background color as transparent
+        plot_bgcolor='rgba(0,0,0,0)',  # setup chart plot background color as transparent
+        legend=dict(
+            orientation="h",  # Horizontal orientation
+            x=-0.05,  # Horizontal position (left of the chart)
+            y=-0.2,  # Vertical position (below the chart)
+            xanchor="left",  # Anchor the legend horizontally at the left
+            yanchor="top"  # Anchor the legend vertically at the top
+        )
+    )
+
+    historical_total_openings_line.update_traces(
+        mode='lines+text',  # Add 'text' to show data labels
+        line={'width': 2.5}, 
+        showlegend=True,  # Show legend
+        name='Total Openings',  # Set legend name
+        hoverinfo='all',  # Ensure hover information is shown
+        hovertemplate='<span style="font-size:15px; font-weight:bold;">%{x|%Y-%m-%d}<br><br>Total openings : %{y}<extra></extra>',  # Custom hover template
+        text=historical_total_openings['total_openings'],  # Add data labels
+        textposition='middle left'  # Position data labels above the points
+    )
+
+    historical_total_openings_line.update_layout(
+        hoverlabel=dict(
+            bgcolor="#ffa726",  
+            font_size=12,      
+            font_color="white",
+            bordercolor="#ffa726" 
+        )
+    )
+
+    # Generate tick values for x-axis (e.g., every 2 weeks)
+    tickvals = historical_total_openings['crawl_date'][::1]
+
+    # Update x-axis to show every week and only show 12 points
+    historical_total_openings_line.update_xaxes(
+        dtick="W1",  # Set dtick to "W1" for weekly ticks
+        tickformat="%b %d",  # Format to show month and day
+        tickmode='array',  # Use array mode to specify tick values
+        title='',  # Hide x-axis title
+        tickvals=tickvals,  # Specify tick values
+        showgrid=False,  # Hide grid lines for x-axis
+        showline=True,  # Show x-axis line
+        linewidth=1,  # Set the width of the x-axis line
+        linecolor='lightgrey',  # Set the color of the x-axis line
+        tickfont=dict(
+            color='#737b8b'  # Set the color of the date labels
+        )
+    )
+
+    # Update y-axis to hide grid lines
+    historical_total_openings_line.update_yaxes(
+        showgrid=True,  # Show grid lines for y-axis
+        title='',  # Hide y-axis title
+        showticklabels=False  # Hide y-axis tick labels
+    )
+
+    return historical_total_openings_line
+
+# Extract openings statistics
+def extract_openings_statistics(openings_statistics):
+    total_openings = openings_statistics['total_openings'].values[0]
+    total_openings_change = openings_statistics['total_openings_change_pct'].values[0]
+    new_openings = openings_statistics['new_openings_count'].values[0]
+    new_openings_change = openings_statistics['new_openings_change_pct'].values[0]
+    fill_rate = openings_statistics['fill_rate'].values[0]
+    fill_rate_change = openings_statistics['fill_rate_change_pct'].values[0]
+    attf = openings_statistics['average_weeks_to_fill'].values[0]
+    attf_change = openings_statistics['average_weeks_to_fill_change_pct'].values[0]
+
+    return {
+        'total_openings': total_openings,
+        'total_openings_change': total_openings_change,
+        'new_openings': new_openings,
+        'new_openings_change': new_openings_change,
+        'fill_rate': fill_rate,
+        'fill_rate_change': fill_rate_change,
+        'attf': attf,
+        'attf_change': attf_change,
+    }
+
+def extract_tools_ranker(data_tools):
+    rank_1_tool_name = data_tools['tool_name'].values[0]
+    rank_1_tool_percentage = data_tools['percentage_of_tool'].values[0]
+    rank_2_tool_name = data_tools['tool_name'].values[1]
+    rank_2_tool_percentage = data_tools['percentage_of_tool'].values[1]
+    rank_3_tool_name = data_tools['tool_name'].values[2]
+    rank_3_tool_percentage = data_tools['percentage_of_tool'].values[2]
+
+    return {
+        'rank_1_tool_name': rank_1_tool_name,
+        'rank_1_tool_percentage': rank_1_tool_percentage,
+        'rank_2_tool_name': rank_2_tool_name,
+        'rank_2_tool_percentage': rank_2_tool_percentage,
+        'rank_3_tool_name': rank_3_tool_name,
+        'rank_3_tool_percentage': rank_3_tool_percentage
+    }
+
+## Web Application Configuration
+# Sidebar Configuration
 def sidebar():
     return html.Div(
         className="sidebar",
@@ -335,7 +451,7 @@ def sidebar():
                             ),
                             html.Div(
                                 className="email",
-                                children=[html.A("Email", href="hool19965401@gmail.com", className="connection-info-content")]
+                                children=[html.A("Email", href="mailto:hool19965401@gmail.com", className="connection-info-content")]
                             ),
                             html.Img(src="assets/icons/github.svg", className="github-icon"),
                             html.Img(src="assets/icons/linkedin.svg", className="linkedin-icon"),
@@ -369,14 +485,27 @@ def sidebar():
         ]
     )
 
-def page_content():
+# Change Icon
+def get_change_icon(value):
+        if value > 0:
+            return html.Img(src="/assets/icons/arrow_up.svg", className="change-icon")
+        else:
+            return html.Img(src="/assets/icons/arrow_down.svg", className="change-icon")
 
+# Page Content Configuration
+def page_content():
     # Load data for the home page
     openings_statistics, historical_total_openings, data_role, data_tools, openings_company, taiepi_area_openings = load_home_page_data()
+
+    # Extract statistics
+    stats = extract_openings_statistics(openings_statistics)
+    tools_ranker = extract_tools_ranker(data_tools)
 
     ## Create figure for the dashboard
     # Create the data role pie chart
     data_role_pie = create_data_role_pie(data_role)
+    # Create the historical total openings line chart
+    historical_total_openings_line = create_historical_total_openings_line_chart(historical_total_openings)
 
     return html.Div(
         className="page",
@@ -423,7 +552,10 @@ def page_content():
                                                             html.Div(
                                                                 className="overlap-group-2",
                                                                 children=[
-                                                                    html.Div(className="ellipse"),
+                                                                    html.Div(className="ellipse", children=[
+                                                                        html.Div(f"{tools_ranker['rank_1_tool_name']}", className="ellipse-text-1"),
+                                                                        html.Div(f"{tools_ranker['rank_1_tool_percentage']:.1f}%", className="ellipse-pt-1"),
+                                                                    ]),
                                                                     html.Img(className="ellipse-2", src="/assets/img/ellipse-17.svg")
                                                                 ]
                                                             )
@@ -435,7 +567,10 @@ def page_content():
                                                             html.Div(
                                                                 className="overlap-4",
                                                                 children=[
-                                                                    html.Div(className="ellipse-3"),
+                                                                    html.Div(className="ellipse-3", children=[
+                                                                        html.Div(f"{tools_ranker['rank_3_tool_name']}", className="ellipse-text-3"),
+                                                                        html.Div(f"{tools_ranker['rank_3_tool_percentage']:.1f}%", className="ellipse-pt-3"),
+                                                                    ]),
                                                                     html.Img(className="ellipse-4", src="/assets/img/ellipse-17-1.svg")
                                                                 ]
                                                             )
@@ -449,7 +584,10 @@ def page_content():
                                                     html.Div(
                                                         className="overlap-5",
                                                         children=[
-                                                            html.Div(className="ellipse-5"),
+                                                            html.Div(className="ellipse-5", children=[
+                                                                html.Div(f"{tools_ranker['rank_2_tool_name']}", className="ellipse-text-2"),
+                                                                html.Div(f"{tools_ranker['rank_2_tool_percentage']:.1f}%", className="ellipse-pt-2"),
+                                                            ]),
                                                             html.Img(className="ellipse-6", src="/assets/img/ellipse-17-2.svg")
                                                         ]
                                                     )
@@ -476,36 +614,80 @@ def page_content():
                                         children=[
                                             html.Div("Total Openings", className="title-data"),
                                             html.Div(
+                                                className="icon-and-value",
+                                                children=[
+                                                    html.Img(className="iconly-bold-profile", src="/assets/icons/person.svg"),
+                                                    html.Div(f"{stats['total_openings']}", className="total-openings-value")
+                                                ]
+                                            ),
+                                            html.Div(
                                                 className="percentage-info",
                                                 children=[
-                                                    html.Div("vs last week", className="element-vs-last-days")
+                                                    html.Span(
+                                                        [
+                                                            get_change_icon(stats['total_openings_change']),
+                                                            html.Span(f"{stats['total_openings_change']:.1f}%", style={"color": "red" if stats['total_openings_change'] > 0 else "green"}),
+                                                            html.Span(" vs last week")
+                                                        ], 
+                                                        className="element-vs-last-days"
+                                                    )
                                                 ]
                                             ),
                                             html.Div("New Openings", className="title-data-2"),
                                             html.Div(
+                                                className="icon-and-value",
+                                                children=[
+                                                    html.Img(className="iconly-bold-profile", src="/assets/icons/person.svg"),
+                                                    html.Div(f"{stats['new_openings']}", className="new-openings-value")
+                                                ]
+                                            ),
+                                            html.Div(
                                                 className="element-vs-last-days-wrapper",
                                                 children=[
-                                                    html.Div("vs last week", className="element-vs-last-days")
+                                                    html.Span(
+                                                        [
+                                                            get_change_icon(stats['new_openings_change']),
+                                                            html.Span(f"{stats['new_openings_change']:.1f}%", style={"color": "red" if stats['new_openings_change'] > 0 else "green"}),
+                                                            html.Span(" vs last week")
+                                                        ], 
+                                                        className="element-vs-last-days"
+                                                    )
                                                 ]
                                             ),
                                             html.Div("Fill Rate", className="title-data-3"),
+                                            html.Div(f"{stats['fill_rate']:.2f} %", className="fill-rate-value"),
                                             html.Div(
                                                 className="div-wrapper",
                                                 children=[
-                                                    html.Div("vs last week", className="element-vs-last-days")
+                                                    html.Span(
+                                                        [
+                                                            get_change_icon(stats['fill_rate_change']),
+                                                            html.Span(f"{stats['fill_rate_change']:.1f}%", style={"color": "red" if stats['fill_rate_change'] > 0 else "green"}),
+                                                            html.Span(" vs last week")
+                                                        ], 
+                                                        className="element-vs-last-days"
+                                                    )
                                                 ]
                                             ),
                                             html.Div("ATTF", className="title-data-4"),
+                                            html.Div(f"{stats['attf']:.2f} Weeks", className="attf-value"),
                                             html.Div(
                                                 className="percentage-info-2",
                                                 children=[
-                                                    html.Div("vs last week", className="element-vs-last-days")
+                                                    html.Span(
+                                                        [
+                                                            get_change_icon(stats['attf_change']),
+                                                            html.Span(f"{stats['attf_change']:.1f}%", style={"color": "red" if stats['attf_change'] > 0 else "green"}),
+                                                            html.Span(" vs last week")
+                                                        ], 
+                                                        className="element-vs-last-days"
+                                                    )
                                                 ]
                                             ),
-                                            html.P("Openings Metrics in the Last 3 Month", className="sales-info")
+                                            html.P("Openings Metrics in the Last 3 Month", className="sales-info"),
+                                            dcc.Graph(figure=historical_total_openings_line, className="historical-total-openings-line-chart")
                                         ]
                                     ),
-                                    html.Img(className="iconly-bold-profile", src="/assets/icons/person.svg"),
                                     html.Img(className="iconly-bold-profile-2", src="/assets/icons/person.svg")
                                 ]
                             ),
