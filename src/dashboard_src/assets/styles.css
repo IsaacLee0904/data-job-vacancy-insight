@@ -930,19 +930,6 @@ Copy code .page .separator,
   top: 68px;
 }
 
-/* .page .change-value {
-  position: absolute;
-  top: 0;
-  left: 0;
-  font-family: "Poppins", Helvetica;
-  font-weight: 400;
-  font-size: 12px;
-  letter-spacing: 0.5px;
-  line-height: 12px;
-  white-space: nowrap;
-  margin-left: 20px;
-} */
-
 .page .title-data-2 {
   left: 186px;
   position: absolute;
@@ -1010,6 +997,66 @@ Copy code .page .separator,
   height: 27px;
   top: 31px;
   left: 2px;
+}
+
+.page .total-openings-value {
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 24px;
+  position: absolute;
+  width: 27px;
+  height: 27px;
+  top: 34px;
+  /* Adjust this value to move the element down */
+  left: 50px;
+  /* Adjust this value to move the element to the right */
+}
+
+.page .new-openings-value {
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 24px;
+  position: absolute;
+  width: 27px;
+  height: 27px;
+  top: 34px;
+  /* Adjust this value to move the element down */
+  left: 233px;
+  /* Adjust this value to move the element to the right */
+}
+
+.page .fill-rate-value {
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 24px;
+  position: absolute;
+  width: auto;
+  /* Adjust to auto to fit content */
+  height: auto;
+  /* Adjust to auto to fit content */
+  top: 34px;
+  /* Adjust this value to move the element down */
+  left: 374px;
+  /* Adjust this value to move the element to the right */
+  white-space: nowrap;
+  /* Prevent line break */
+}
+
+.page .attf-value {
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  font-size: 24px;
+  position: absolute;
+  width: auto;
+  /* Adjust to auto to fit content */
+  height: auto;
+  /* Adjust to auto to fit content */
+  top: 34px;
+  /* Adjust this value to move the element down */
+  left: 550px;
+  /* Adjust this value to move the element to the right */
+  white-space: nowrap;
+  /* Prevent line break */
 }
 
 .page .iconly-bold-profile-2 {
