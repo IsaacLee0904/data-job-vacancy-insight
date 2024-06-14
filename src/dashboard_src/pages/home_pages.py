@@ -1,6 +1,7 @@
 ## import packages
 # import necessary libraries
 import sys, os 
+import json
 from datetime import datetime, timedelta
 import pandas as pd
 import dash
@@ -317,6 +318,30 @@ def create_historical_total_openings_line_chart(historical_total_openings):
 
     return historical_total_openings_line
 
+# Create the taiepi area openings map
+# def create_openings_map(taiepi_area_openings):
+#     taiepi_geo_json = json.load(open("src/dashboard_src/assets/geo_data/original/taipei.geojson", "r"))
+#     new_taiepi_geo_json = json.load(open("src/dashboard_src/assets/geo_data/original/new_taipei.geojson", "r"))
+
+#     combined_geo_info = {
+#         "type": "FeatureCollection",
+#         "features": taiepi_geo_json["features"] + new_taiepi_geo_json["features"]
+#     }
+    
+#     print(combined_geo_info)
+    # openings_map = px.choropleth(
+    #     taiepi_area_openings,
+    #     geojson=combined_geo_info,
+    #     locations='district_name_eng',
+    #     featureidkey='properties.name',
+    #     color='openings_count',
+    #     color_continuous_scale="Viridis",
+    #     range_color=(0, taiepi_area_openings['openings_count'].max()),
+    #     labels={'openings_count': 'Openings Count'},
+    # )
+
+    # return none
+
 # Extract openings statistics
 def extract_openings_statistics(openings_statistics):
     total_openings = openings_statistics['total_openings'].values[0]
@@ -354,6 +379,31 @@ def extract_tools_ranker(data_tools):
         'rank_2_tool_percentage': rank_2_tool_percentage,
         'rank_3_tool_name': rank_3_tool_name,
         'rank_3_tool_percentage': rank_3_tool_percentage
+    }
+
+def extract_company_ranker(openings_company):
+    rank_1_company_name = openings_company['company_name'].values[0]
+    rank_1_openings = openings_company['opening_count'].values[0]
+    rank_2_company_name = openings_company['company_name'].values[1]
+    rank_2_openings = openings_company['opening_count'].values[1]
+    rank_3_company_name = openings_company['company_name'].values[2]
+    rank_3_openings = openings_company['opening_count'].values[2]
+    rank_4_company_name = openings_company['company_name'].values[3]
+    rank_4_openings = openings_company['opening_count'].values[3]
+    rank_5_company_name = openings_company['company_name'].values[4]
+    rank_5_openings = openings_company['opening_count'].values[4]
+
+    return {
+        'rank_1_company_name': rank_1_company_name,
+        'rank_1_openings': rank_1_openings,
+        'rank_2_company_name': rank_2_company_name,
+        'rank_2_openings': rank_2_openings,
+        'rank_3_company_name': rank_3_company_name,
+        'rank_3_openings': rank_3_openings,
+        'rank_4_company_name': rank_4_company_name,
+        'rank_4_openings': rank_4_openings,
+        'rank_5_company_name': rank_5_company_name,
+        'rank_5_openings': rank_5_openings
     }
 
 ## Web Application Configuration
@@ -500,12 +550,15 @@ def page_content():
     # Extract statistics
     stats = extract_openings_statistics(openings_statistics)
     tools_ranker = extract_tools_ranker(data_tools)
+    company_ranker = extract_company_ranker(openings_company)
 
     ## Create figure for the dashboard
     # Create the data role pie chart
     data_role_pie = create_data_role_pie(data_role)
     # Create the historical total openings line chart
     historical_total_openings_line = create_historical_total_openings_line_chart(historical_total_openings)
+    # Create the taiepi area openings map
+    # openings_map = create_openings_map(taiepi_area_openings)
 
     return html.Div(
         className="page",
@@ -527,7 +580,8 @@ def page_content():
                             html.Div(
                                 className="order-stats",
                                 children=[
-                                    html.Div("Openings in Taipei", className="title-data")
+                                    html.Div("Openings in Taipei", className="title-data"),
+                                    # dcc.Graph(figure=openings_map, className="openings-map")
                                 ]
                             ),
                             html.Div(
@@ -699,16 +753,41 @@ def page_content():
                             html.Hr(className="line-3"),
                             html.Hr(className="line-4"),
                             html.Hr(className="line-5"),
-                            html.Div("01", className="text-wrapper-5"),
-                            html.Div("02", className="text-wrapper-6"),
-                            html.Div("03", className="text-wrapper-7"),
-                            html.Div("04", className="text-wrapper-8"),
-                            html.Div("05", className="text-wrapper-9"),
-                            html.Div(className="group"),
-                            html.Div(className="group-2"),
-                            html.Div(className="group-3"),
-                            html.Div(className="group-4"),
-                            html.Div(className="group-5")
+                            html.Div(className="ranker-1", children=[
+                                html.Div("01", className="text-wrapper-5"),
+                                html.Div(f"{company_ranker['rank_1_company_name']}", className="company_name"),
+                            ]), 
+                            html.Div(className="ranker-2", children=[
+                                html.Div("02", className="text-wrapper-6"),
+                                html.Div(f"{company_ranker['rank_2_company_name']}", className="company_name-2"),
+                            ]),
+                            html.Div(className="ranker-3", children=[
+                                html.Div("03", className="text-wrapper-7"),
+                                html.Div(f"{company_ranker['rank_3_company_name']}", className="company_name-3"),
+                            ]),
+                            html.Div(className="ranker-4", children=[
+                                html.Div("04", className="text-wrapper-8"),
+                                html.Div(f"{company_ranker['rank_4_company_name']}", className="company_name-4"),
+                            ]),
+                            html.Div(className="ranker-5", children=[
+                                html.Div("05", className="text-wrapper-9"),
+                                html.Div(f"{company_ranker['rank_5_company_name']}", className="company_name-5"),
+                            ]),
+                            html.Div(className="group", children=[
+                                html.Div(f"{company_ranker['rank_1_openings']}", className="company-openings")
+                            ]),
+                            html.Div(className="group-2", children=[
+                                html.Div(f"{company_ranker['rank_2_openings']}", className="company-openings-2")
+                            ]),
+                            html.Div(className="group-3", children=[
+                                html.Div(f"{company_ranker['rank_3_openings']}", className="company-openings-3")
+                            ]),
+                            html.Div(className="group-4", children=[
+                                html.Div(f"{company_ranker['rank_4_openings']}", className="company-openings-4")
+                            ]),
+                            html.Div(className="group-5", children=[
+                                html.Div(f"{company_ranker['rank_5_openings']}", className="company-openings-5")
+                            ]),
                         ]
                     ),
                     html.Div("Dashboard", className="title-page")

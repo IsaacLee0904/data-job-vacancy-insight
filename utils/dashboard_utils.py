@@ -1,4 +1,5 @@
 import sys, os
+import re
 import datetime
 import pandas as pd
 
@@ -241,7 +242,8 @@ class FetchReportData:
 
     def fetch_openings_company(self, crawl_date):
         """
-        Fetch job vacancy data for the top five companies from the 'reporting_data' schema for a specific crawl date.
+        Fetch job vacancy data for the top five companies from the 'reporting_data' schema for a specific crawl date,
+        adjusting company names with special characters.
         """
         try:
             # Prepare the SQL query to fetch the required data
@@ -258,7 +260,18 @@ class FetchReportData:
             # Convert the data into a DataFrame if not empty
             if data:
                 df = pd.DataFrame(data, columns=['rank', 'company_name', 'opening_count', 'crawl_date'])
-                self.logger.info("Job vacancy data for the top five companies converted to DataFrame successfully.")
+                
+                # Adjust company names based on your specified conditions
+                def adjust_company_name(name):
+                    if '_' in name:
+                        return name.split('_')[0]
+                    elif '(' in name and ')' in name:
+                        return re.search(r'\((.*?)\)', name).group(1)
+                    else:
+                        return name
+                
+                df['company_name'] = df['company_name'].apply(adjust_company_name)
+                self.logger.info("Job vacancy data for the top five companies converted to DataFrame successfully with adjusted company names.")
                 return df
             else:
                 self.logger.info("No job vacancy data found for the specified crawl date.")
