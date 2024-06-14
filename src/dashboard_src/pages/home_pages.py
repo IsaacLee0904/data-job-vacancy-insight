@@ -1,6 +1,7 @@
 ## import packages
 # import necessary libraries
 import sys, os 
+import json
 from datetime import datetime, timedelta
 import pandas as pd
 import dash
@@ -317,6 +318,30 @@ def create_historical_total_openings_line_chart(historical_total_openings):
 
     return historical_total_openings_line
 
+# Create the taiepi area openings map
+# def create_openings_map(taiepi_area_openings):
+#     taiepi_geo_json = json.load(open("src/dashboard_src/assets/geo_data/original/taipei.geojson", "r"))
+#     new_taiepi_geo_json = json.load(open("src/dashboard_src/assets/geo_data/original/new_taipei.geojson", "r"))
+
+#     combined_geo_info = {
+#         "type": "FeatureCollection",
+#         "features": taiepi_geo_json["features"] + new_taiepi_geo_json["features"]
+#     }
+    
+#     print(combined_geo_info)
+    # openings_map = px.choropleth(
+    #     taiepi_area_openings,
+    #     geojson=combined_geo_info,
+    #     locations='district_name_eng',
+    #     featureidkey='properties.name',
+    #     color='openings_count',
+    #     color_continuous_scale="Viridis",
+    #     range_color=(0, taiepi_area_openings['openings_count'].max()),
+    #     labels={'openings_count': 'Openings Count'},
+    # )
+
+    # return none
+
 # Extract openings statistics
 def extract_openings_statistics(openings_statistics):
     total_openings = openings_statistics['total_openings'].values[0]
@@ -532,6 +557,8 @@ def page_content():
     data_role_pie = create_data_role_pie(data_role)
     # Create the historical total openings line chart
     historical_total_openings_line = create_historical_total_openings_line_chart(historical_total_openings)
+    # Create the taiepi area openings map
+    # openings_map = create_openings_map(taiepi_area_openings)
 
     return html.Div(
         className="page",
@@ -553,7 +580,8 @@ def page_content():
                             html.Div(
                                 className="order-stats",
                                 children=[
-                                    html.Div("Openings in Taipei", className="title-data")
+                                    html.Div("Openings in Taipei", className="title-data"),
+                                    # dcc.Graph(figure=openings_map, className="openings-map")
                                 ]
                             ),
                             html.Div(
