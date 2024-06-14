@@ -725,11 +725,26 @@ def page_content():
                             html.Hr(className="line-3"),
                             html.Hr(className="line-4"),
                             html.Hr(className="line-5"),
-                            html.Div("01", className="text-wrapper-5"),
-                            html.Div("02", className="text-wrapper-6"),
-                            html.Div("03", className="text-wrapper-7"),
-                            html.Div("04", className="text-wrapper-8"),
-                            html.Div("05", className="text-wrapper-9"),
+                            html.Div(className="ranker-1", children=[
+                                html.Div("01", className="text-wrapper-5"),
+                                html.Div(f"{company_ranker['rank_1_company_name']}", className="company_name"),
+                            ]), 
+                            html.Div(className="ranker-2", children=[
+                                html.Div("02", className="text-wrapper-6"),
+                                html.Div(f"{company_ranker['rank_2_company_name']}", className="company_name-2"),
+                            ]),
+                            html.Div(className="ranker-3", children=[
+                                html.Div("03", className="text-wrapper-7"),
+                                html.Div(f"{company_ranker['rank_3_company_name']}", className="company_name-3"),
+                            ]),
+                            html.Div(className="ranker-4", children=[
+                                html.Div("04", className="text-wrapper-8"),
+                                html.Div(f"{company_ranker['rank_4_company_name']}", className="company_name-4"),
+                            ]),
+                            html.Div(className="ranker-5", children=[
+                                html.Div("05", className="text-wrapper-9"),
+                                html.Div(f"{company_ranker['rank_5_company_name']}", className="company_name-5"),
+                            ]),
                             html.Div(className="group", children=[
                                 html.Div(f"{company_ranker['rank_1_openings']}", className="company-openings")
                             ]),
