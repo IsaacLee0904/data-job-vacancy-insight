@@ -730,11 +730,21 @@ def page_content():
                             html.Div("03", className="text-wrapper-7"),
                             html.Div("04", className="text-wrapper-8"),
                             html.Div("05", className="text-wrapper-9"),
-                            html.Div(className="group"),
-                            html.Div(className="group-2"),
-                            html.Div(className="group-3"),
-                            html.Div(className="group-4"),
-                            html.Div(className="group-5")
+                            html.Div(className="group", children=[
+                                html.Div(f"{company_ranker['rank_1_openings']}", className="company-openings")
+                            ]),
+                            html.Div(className="group-2", children=[
+                                html.Div(f"{company_ranker['rank_2_openings']}", className="company-openings-2")
+                            ]),
+                            html.Div(className="group-3", children=[
+                                html.Div(f"{company_ranker['rank_3_openings']}", className="company-openings-3")
+                            ]),
+                            html.Div(className="group-4", children=[
+                                html.Div(f"{company_ranker['rank_4_openings']}", className="company-openings-4")
+                            ]),
+                            html.Div(className="group-5", children=[
+                                html.Div(f"{company_ranker['rank_5_openings']}", className="company-openings-5")
+                            ]),
                         ]
                     ),
                     html.Div("Dashboard", className="title-page")
