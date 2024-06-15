@@ -4,6 +4,7 @@ import sys, os
 import json
 from datetime import datetime, timedelta
 import pandas as pd
+# import geopandas as gpd
 import dash
 from dash import html, dcc
 from dash.dependencies import Input, Output
@@ -319,28 +320,36 @@ def create_historical_total_openings_line_chart(historical_total_openings):
     return historical_total_openings_line
 
 # Create the taiepi area openings map
-# def create_openings_map(taiepi_area_openings):
-#     taiepi_geo_json = json.load(open("src/dashboard_src/assets/geo_data/original/taipei.geojson", "r"))
-#     new_taiepi_geo_json = json.load(open("src/dashboard_src/assets/geo_data/original/new_taipei.geojson", "r"))
+def create_openings_map(taiepi_area_openings):
+    # Load your GeoJSON file
+    with open('src/dashboard_src/assets/geo_data/county_geo_info.geojson', 'r') as file:
+        geojson_data = json.load(file)
 
-#     combined_geo_info = {
-#         "type": "FeatureCollection",
-#         "features": taiepi_geo_json["features"] + new_taiepi_geo_json["features"]
-#     }
-    
-#     print(combined_geo_info)
-    # openings_map = px.choropleth(
-    #     taiepi_area_openings,
-    #     geojson=combined_geo_info,
-    #     locations='district_name_eng',
-    #     featureidkey='properties.name',
-    #     color='openings_count',
-    #     color_continuous_scale="Viridis",
-    #     range_color=(0, taiepi_area_openings['openings_count'].max()),
-    #     labels={'openings_count': 'Openings Count'},
-    # )
+    # Filter features for 'COUNTYNAME' of '臺北市' or '新北市'
+    filtered_features = [feature for feature in geojson_data['features']
+                        if feature['properties']['COUNTYNAME'] in ['臺北市', '新北市']]
 
-    # return none
+    # Update GeoJSON data with filtered features
+    filtered_geojson_data = dict(geojson_data)  # Make a copy of the original data
+    filtered_geojson_data['features'] = filtered_features
+
+    # Extract 'TOWNID' from the filtered features
+    filtered_town_ids = [feature['properties']['TOWNID'] for feature in filtered_features]
+
+    # Generate the map
+    openings_map = px.choropleth_mapbox(geojson=filtered_geojson_data,
+                            locations=filtered_town_ids,  # Use 'TOWNID' as location identifier
+                            featureidkey="properties.TOWNID",
+                            color_discrete_sequence=["rgba(255,255,255,0)"],  # Set fill color to match background
+                            mapbox_style="white-bg",  # Use a plain white background
+                            center={"lat": 25.016983, "lon": 121.462787},  # Centered around Taipei
+                            zoom=9)
+
+    # Update layout to ensure no other geographic information is shown
+    openings_map.update_traces(marker_line_color='black', marker_line_width=1)  # Only show outlines
+    openings_map.update_layout(showlegend=False, margin={"r":0,"t":0,"l":0,"b":0})
+
+    return openings_map
 
 # Extract openings statistics
 def extract_openings_statistics(openings_statistics):
@@ -558,7 +567,7 @@ def page_content():
     # Create the historical total openings line chart
     historical_total_openings_line = create_historical_total_openings_line_chart(historical_total_openings)
     # Create the taiepi area openings map
-    # openings_map = create_openings_map(taiepi_area_openings)
+    openings_map = create_openings_map(taiepi_area_openings)
 
     return html.Div(
         className="page",
@@ -580,8 +589,8 @@ def page_content():
                             html.Div(
                                 className="order-stats",
                                 children=[
-                                    html.Div("Openings in Taipei", className="title-data"),
-                                    # dcc.Graph(figure=openings_map, className="openings-map")
+                                    html.Div("Openings in Taipei Metro Area", className="title-data"),
+                                    dcc.Graph(figure=openings_map, className="openings-map")
                                 ]
                             ),
                             html.Div(
