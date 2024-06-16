@@ -4,6 +4,7 @@ import sys, os
 import json
 from datetime import datetime, timedelta
 import pandas as pd
+# import geopandas as gpd
 import dash
 from dash import html, dcc
 from dash.dependencies import Input, Output
@@ -319,28 +320,77 @@ def create_historical_total_openings_line_chart(historical_total_openings):
     return historical_total_openings_line
 
 # Create the taiepi area openings map
-# def create_openings_map(taiepi_area_openings):
-#     taiepi_geo_json = json.load(open("src/dashboard_src/assets/geo_data/original/taipei.geojson", "r"))
-#     new_taiepi_geo_json = json.load(open("src/dashboard_src/assets/geo_data/original/new_taipei.geojson", "r"))
+def create_openings_map(taiepi_area_openings):
+    # Load your GeoJSON file
+    with open('src/dashboard_src/assets/geo_data/county_geo_info.geojson', 'r') as file:
+        geojson_data = json.load(file)
 
-#     combined_geo_info = {
-#         "type": "FeatureCollection",
-#         "features": taiepi_geo_json["features"] + new_taiepi_geo_json["features"]
-#     }
-    
-#     print(combined_geo_info)
-    # openings_map = px.choropleth(
-    #     taiepi_area_openings,
-    #     geojson=combined_geo_info,
-    #     locations='district_name_eng',
-    #     featureidkey='properties.name',
-    #     color='openings_count',
-    #     color_continuous_scale="Viridis",
-    #     range_color=(0, taiepi_area_openings['openings_count'].max()),
-    #     labels={'openings_count': 'Openings Count'},
-    # )
+    # Filter features for 'COUNTYNAME' of '臺北市' or '新北市'
+    filtered_features = [feature for feature in geojson_data['features']
+                         if feature['properties']['COUNTYNAME'] in ['臺北市', '新北市']]
 
-    # return none
+    # Update GeoJSON data with filtered features
+    filtered_geojson_data = dict(geojson_data)  # Make a copy of the original data
+    filtered_geojson_data['features'] = filtered_features
+
+    # Extract all districts from the GeoJSON data
+    all_districts = [feature['properties']['TOWNENG'] for feature in filtered_features]
+
+    # Ensure taiepi_area_openings contains all districts
+    all_districts_df = pd.DataFrame({'district_name_eng': all_districts})
+    taiepi_area_openings = all_districts_df.merge(taiepi_area_openings, on='district_name_eng', how='left')
+    taiepi_area_openings['openings_count'] = taiepi_area_openings['openings_count'].fillna(0)
+    taiepi_area_openings['openings_count'] = taiepi_area_openings['openings_count'].astype(float)
+
+    # Define a custom color scale
+    custom_color_scale = [
+        [0, '#E6ECFF'],    # low
+        [0.5, '#5A6ACF'],  # mid
+        [1, '#2E2E48']     # high
+    ]
+
+    # Generate the map
+    openings_map = px.choropleth_mapbox(
+        taiepi_area_openings,
+        geojson=filtered_geojson_data,
+        locations='district_name_eng',  # Use 'district_name_eng' as location identifier
+        featureidkey="properties.TOWNENG",  # Match with 'TOWNENG' in GeoJSON
+        color='openings_count',  # Color by 'openings_count'
+        color_continuous_scale=custom_color_scale,  # Use custom color scale
+        range_color=(0, taiepi_area_openings['openings_count'].max()),  # Set color range
+        mapbox_style="white-bg",  # Use a plain white background
+        center={"lat": 25.008216635689223, "lon": 121.641468398647703},  # Centered around Taipei
+        zoom=8.1,  # Adjust the zoom level to fit the desired area
+    )
+
+    # Update layout to ensure no other geographic information is shown
+    openings_map.update_traces(
+            marker_line_color='black', 
+            marker_line_width=1,  # Only show outlines
+            hovertemplate='<b><span style="font-size:15px;">%{location}</span></b><br><b><span style="font-size:12px;">Openings count: %{z}</span></b><extra></extra>'
+        )
+   
+    openings_map.update_layout(
+        coloraxis_showscale=False,  # Hide the color bar
+        showlegend=True,  # Show legend
+        margin={"r":0,"t":0,"l":0,"b":0},
+        width=410,  # Adjust the width of the map to center it
+        height=300,  # Adjust the height of the map to center it
+        mapbox=dict(
+            center={"lat": 25.008216635689223, "lon": 121.641468398647703},
+            zoom=8.1  # Adjust zoom level as needed
+        ),
+        autosize=True,  # Automatically adjust the size of the map
+        hovermode='closest',  # Hover mode closest to the cursor
+        hoverlabel=dict(
+            bgcolor="#2E2E48", # setup hover label background color
+            font_size=12,      # setup hover label font size
+            font_color="white",# setup hover label font color
+            bordercolor="#2E2E48" # setup hover label border color
+        )
+    )
+
+    return openings_map
 
 # Extract openings statistics
 def extract_openings_statistics(openings_statistics):
@@ -558,7 +608,7 @@ def page_content():
     # Create the historical total openings line chart
     historical_total_openings_line = create_historical_total_openings_line_chart(historical_total_openings)
     # Create the taiepi area openings map
-    # openings_map = create_openings_map(taiepi_area_openings)
+    openings_map = create_openings_map(taiepi_area_openings)
 
     return html.Div(
         className="page",
@@ -580,8 +630,8 @@ def page_content():
                             html.Div(
                                 className="order-stats",
                                 children=[
-                                    html.Div("Openings in Taipei", className="title-data"),
-                                    # dcc.Graph(figure=openings_map, className="openings-map")
+                                    html.Div("Openings in Taipei Metro Area", className="title-data"),
+                                    dcc.Graph(figure=openings_map, className="openings-map")
                                 ]
                             ),
                             html.Div(
