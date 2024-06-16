@@ -337,17 +337,30 @@ def create_openings_map(taiepi_area_openings):
     filtered_town_ids = [feature['properties']['TOWNID'] for feature in filtered_features]
 
     # Generate the map
-    openings_map = px.choropleth_mapbox(geojson=filtered_geojson_data,
-                            locations=filtered_town_ids,  # Use 'TOWNID' as location identifier
-                            featureidkey="properties.TOWNID",
-                            color_discrete_sequence=["rgba(255,255,255,0)"],  # Set fill color to match background
-                            mapbox_style="white-bg",  # Use a plain white background
-                            center={"lat": 25.016983, "lon": 121.462787},  # Centered around Taipei
-                            zoom=9)
+    openings_map = px.choropleth_mapbox(
+        geojson=filtered_geojson_data,
+        locations=filtered_town_ids,  # Use 'TOWNID' as location identifier
+        featureidkey="properties.TOWNID",
+        color_discrete_sequence=["rgba(255,255,255,0)"],  # Set fill color to match background
+        mapbox_style="white-bg",  # Use a plain white background
+        center={"lat": 25.008216635689223, "lon": 121.641468398647703},  # Centered around Taipei
+        zoom=8.1  # Adjust the zoom level to fit the desired area
+    )
 
     # Update layout to ensure no other geographic information is shown
     openings_map.update_traces(marker_line_color='black', marker_line_width=1)  # Only show outlines
-    openings_map.update_layout(showlegend=False, margin={"r":0,"t":0,"l":0,"b":0})
+    openings_map.update_layout(
+        showlegend=False, 
+        margin={"r":0,"t":0,"l":0,"b":0},
+        width=410,  # Adjust the width of the map to center it
+        height=300,  # Adjust the height of the map to center it
+        mapbox=dict(
+            center={"lat": 25.008216635689223, "lon": 121.641468398647703},
+            zoom=8.1  # Adjust zoom level as needed
+        ),
+        autosize=True,  # Automatically adjust the size of the map
+        hovermode='closest',  # Hover mode closest to the cursor
+    )
 
     return openings_map
 

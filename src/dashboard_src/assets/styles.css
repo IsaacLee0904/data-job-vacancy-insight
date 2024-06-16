@@ -626,7 +626,7 @@ Copy code .page .separator,
   border: 0.5px solid #ffa726;
 }
 
-.page .company_name{
+.page .company_name {
   font-family: "Inter", Helvetica;
   font-weight: 500;
   font-size: 12px;
@@ -638,16 +638,16 @@ Copy code .page .separator,
   transform: translateY(-50%);
 }
 
-.page .company-openings{
-    font-family: "Poppins", Helvetica;
-    font-weight: 100;
-    font-size: 12px;
-    text-align: center;
-    color: #ffa726;
-    position: relative;
-    top: 10.5px;
-    transform: translateY(-50%);
-  }
+.page .company-openings {
+  font-family: "Poppins", Helvetica;
+  font-weight: 100;
+  font-size: 12px;
+  text-align: center;
+  color: #ffa726;
+  position: relative;
+  top: 10.5px;
+  transform: translateY(-50%);
+}
 
 .page .group-2 {
   top: 687px;
@@ -662,7 +662,7 @@ Copy code .page .separator,
   border: 0.5px solid #81d4fa;
 }
 
-.page .company_name-2{
+.page .company_name-2 {
   font-family: "Inter", Helvetica;
   font-weight: 500;
   font-size: 12px;
@@ -674,7 +674,7 @@ Copy code .page .separator,
   transform: translateY(-50%);
 }
 
-.page .company-openings-2{
+.page .company-openings-2 {
   font-family: "Poppins", Helvetica;
   font-weight: 100;
   font-size: 12px;
@@ -698,7 +698,7 @@ Copy code .page .separator,
   border: 0.5px solid #ce93d8;
 }
 
-.page .company_name-3{
+.page .company_name-3 {
   font-family: "Inter", Helvetica;
   font-weight: 500;
   font-size: 12px;
@@ -710,7 +710,7 @@ Copy code .page .separator,
   transform: translateY(-50%);
 }
 
-.page .company-openings-3{
+.page .company-openings-3 {
   font-family: "Poppins", Helvetica;
   font-weight: 100;
   font-size: 12px;
@@ -734,7 +734,7 @@ Copy code .page .separator,
   border: 0.5px solid #78909c;
 }
 
-.page .company_name-4{
+.page .company_name-4 {
   font-family: "Inter", Helvetica;
   font-weight: 500;
   font-size: 12px;
@@ -746,7 +746,7 @@ Copy code .page .separator,
   transform: translateY(-50%);
 }
 
-.page .company-openings-4{
+.page .company-openings-4 {
   font-family: "Poppins", Helvetica;
   font-weight: 100;
   font-size: 12px;
@@ -770,7 +770,7 @@ Copy code .page .separator,
   border: 0.5px solid #78909c;
 }
 
-.page .company_name-5{
+.page .company_name-5 {
   font-family: "Inter", Helvetica;
   font-weight: 500;
   font-size: 12px;
@@ -782,7 +782,7 @@ Copy code .page .separator,
   transform: translateY(-50%);
 }
 
-.page .company-openings-5{
+.page .company-openings-5 {
   font-family: "Poppins", Helvetica;
   font-weight: 100;
   font-size: 12px;
@@ -1308,4 +1308,11 @@ Copy code .page .separator,
   position: relative;
   top: 50%;
   transform: translateY(-50%);
+}
+
+.page .openings-map {
+  width: 100%;
+  height: auto;
+  margin-top: 20px;
+  margin-left: -25px;
 }
