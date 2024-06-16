@@ -327,21 +327,30 @@ def create_openings_map(taiepi_area_openings):
 
     # Filter features for 'COUNTYNAME' of '臺北市' or '新北市'
     filtered_features = [feature for feature in geojson_data['features']
-                        if feature['properties']['COUNTYNAME'] in ['臺北市', '新北市']]
+                         if feature['properties']['COUNTYNAME'] in ['臺北市', '新北市']]
 
     # Update GeoJSON data with filtered features
     filtered_geojson_data = dict(geojson_data)  # Make a copy of the original data
     filtered_geojson_data['features'] = filtered_features
 
-    # Extract 'TOWNID' from the filtered features
-    filtered_town_ids = [feature['properties']['TOWNID'] for feature in filtered_features]
+    # Extract all districts from the GeoJSON data
+    all_districts = [feature['properties']['TOWNENG'] for feature in filtered_features]
+
+    # Ensure taiepi_area_openings contains all districts
+    all_districts_df = pd.DataFrame({'district_name_eng': all_districts})
+    taiepi_area_openings = all_districts_df.merge(taiepi_area_openings, on='district_name_eng', how='left')
+    taiepi_area_openings['openings_count'] = taiepi_area_openings['openings_count'].fillna(0)
+    taiepi_area_openings['openings_count'] = taiepi_area_openings['openings_count'].astype(float)
 
     # Generate the map
     openings_map = px.choropleth_mapbox(
+        taiepi_area_openings,
         geojson=filtered_geojson_data,
-        locations=filtered_town_ids,  # Use 'TOWNID' as location identifier
-        featureidkey="properties.TOWNID",
-        color_discrete_sequence=["rgba(255,255,255,0)"],  # Set fill color to match background
+        locations='district_name_eng',  # Use 'district_name_eng' as location identifier
+        featureidkey="properties.TOWNENG",  # Match with 'TOWNENG' in GeoJSON
+        color='openings_count',  # Color by 'openings_count'
+        color_continuous_scale="Viridis",  # Use Viridis color scale
+        range_color=(0, taiepi_area_openings['openings_count'].max()),  # Set color range
         mapbox_style="white-bg",  # Use a plain white background
         center={"lat": 25.008216635689223, "lon": 121.641468398647703},  # Centered around Taipei
         zoom=8.1  # Adjust the zoom level to fit the desired area
@@ -350,7 +359,7 @@ def create_openings_map(taiepi_area_openings):
     # Update layout to ensure no other geographic information is shown
     openings_map.update_traces(marker_line_color='black', marker_line_width=1)  # Only show outlines
     openings_map.update_layout(
-        showlegend=False, 
+        showlegend=True,  # Show legend
         margin={"r":0,"t":0,"l":0,"b":0},
         width=410,  # Adjust the width of the map to center it
         height=300,  # Adjust the height of the map to center it
