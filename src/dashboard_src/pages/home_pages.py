@@ -465,7 +465,7 @@ def sidebar():
             html.Div(
                 className="profile",
                 children=[
-                    html.Div("MidnightGuy", className="watermark"),
+                    html.Div("DataWonderlust", className="watermark"),
                     html.Div(
                         className="watermark-icon",
                         children=[
