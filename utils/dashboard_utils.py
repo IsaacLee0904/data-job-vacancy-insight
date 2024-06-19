@@ -311,6 +311,37 @@ class FetchReportData:
         except Exception as e:
             self.logger.error(f"Error fetching job vacancy data: {str(e)}")
             return pd.DataFrame()  # Return an empty DataFrame in case of an error
+        
+    def fetch_tool_by_data_role(self, crawl_date):
+        """
+        Fetch tool usage data segmented by data role from the 'reporting_data' schema for a specific crawl date.
+        """
+        try:
+            # Prepare the SQL query to fetch the required data
+            query = f"""
+                SELECT 
+                    data_role,
+                    category,
+                    tool_name,
+                    tool_count,
+                    crawl_date 
+                FROM reporting_data.rpt_data_tools_by_data_role
+                WHERE crawl_date = '{crawl_date}';
+            """
+            # Execute the query and fetch the result
+            data = self.execute_query(query)  # Use self.execute_query to call the local method
+
+            # Convert the data into a DataFrame if not empty
+            if data:
+                df = pd.DataFrame(data, columns=['data_role', 'category', 'tool_name', 'tool_count', 'crawl_date'])
+                self.logger.info("Tool data by data role converted to DataFrame successfully.")
+                return df
+            else:
+                self.logger.info("No tool data found for the specified crawl date.")
+                return pd.DataFrame()  # Return an empty DataFrame if no data
+        except Exception as e:
+            self.logger.error(f"Error fetching tool data by data role: {str(e)}")
+            return pd.DataFrame()  # Return an empty DataFrame in case of an error
 
 class CreateReportChart:
     # Create the data role pie chart
