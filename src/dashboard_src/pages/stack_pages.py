@@ -37,14 +37,13 @@ def load_stack_page_data():
 
     # load data for tool by data role
     tool_by_data_role = FetchReportData.fetch_tool_by_data_role(fetcher)
-    tool_trends_data = FetchReportData.fetch_tool_trends(fetcher)
 
     # Close the database connection safely
     if fetcher.connection:
         fetcher.connection.close()
         logger.info("Database connection closed.")
     
-    return tool_by_data_role, tool_trends_data
+    return tool_by_data_role
 
 def sidebar():
     return html.Div(
@@ -174,7 +173,7 @@ def sidebar():
 
 def page_content():
     # Load data for the stack page
-    tool_by_data_role, tool_trends_data = load_stack_page_data()
+    tool_by_data_role = load_stack_page_data()
 
 layout = html.Div(
     children=[
