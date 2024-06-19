@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 # import geopandas as gpd
 import dash
-from dash import html, dcc
+from dash import html, dcc, callback
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 import plotly.express as px
@@ -175,6 +175,45 @@ def page_content():
     # Load data for the stack page
     tool_by_data_role = load_stack_page_data()
 
+    # Check for missing category values and handle them
+    tool_by_data_role['category'] = tool_by_data_role['category'].fillna('Others')
+
+    # Create dropdown options
+    data_roles = [{'label': role, 'value': role} for role in tool_by_data_role['data_role'].unique()]
+    data_roles.insert(0, {'label': 'All', 'value': 'All'})
+
+    categories = [{'label': category, 'value': category} for category in tool_by_data_role['category'].unique()]
+    categories.insert(0, {'label': 'All', 'value': 'All'})
+
+    return html.Div(
+        className="page",
+        children=[
+            html.Div("Dashboard", className="title-page"),
+            html.Div(
+                className="dropdowns",
+                children=[
+                    html.Div([
+                        html.Label("選擇Data Role:"),
+                        dcc.Dropdown(
+                            id='datarole-dropdown',
+                            options=data_roles,
+                            value='All'
+                        ),
+                    ]),
+            #         html.Div([
+            #             html.Label("選擇Category:"),
+            #             dcc.Dropdown(
+            #                 id='category-dropdown',
+            #                 options=categories,
+            #                 value='All'
+            #             ),
+            #         ]),
+                ]
+            ),
+            # dcc.Graph(id='line-chart', className="openings-map")
+        ]
+    )
+
 layout = html.Div(
     children=[
         sidebar(),
@@ -182,6 +221,12 @@ layout = html.Div(
     ]
 )
 
-# Run the server
-if __name__ == '__main__':
-    app.run_server(debug=True)
+# Define callback function
+# @callback(
+#     Output('line-chart', 'figure'),
+#     [Input('datarole-dropdown', 'value'),
+#      Input('category-dropdown', 'value')]
+# )
+# def update_line_chart(selected_datarole, selected_category):
+#     tool_by_data_role = load_stack_page_data()
+#     return CreateReportChart.create_tool_trends_line_chart(tool_by_data_role, selected_datarole, selected_category)
