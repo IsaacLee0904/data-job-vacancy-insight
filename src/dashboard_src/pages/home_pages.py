@@ -184,29 +184,6 @@ def load_home_page_data():
         logger.info("Database connection closed.")
     
     return openings_statistics, historical_total_openings, data_role, data_tools, openings_company, taiepi_area_openings
-    rank_1_company_name = openings_company['company_name'].values[0]
-    rank_1_openings = openings_company['opening_count'].values[0]
-    rank_2_company_name = openings_company['company_name'].values[1]
-    rank_2_openings = openings_company['opening_count'].values[1]
-    rank_3_company_name = openings_company['company_name'].values[2]
-    rank_3_openings = openings_company['opening_count'].values[2]
-    rank_4_company_name = openings_company['company_name'].values[3]
-    rank_4_openings = openings_company['opening_count'].values[3]
-    rank_5_company_name = openings_company['company_name'].values[4]
-    rank_5_openings = openings_company['opening_count'].values[4]
-
-    return {
-        'rank_1_company_name': rank_1_company_name,
-        'rank_1_openings': rank_1_openings,
-        'rank_2_company_name': rank_2_company_name,
-        'rank_2_openings': rank_2_openings,
-        'rank_3_company_name': rank_3_company_name,
-        'rank_3_openings': rank_3_openings,
-        'rank_4_company_name': rank_4_company_name,
-        'rank_4_openings': rank_4_openings,
-        'rank_5_company_name': rank_5_company_name,
-        'rank_5_openings': rank_5_openings
-    }
 
 ## Web Application Configuration
 # Sidebar Configuration
