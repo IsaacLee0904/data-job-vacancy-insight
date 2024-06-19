@@ -21,32 +21,6 @@ from utils.dashboard_utils import FetchReportData, CreateReportChart
 
 ## Load data
 # define fetch functions
-def fetch_tool_by_data_role_for_dashboard(fetcher, crawl_date):
-    """
-    Fetch data tool by data role from the database for a given crawl date and verify if the data matches the crawl date.
-    """
-    data = fetcher.fetch_tool_by_data_role(crawl_date)
-    if not data.empty:
-        # Ensure the date formats are consistent for comparison
-        data['crawl_date'] = pd.to_datetime(data['crawl_date']).dt.date
-        provided_date = pd.to_datetime(crawl_date).date()
-
-        # Verify that all records have the correct crawl date
-        if all(data['crawl_date'] == provided_date):
-            fetcher.logger.info("All data records match the provided crawl date.")
-            return data
-        else:
-            fetcher.logger.error("Data inconsistency detected: 'crawl_date' does not match the provided date.")
-            # Return only consistent data or handle inconsistency here
-            consistent_data = data[data['crawl_date'] == provided_date]
-            if not consistent_data.empty:
-                return consistent_data
-            else:
-                fetcher.logger.info("No consistent data available after filtering.")
-                return pd.DataFrame()
-    else:
-        fetcher.logger.info("No data available for tool_by_data_role on the provided crawl date.")
-        return pd.DataFrame()
     
 # Integrate the fetch functions into the load_home_page_data function
 def load_stack_page_data():
@@ -59,24 +33,18 @@ def load_stack_page_data():
     # Initialize the FetchReportData class to handle database operations
     fetcher = FetchReportData(logger)
 
-    # Get the newest crawl date
-    newest_crawl_date = fetcher.get_newest_crawl_date()
+    # Fetch the data for different metrics from the stack page
 
-    # Fetch the data for different metrics from the home page
-    if newest_crawl_date:
-        logger.info(f"Fetching data for the date: {newest_crawl_date}")
-        # load data for openings statistics metrics
-        tool_by_data_role = fetch_tool_by_data_role_for_dashboard(fetcher, newest_crawl_date)
-        
-    else:
-        logger.info("No newest crawl date available.")
+    # load data for tool by data role
+    tool_by_data_role = FetchReportData.fetch_tool_by_data_role(fetcher)
+    tool_trends_data = FetchReportData.fetch_tool_trends(fetcher)
 
     # Close the database connection safely
     if fetcher.connection:
         fetcher.connection.close()
         logger.info("Database connection closed.")
     
-    return tool_by_data_role
+    return tool_by_data_role, tool_trends_data
 
 def sidebar():
     return html.Div(
@@ -206,7 +174,7 @@ def sidebar():
 
 def page_content():
     # Load data for the stack page
-    tool_by_data_role = load_stack_page_data()
+    tool_by_data_role, tool_trends_data = load_stack_page_data()
 
 layout = html.Div(
     children=[
