@@ -186,38 +186,49 @@ def page_content():
     categories.insert(0, {'label': 'All', 'value': 'All'})
 
     return html.Div(
-        className="page",
+        className="page-content",  # Changed from "page" to "page-content"
         children=[
             html.Div("Dashboard", className="title-page"),
             html.Div(
                 className="dropdowns",
                 children=[
-                    html.Div([
-                        html.Label("選擇Data Role:"),
-                        dcc.Dropdown(
-                            id='datarole-dropdown',
-                            options=data_roles,
-                            value='All'
-                        ),
-                    ]),
-            #         html.Div([
-            #             html.Label("選擇Category:"),
-            #             dcc.Dropdown(
-            #                 id='category-dropdown',
-            #                 options=categories,
-            #                 value='All'
-            #             ),
-            #         ]),
+                    html.Div(
+                        className="dropdown-item",
+                        children=[
+                            html.Label("選擇Data Role:"),
+                            dcc.Dropdown(
+                                id='datarole-dropdown',
+                                options=data_roles,
+                                value='All'
+                            ),
+                        ]
+                    ),
+                    html.Div(
+                        className="dropdown-item",
+                        children=[
+                            html.Label("選擇Category:"),
+                            dcc.Dropdown(
+                                id='category-dropdown',
+                                options=categories,
+                                value='All'
+                            ),
+                        ]
+                    ),
                 ]
             ),
-            # dcc.Graph(id='line-chart', className="openings-map")
+            dcc.Graph(id='line-chart', className="line-chart")  # Ensure this is correctly placed
         ]
     )
 
 layout = html.Div(
     children=[
         sidebar(),
-        page_content()
+        html.Div(
+            className="main-content",
+            children=[
+                page_content()
+            ]
+        )
     ]
 )
 
