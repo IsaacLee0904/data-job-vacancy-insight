@@ -186,7 +186,7 @@ def page_content():
     categories.insert(0, {'label': 'All', 'value': 'All'})
 
     return html.Div(
-        className="page-content",  # Changed from "page" to "page-content"
+        className="stack-page",  # Changed from "page" to "page-content"
         children=[
             html.Div("Dashboard", className="title-page"),
             html.Div(

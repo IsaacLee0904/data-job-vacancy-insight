@@ -1316,3 +1316,47 @@ Copy code .page .separator,
   margin-top: 20px;
   margin-left: -25px;
 }
+
+.stack-page {
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 234px);
+  margin-left: 234px;
+  /* This ensures the content starts next to the sidebar */
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.stack-page .div {
+  background-color: #ffffff;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.stack-page .title-page {
+  top: 31px;
+  left: 258px;
+  font-weight: 500;
+  color: #1f384c;
+  font-size: 35px;
+  line-height: 23px;
+  position: absolute;
+  font-family: "Poppins", Helvetica;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.stack-page .dropdowns {
+  width: 100%;
+  height: auto;
+  margin-top: -200px;
+  margin-left: 0px;
+}
+
+.stack-page .dropdown-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
