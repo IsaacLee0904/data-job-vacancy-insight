@@ -640,3 +640,59 @@ class CreateReportChart:
             'rank_5_company_name': rank_5_company_name,
             'rank_5_openings': rank_5_openings
         }
+    
+    def create_tool_trends_line_chart(tool_by_data_role, selected_datarole='All', selected_category='All'):
+        filtered_data = tool_by_data_role.copy()
+        
+        if selected_datarole != 'All':
+            filtered_data = filtered_data[filtered_data['data_role'] == selected_datarole]
+        
+        if selected_category != 'All':
+            filtered_data = filtered_data[filtered_data['category'] == selected_category]
+        
+        top_tools = filtered_data.groupby('tool_name')['tool_count'].sum().nlargest(10).index
+        filtered_data = filtered_data[filtered_data['tool_name'].isin(top_tools)]
+        
+        tool_trends_line_chart = px.line(
+                filtered_data, 
+                x='crawl_date', 
+                y='tool_count', 
+                color='tool_name',
+                labels={'crawl_date': '日期', 'tool_count': '使用次數', 'tool_name': '工具'},
+                template='plotly_white'
+            )
+        
+        tool_trends_line_chart.update_layout(
+                width=750,
+                height=400,
+                margin=dict(l=95, r=20, t=143, b=50),
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                legend=dict(
+                    orientation="h",
+                    x=-0.05,
+                    y=-0.2,
+                    xanchor="left",
+                    yanchor="top"
+                )
+            )
+        
+        tool_trends_line_chart.update_traces(
+                mode='lines+markers',
+                line={'width': 2.5},
+                showlegend=True,
+                hoverinfo='all',
+                hovertemplate='<span style="font-size:15px; font-weight:bold;">%{x|%Y-%m-%d}<br><br>使用次數 : %{y}<extra></extra>',
+                textposition='middle left'
+            )
+        
+        tool_trends_line_chart.update_layout(
+            hoverlabel=dict(
+                bgcolor="#ffa726",
+                font_size=12,
+                font_color="white",
+                bordercolor="#ffa726"
+                )
+            )
+        
+        return tool_trends_line_chart 
