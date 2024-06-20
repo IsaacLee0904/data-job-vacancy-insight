@@ -186,49 +186,60 @@ def page_content():
     categories.insert(0, {'label': 'All', 'value': 'All'})
 
     return html.Div(
-        className="stack-page",  # Changed from "page" to "page-content"
-        children=[
-            html.Div("Dashboard", className="title-page"),
-            html.Div(
-                className="dropdowns",
-                children=[
-                    html.Div(
-                        className="dropdown-item",
-                        children=[
-                            html.Label("選擇Data Role:"),
-                            dcc.Dropdown(
-                                id='datarole-dropdown',
-                                options=data_roles,
-                                value='All'
-                            ),
-                        ]
-                    ),
-                    html.Div(
-                        className="dropdown-item",
-                        children=[
-                            html.Label("選擇Category:"),
-                            dcc.Dropdown(
-                                id='category-dropdown',
-                                options=categories,
-                                value='All'
-                            ),
-                        ]
-                    ),
-                ]
-            ),
-            dcc.Graph(id='line-chart', className="line-chart")  # Ensure this is correctly placed
-        ]
-    )
+            className="page",
+            children=[
+                html.Div(
+                    className="div",
+                    children=[
+                        html.Div(
+                            className="overlap",
+                            children=[                          
+                                html.Div(
+                                    className="overlap-6",
+                                    children=[
+                                        html.Div(
+                                            className="revenue",
+                                            children=[                                            
+                                                html.Div(
+                                                    className="group-dropdown-item",
+                                                    children=[
+                                                        html.Label("Select Technology Group"),
+                                                        dcc.Dropdown(
+                                                            id='category-dropdown',
+                                                            options=categories,
+                                                            value='All'
+                                                        ),
+                                                    ]
+                                                ),
+                                                html.Div(
+                                                    className="role-dropdown-item",
+                                                    children=[
+                                                        html.Label("Select Data Role"),
+                                                        dcc.Dropdown(
+                                                            id='datarole-dropdown',
+                                                            options=data_roles,
+                                                            value='All'
+                                                        ),
+                                                    ]
+                                                ),
+                                                html.P("Tool Trends", className="sales-info"),
+                                                dcc.Graph(id='line-chart', className="tool-trends-line-chart")
+                                            ]
+                                        ),
+                                    ]
+                                ),
+                            ]
+                        ),
+                        html.Div("Dashboard", className="title-page")
+                    ]
+                )
+            ]
+        )
 
 layout = html.Div(
     children=[
         sidebar(),
-        html.Div(
-            className="main-content",
-            children=[
-                page_content()
-            ]
-        )
+        page_content()
     ]
 )
 

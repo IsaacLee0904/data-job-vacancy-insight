@@ -1355,8 +1355,27 @@ Copy code .page .separator,
   margin-left: 0px;
 }
 
-.stack-page .dropdown-item {
+.stack-page .group-dropdown-item {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  left: 552px;
+  position: absolute;
+  top: 0;
+}
+
+.stack-page .role-dropdown-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  left: 552px;
+  position: absolute;
+  top: 0;
+}
+
+.tool-trends-line-chart {
+  width: 100%;
+  height: auto;
+  margin-top: 27px;
+  margin-left: -50px;
 }
