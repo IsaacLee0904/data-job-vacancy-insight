@@ -198,12 +198,12 @@ def page_content():
                                     className="overlap-6",
                                     children=[
                                         html.Div(
-                                            className="revenue",
+                                            className="dropdowns",
                                             children=[                                            
                                                 html.Div(
                                                     className="group-dropdown-item",
                                                     children=[
-                                                        html.Label("Select Technology Group"),
+                                                        html.Label("Select Technology Group", className="group-label"),
                                                         dcc.Dropdown(
                                                             id='category-dropdown',
                                                             options=categories,
@@ -214,7 +214,7 @@ def page_content():
                                                 html.Div(
                                                     className="role-dropdown-item",
                                                     children=[
-                                                        html.Label("Select Data Role"),
+                                                        html.Label("Select Data Role", className="role-label"),
                                                         dcc.Dropdown(
                                                             id='datarole-dropdown',
                                                             options=data_roles,
@@ -222,7 +222,8 @@ def page_content():
                                                         ),
                                                     ]
                                                 ),
-                                                html.P("Tool Trends", className="sales-info"),
+                                                html.P("Tool Trends", className="tool-trend-title"),
+                                                html.P("Tracking the trends of the most maintion tools in data-centric jobs", className="tool-trend-sub-title"),
                                                 dcc.Graph(id='line-chart', className="tool-trends-line-chart")
                                             ]
                                         ),
@@ -244,11 +245,11 @@ layout = html.Div(
 )
 
 # Define callback function
-# @callback(
-#     Output('line-chart', 'figure'),
-#     [Input('datarole-dropdown', 'value'),
-#      Input('category-dropdown', 'value')]
-# )
-# def update_line_chart(selected_datarole, selected_category):
-#     tool_by_data_role = load_stack_page_data()
-#     return CreateReportChart.create_tool_trends_line_chart(tool_by_data_role, selected_datarole, selected_category)
+@callback(
+    Output('line-chart', 'figure'),
+    [Input('datarole-dropdown', 'value'),
+     Input('category-dropdown', 'value')]
+)
+def update_line_chart(selected_datarole, selected_category):
+    tool_by_data_role = load_stack_page_data()
+    return CreateReportChart.create_tool_trends_line_chart(tool_by_data_role, selected_datarole, selected_category)

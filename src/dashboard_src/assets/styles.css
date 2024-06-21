@@ -1335,9 +1335,8 @@ Copy code .page .separator,
   position: relative;
 }
 
-.stack-page .title-page {
+.page .title-page {
   top: 31px;
-  left: 258px;
   font-weight: 500;
   color: #1f384c;
   font-size: 35px;
@@ -1348,34 +1347,73 @@ Copy code .page .separator,
   white-space: nowrap;
 }
 
-.stack-page .dropdowns {
-  width: 100%;
-  height: auto;
-  margin-top: -200px;
-  margin-left: 0px;
+.page .dropdowns {
+  position: absolute;
+  width: 659px;
+  height: 131px;
+  top: 0;
+  left: 0;
 }
 
-.stack-page .group-dropdown-item {
+.page .group-dropdown-item {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  left: 552px;
+  left: 530px;
   position: absolute;
   top: 0;
+  width: 40%;
 }
 
-.stack-page .role-dropdown-item {
+.group-label {
+  font-weight: bold;
+}
+
+.page .role-dropdown-item {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  left: 552px;
+  left: 850px;
   position: absolute;
   top: 0;
+  width: 40%;
 }
 
-.tool-trends-line-chart {
+.role-label {
+  font-weight: bold;
+}
+
+.page .tool-trend-title {
+  position: absolute;
+  top: 10px;
+  left: 1px;
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 20px;
+  letter-spacing: 0.5px;
+  line-height: 21px;
+  white-space: nowrap;
+}
+
+.page .tool-trend-sub-title {
+  top: 40px;
+  position: absolute;
+  width: 460px;
+  left: 2px;
+  opacity: 0.5;
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  line-height: 22px;
+}
+
+.page .tool-trends-line-chart {
   width: 100%;
-  height: auto;
+  height: 50%;
   margin-top: 27px;
   margin-left: -50px;
+  left: 2000px
 }

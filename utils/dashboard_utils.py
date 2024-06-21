@@ -663,9 +663,9 @@ class CreateReportChart:
             )
         
         tool_trends_line_chart.update_layout(
-                width=750,
-                height=400,
-                margin=dict(l=95, r=20, t=143, b=50),
+                width=1200,
+                height=480,
+                margin=dict(l=95, r=20, t=40, b=50),
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)',
                 legend=dict(
