@@ -332,7 +332,7 @@ class FetchReportData:
 
             # Convert the data into a DataFrame if not empty
             if data:
-                df = pd.DataFrame(data, columns=['data_role', 'category', 'tool_name', 'tool', 'crawl_date'])
+                df = pd.DataFrame(data, columns=['data_role', 'category', 'tool_name', 'count', 'crawl_date'])
                 self.logger.info("Tool data by data role converted to DataFrame successfully.")
                 return df
             else:
@@ -650,15 +650,15 @@ class CreateReportChart:
         if selected_category != 'All':
             filtered_data = filtered_data[filtered_data['category'] == selected_category]
         
-        top_tools = filtered_data.groupby('tool_name')['tool_count'].sum().nlargest(10).index
+        top_tools = filtered_data.groupby('tool_name')['count'].sum().nlargest(10).index
         filtered_data = filtered_data[filtered_data['tool_name'].isin(top_tools)]
         
         tool_trends_line_chart = px.line(
                 filtered_data, 
                 x='crawl_date', 
-                y='tool_count', 
+                y='count', 
                 color='tool_name',
-                labels={'crawl_date': '日期', 'tool_count': '使用次數', 'tool_name': '工具'},
+                labels={'crawl_date': '日期', 'count': '使用次數', 'tool_name': '工具'},
                 template='plotly_white'
             )
         
