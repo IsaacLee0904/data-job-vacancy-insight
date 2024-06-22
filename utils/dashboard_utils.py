@@ -323,7 +323,7 @@ class FetchReportData:
                     data_role,
                     category,
                     tool_name,
-                    tool_count,
+                    count,
                     crawl_date 
                 FROM reporting_data.rpt_data_tools_by_data_role;
             """
@@ -332,7 +332,7 @@ class FetchReportData:
 
             # Convert the data into a DataFrame if not empty
             if data:
-                df = pd.DataFrame(data, columns=['data_role', 'category', 'tool_name', 'tool_count', 'crawl_date'])
+                df = pd.DataFrame(data, columns=['data_role', 'category', 'tool_name', 'tool', 'crawl_date'])
                 self.logger.info("Tool data by data role converted to DataFrame successfully.")
                 return df
             else:
