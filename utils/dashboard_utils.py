@@ -643,56 +643,80 @@ class CreateReportChart:
     
     def create_tool_trends_line_chart(tool_by_data_role, selected_datarole='All', selected_category='All'):
         filtered_data = tool_by_data_role.copy()
+
+        # 處理兩個選項都為 'All' 的情況
+        if selected_datarole == 'All' and selected_category == 'All':
+            grouped_data = filtered_data.groupby(['tool_name', 'crawl_date'])['count'].sum().reset_index()
+            top_tools = grouped_data.groupby('tool_name')['count'].sum().nlargest(10).index
+            filtered_data = grouped_data[grouped_data['tool_name'].isin(top_tools)]
         
-        if selected_datarole != 'All':
-            filtered_data = filtered_data[filtered_data['data_role'] == selected_datarole]
-        
-        if selected_category != 'All':
+        # 處理 data_role 為 'All' 但 category 有選擇值的情況
+        elif selected_datarole == 'All':
             filtered_data = filtered_data[filtered_data['category'] == selected_category]
+            grouped_data = filtered_data.groupby(['tool_name', 'crawl_date'])['count'].sum().reset_index()
+            top_tools = grouped_data.groupby('tool_name')['count'].sum().nlargest(10).index
+            filtered_data = grouped_data[grouped_data['tool_name'].isin(top_tools)]
         
-        top_tools = filtered_data.groupby('tool_name')['count'].sum().nlargest(10).index
-        filtered_data = filtered_data[filtered_data['tool_name'].isin(top_tools)]
+        # 處理 category 為 'All' 但 data_role 有選擇值的情況
+        elif selected_category == 'All':
+            filtered_data = filtered_data[filtered_data['data_role'] == selected_datarole]
+            grouped_data = filtered_data.groupby(['tool_name', 'crawl_date'])['count'].sum().reset_index()
+            top_tools = grouped_data.groupby('tool_name')['count'].sum().nlargest(10).index
+            filtered_data = grouped_data[grouped_data['tool_name'].isin(top_tools)]
         
+        # 處理兩個選項都不是 'All' 的情況
+        else:
+            filtered_data = filtered_data[(filtered_data['data_role'] == selected_datarole) & (filtered_data['category'] == selected_category)]
+            grouped_data = filtered_data.groupby(['tool_name', 'crawl_date'])['count'].sum().reset_index()
+            top_tools = grouped_data.groupby('tool_name')['count'].sum().nlargest(10).index
+            filtered_data = grouped_data[grouped_data['tool_name'].isin(top_tools)]
+
+        # 檢查是否有資料
+        if filtered_data.empty:
+            return go.Figure()  # 返回空圖表以避免錯誤
+
+        # 創建折線圖
         tool_trends_line_chart = px.line(
-                filtered_data, 
-                x='crawl_date', 
-                y='count', 
-                color='tool_name',
-                labels={'crawl_date': '日期', 'count': '使用次數', 'tool_name': '工具'},
-                template='plotly_white'
-            )
-        
+            filtered_data, 
+            x='crawl_date', 
+            y='count', 
+            color='tool_name',
+            labels={'crawl_date': '日期', 'count': '使用次數', 'tool_name': '工具'},
+            template='plotly_white'
+        )
+
+        # 更新圖表佈局和樣式
         tool_trends_line_chart.update_layout(
-                width=1200,
-                height=480,
-                margin=dict(l=95, r=20, t=0, b=50),
-                paper_bgcolor='rgba(0,0,0,0)',
-                plot_bgcolor='rgba(0,0,0,0)',
-                legend=dict(
-                    orientation="h",
-                    x=-0.05,
-                    y=-0.2,
-                    xanchor="left",
-                    yanchor="top"
-                )
+            width=1200,
+            height=480,
+            margin=dict(l=95, r=20, t=0, b=50),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            legend=dict(
+                orientation="h",
+                x=-0.05,
+                y=-0.2,
+                xanchor="left",
+                yanchor="top"
             )
-        
+        )
+
         tool_trends_line_chart.update_traces(
-                mode='lines+markers',
-                line={'width': 2.5},
-                showlegend=True,
-                hoverinfo='all',
-                hovertemplate='<span style="font-size:15px; font-weight:bold;">%{x|%Y-%m-%d}<br><br>使用次數 : %{y}<extra></extra>',
-                textposition='middle left'
-            )
-        
+            mode='lines+markers',
+            line={'width': 2.5},
+            showlegend=True,
+            hoverinfo='all',
+            hovertemplate='<span style="font-size:15px; font-weight:bold;">%{x|%Y-%m-%d}<br><br>使用次數 : %{y}<extra></extra>',
+            textposition='middle left'
+        )
+
         tool_trends_line_chart.update_layout(
             hoverlabel=dict(
                 bgcolor="#ffa726",
                 font_size=12,
                 font_color="white",
                 bordercolor="#ffa726"
-                )
             )
-        
-        return tool_trends_line_chart 
+        )
+
+        return tool_trends_line_chart
