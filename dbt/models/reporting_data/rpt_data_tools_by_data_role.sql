@@ -1,5 +1,5 @@
 -- models/reporting_data/rpt_data_tools_by_data_role.sql
-{{ config(materialized='incremental', schema='reporting_data', unique_key='data_role || tool_name') }}
+{{ config(materialized='incremental', schema='reporting_data', unique_key='data_role || tool_name || crawl_date') }}
 
 WITH listing_table AS (
 	SELECT DISTINCT
