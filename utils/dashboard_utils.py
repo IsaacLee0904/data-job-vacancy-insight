@@ -671,18 +671,13 @@ class CreateReportChart:
             top_tools = grouped_data.groupby('tool_name')['count'].sum().nlargest(10).index
             filtered_data = grouped_data[grouped_data['tool_name'].isin(top_tools)]
 
-        # Check if there is any data
-        if filtered_data.empty:
-            return go.Figure()  # Return an empty figure to avoid errors
-
         # Create line chart
         tool_trends_line_chart = px.line(
             filtered_data, 
             x='crawl_date', 
             y='count', 
             color='tool_name',
-            labels={'crawl_date': '日期', 'count': '使用次數', 'tool_name': '工具'},
-            template='plotly_white'
+            template='plotly_white',
         )
 
         # Update chart layout and style
@@ -692,31 +687,62 @@ class CreateReportChart:
             margin=dict(l=95, r=20, t=0, b=50),
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
+            xaxis_title=None,  # Remove x-axis title
+            yaxis_title=None,  # Remove y-axis title
+            legend_title=None,  # Remove legend title
             legend=dict(
                 orientation="h",
                 x=-0.05,
                 y=-0.2,
                 xanchor="left",
                 yanchor="top"
-            )
-        )
-
-        tool_trends_line_chart.update_traces(
-            mode='lines+markers',
-            line={'width': 2.5},
-            showlegend=True,
-            hoverinfo='all',
-            hovertemplate='<span style="font-size:15px; font-weight:bold;">%{x|%Y-%m-%d}<br><br>使用次數 : %{y}<extra></extra>',
-            textposition='middle left'
-        )
-
-        tool_trends_line_chart.update_layout(
+            ),
+            xaxis=dict(
+                showgrid=False,  # Hide x-axis grid lines
+                showline=True,  # Show x-axis line
+                linewidth=1,
+                linecolor='lightgrey',
+                tickfont=dict(
+                    color='#737b8b'
+                )
+            ),
+            yaxis=dict(
+                showgrid=True,  # Show y-axis grid lines
+                showline=True,  # Show y-axis line
+                linewidth=1,
+                linecolor='lightgrey',
+                tickfont=dict(
+                    color='#737b8b'
+                ),
+                showticklabels=False  # Hide y-axis tick labels
+            ),
             hoverlabel=dict(
                 bgcolor="#ffa726",
                 font_size=12,
                 font_color="white",
                 bordercolor="#ffa726"
             )
+        )
+
+        tool_trends_line_chart.update_traces(
+            mode='lines+markers+text',
+            line={'width': 2.5},
+            showlegend=True,
+            hoverinfo='all',
+            hovertemplate='<span style="font-size:15px; font-weight:bold;">%{x|%Y-%m-%d}<br><br>使用次數 : %{y}<extra></extra>',
+            text=filtered_data['count'],
+            textposition='middle left'
+        )
+
+        # Generate tick values for x-axis
+        tickvals = filtered_data['crawl_date'][::1]
+
+        # Update x-axis to show every week and only show 12 points
+        tool_trends_line_chart.update_xaxes(
+            dtick="W1",
+            tickformat="%b %d",
+            tickmode='array',
+            tickvals=tickvals
         )
 
         return tool_trends_line_chart
