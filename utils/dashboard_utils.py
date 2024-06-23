@@ -644,38 +644,38 @@ class CreateReportChart:
     def create_tool_trends_line_chart(tool_by_data_role, selected_datarole='All', selected_category='All'):
         filtered_data = tool_by_data_role.copy()
 
-        # 處理兩個選項都為 'All' 的情況
+        # Handle the case where both selections are 'All'
         if selected_datarole == 'All' and selected_category == 'All':
             grouped_data = filtered_data.groupby(['tool_name', 'crawl_date'])['count'].sum().reset_index()
             top_tools = grouped_data.groupby('tool_name')['count'].sum().nlargest(10).index
             filtered_data = grouped_data[grouped_data['tool_name'].isin(top_tools)]
         
-        # 處理 data_role 為 'All' 但 category 有選擇值的情況
+        # Handle the case where data_role is 'All' but category has a selected value
         elif selected_datarole == 'All':
             filtered_data = filtered_data[filtered_data['category'] == selected_category]
             grouped_data = filtered_data.groupby(['tool_name', 'crawl_date'])['count'].sum().reset_index()
             top_tools = grouped_data.groupby('tool_name')['count'].sum().nlargest(10).index
             filtered_data = grouped_data[grouped_data['tool_name'].isin(top_tools)]
         
-        # 處理 category 為 'All' 但 data_role 有選擇值的情況
+        # Handle the case where category is 'All' but data_role has a selected value
         elif selected_category == 'All':
             filtered_data = filtered_data[filtered_data['data_role'] == selected_datarole]
             grouped_data = filtered_data.groupby(['tool_name', 'crawl_date'])['count'].sum().reset_index()
             top_tools = grouped_data.groupby('tool_name')['count'].sum().nlargest(10).index
             filtered_data = grouped_data[grouped_data['tool_name'].isin(top_tools)]
         
-        # 處理兩個選項都不是 'All' 的情況
+        # Handle the case where both selections are not 'All'
         else:
             filtered_data = filtered_data[(filtered_data['data_role'] == selected_datarole) & (filtered_data['category'] == selected_category)]
             grouped_data = filtered_data.groupby(['tool_name', 'crawl_date'])['count'].sum().reset_index()
             top_tools = grouped_data.groupby('tool_name')['count'].sum().nlargest(10).index
             filtered_data = grouped_data[grouped_data['tool_name'].isin(top_tools)]
 
-        # 檢查是否有資料
+        # Check if there is any data
         if filtered_data.empty:
-            return go.Figure()  # 返回空圖表以避免錯誤
+            return go.Figure()  # Return an empty figure to avoid errors
 
-        # 創建折線圖
+        # Create line chart
         tool_trends_line_chart = px.line(
             filtered_data, 
             x='crawl_date', 
@@ -685,7 +685,7 @@ class CreateReportChart:
             template='plotly_white'
         )
 
-        # 更新圖表佈局和樣式
+        # Update chart layout and style
         tool_trends_line_chart.update_layout(
             width=1200,
             height=480,
