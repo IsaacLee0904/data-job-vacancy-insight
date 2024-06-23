@@ -684,7 +684,7 @@ class CreateReportChart:
         tool_trends_line_chart.update_layout(
             width=1200,
             height=480,
-            margin=dict(l=95, r=20, t=0, b=50),
+            margin=dict(l=70, r=20, t=0, b=50),
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
             xaxis_title=None,  # Remove x-axis title
@@ -692,7 +692,7 @@ class CreateReportChart:
             legend_title=None,  # Remove legend title
             legend=dict(
                 orientation="h",
-                x=-0.05,
+                x=-0.02,
                 y=-0.2,
                 xanchor="left",
                 yanchor="top"
