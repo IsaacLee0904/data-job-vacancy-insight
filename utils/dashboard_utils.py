@@ -708,7 +708,7 @@ class CreateReportChart:
             ),
             yaxis=dict(
                 showgrid=True,  # Show y-axis grid lines
-                showline=True,  # Show y-axis line
+                showline=False,  # Show y-axis line
                 linewidth=1,
                 linecolor='lightgrey',
                 tickfont=dict(
@@ -725,24 +725,17 @@ class CreateReportChart:
         )
 
         tool_trends_line_chart.update_traces(
-            mode='lines+markers+text',
+            mode='lines+markers',
             line={'width': 2.5},
             showlegend=True,
             hoverinfo='all',
-            hovertemplate='<span style="font-size:15px; font-weight:bold;">%{x|%Y-%m-%d}<br><br>使用次數 : %{y}<extra></extra>',
-            text=filtered_data['count'],
-            textposition='middle left'
+            hovertemplate='<span style="font-size:15px; font-weight:bold;">%{x|%Y-%m-%d}<br><br>Count : %{y}<extra></extra>',
         )
-
-        # Generate tick values for x-axis
-        tickvals = filtered_data['crawl_date'][::1]
 
         # Update x-axis to show every week and only show 12 points
         tool_trends_line_chart.update_xaxes(
-            dtick="W1",
+            dtick="M1",
             tickformat="%b %d",
-            tickmode='array',
-            tickvals=tickvals
         )
 
         return tool_trends_line_chart
