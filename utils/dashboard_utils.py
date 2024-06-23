@@ -323,7 +323,7 @@ class FetchReportData:
                     data_role,
                     category,
                     tool_name,
-                    tool_count,
+                    count,
                     crawl_date 
                 FROM reporting_data.rpt_data_tools_by_data_role;
             """
@@ -332,7 +332,7 @@ class FetchReportData:
 
             # Convert the data into a DataFrame if not empty
             if data:
-                df = pd.DataFrame(data, columns=['data_role', 'category', 'tool_name', 'tool_count', 'crawl_date'])
+                df = pd.DataFrame(data, columns=['data_role', 'category', 'tool_name', 'count', 'crawl_date'])
                 self.logger.info("Tool data by data role converted to DataFrame successfully.")
                 return df
             else:
@@ -650,22 +650,22 @@ class CreateReportChart:
         if selected_category != 'All':
             filtered_data = filtered_data[filtered_data['category'] == selected_category]
         
-        top_tools = filtered_data.groupby('tool_name')['tool_count'].sum().nlargest(10).index
+        top_tools = filtered_data.groupby('tool_name')['count'].sum().nlargest(10).index
         filtered_data = filtered_data[filtered_data['tool_name'].isin(top_tools)]
         
         tool_trends_line_chart = px.line(
                 filtered_data, 
                 x='crawl_date', 
-                y='tool_count', 
+                y='count', 
                 color='tool_name',
-                labels={'crawl_date': '日期', 'tool_count': '使用次數', 'tool_name': '工具'},
+                labels={'crawl_date': '日期', 'count': '使用次數', 'tool_name': '工具'},
                 template='plotly_white'
             )
         
         tool_trends_line_chart.update_layout(
                 width=1200,
                 height=480,
-                margin=dict(l=95, r=20, t=40, b=50),
+                margin=dict(l=95, r=20, t=0, b=50),
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)',
                 legend=dict(

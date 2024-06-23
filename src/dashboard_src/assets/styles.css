@@ -1415,5 +1415,7 @@ Copy code .page .separator,
   height: 50%;
   margin-top: 27px;
   margin-left: -50px;
-  left: 2000px
+  position: absolute;
+  top: 50px;
+  left: 10px;
 }
