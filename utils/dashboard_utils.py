@@ -149,7 +149,7 @@ class FetchReportData:
                 FROM(
                     SELECT AA.total_openings, AA.crawl_date 
                     FROM reporting_data.rpt_job_openings_metrics AA 
-                    ORDER BY AA.crawl_date 
+                    ORDER BY AA.crawl_date DESC
                     LIMIT 12
                 )AAA
                 ORDER BY AAA.crawl_date ASC;
