@@ -699,7 +699,7 @@ class CreateReportChart:
         # Update chart layout and style
         tool_trends_line_chart.update_layout(
             width=1200,
-            height=480,
+            height=400,
             margin=dict(l=70, r=20, t=0, b=50),
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
