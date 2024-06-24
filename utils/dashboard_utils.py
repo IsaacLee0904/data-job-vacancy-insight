@@ -709,7 +709,7 @@ class CreateReportChart:
             legend=dict(
                 orientation="h",
                 x=-0.02,
-                y=-0.2,
+                y=-0.15,
                 xanchor="left",
                 yanchor="top"
             ),
