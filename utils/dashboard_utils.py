@@ -692,6 +692,10 @@ class CreateReportChart:
             template='plotly_white',
         )
 
+        # Define the y-axis range and tick values to ensure 5 grid lines
+        y_max = filtered_data['count'].max()
+        y_ticks = [0, y_max / 4, y_max / 2, 3 * y_max / 4, y_max]
+
         # Update chart layout and style
         tool_trends_line_chart.update_layout(
             width=1200,
@@ -714,6 +718,7 @@ class CreateReportChart:
                 showline=True,  # Show x-axis line
                 linewidth=1,
                 linecolor='lightgrey',
+                zeroline=False,  # Remove x-axis 0 line
                 tickfont=dict(
                     color='#737b8b'
                 )
@@ -726,7 +731,10 @@ class CreateReportChart:
                 tickfont=dict(
                     color='#737b8b'
                 ),
-                showticklabels=False  # Hide y-axis tick labels
+                zeroline=False,
+                showticklabels=True,  # Show y-axis tick labels
+                tickvals=y_ticks,  # Set the y-axis tick values to ensure 5 grid lines
+                ticktext=['0', f'{y_max / 4:.0f}', f'{y_max / 2:.0f}', f'{3 * y_max / 4:.0f}', f'{y_max:.0f}']  # Set the tick text
             ),
             hoverlabel=dict(
                 bgcolor="#2E2E48",
@@ -741,9 +749,9 @@ class CreateReportChart:
             line={'width': 2.5},
             showlegend=True,
             hovertemplate=(
-            '<span style="font-size:15px; font-weight:bold;">%{fullData.name}</span>'
-            '<span style="font-size:15px; font-weight:bold;">: %{y}</span><br><br>'
-            '<span style="font-size:15px; font-weight:bold;">%{x|%Y-%m-%d}</span><extra></extra>'
+                '<span style="font-size:15px; font-weight:bold;">%{fullData.name}</span>'
+                '<span style="font-size:15px; font-weight:bold;">: %{y}</span><br><br>'
+                '<span style="font-size:12px; font-weight:bold;">%{x|%Y-%m-%d}</span><extra></extra>'
             ),
         )
 
