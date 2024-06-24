@@ -671,12 +671,20 @@ class CreateReportChart:
             top_tools = grouped_data.groupby('tool_name')['count'].sum().nlargest(10).index
             filtered_data = grouped_data[grouped_data['tool_name'].isin(top_tools)]
 
+        # Define color sequence based on your specified colors
+        color_sequence = ['#2E2E48', '#42425F', '#565778', '#6C6E91', '#8285AC', '#989CC7', '#AFB5E3', '#C7CEFF', '#C7CEFF', '#C7CEFF']
+
+        # Sort tools by total count and assign colors
+        tool_order = filtered_data.groupby('tool_name')['count'].sum().sort_values(ascending=False).index
+        tool_colors = {tool: color for tool, color in zip(tool_order, color_sequence)}
+
         # Create line chart
         tool_trends_line_chart = px.line(
             filtered_data, 
             x='crawl_date', 
             y='count', 
             color='tool_name',
+            color_discrete_map=tool_colors,  # Apply the color mapping
             template='plotly_white',
         )
 
@@ -708,7 +716,7 @@ class CreateReportChart:
             ),
             yaxis=dict(
                 showgrid=True,  # Show y-axis grid lines
-                showline=False,  # Show y-axis line
+                showline=False,  # Hide y-axis line
                 linewidth=1,
                 linecolor='lightgrey',
                 tickfont=dict(
