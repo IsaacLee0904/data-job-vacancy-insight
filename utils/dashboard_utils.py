@@ -678,6 +678,10 @@ class CreateReportChart:
         tool_order = filtered_data.groupby('tool_name')['count'].sum().sort_values(ascending=False).index
         tool_colors = {tool: color for tool, color in zip(tool_order, color_sequence)}
 
+        # Sort filtered_data by tool_name to ensure legend order
+        filtered_data['tool_name'] = pd.Categorical(filtered_data['tool_name'], categories=tool_order, ordered=True)
+        filtered_data = filtered_data.sort_values(['tool_name', 'crawl_date'])
+
         # Create line chart
         tool_trends_line_chart = px.line(
             filtered_data, 
