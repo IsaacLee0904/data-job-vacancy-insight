@@ -149,7 +149,7 @@ class FetchReportData:
                 FROM(
                     SELECT AA.total_openings, AA.crawl_date 
                     FROM reporting_data.rpt_job_openings_metrics AA 
-                    ORDER BY AA.crawl_date 
+                    ORDER BY AA.crawl_date DESC
                     LIMIT 12
                 )AAA
                 ORDER BY AAA.crawl_date ASC;
@@ -671,19 +671,35 @@ class CreateReportChart:
             top_tools = grouped_data.groupby('tool_name')['count'].sum().nlargest(10).index
             filtered_data = grouped_data[grouped_data['tool_name'].isin(top_tools)]
 
+        # Define color sequence based on your specified colors
+        color_sequence = ['#2E2E48', '#42425F', '#565778', '#6C6E91', '#8285AC', '#989CC7', '#AFB5E3', '#C7CEFF', '#C7CEFF', '#C7CEFF']
+
+        # Sort tools by total count and assign colors
+        tool_order = filtered_data.groupby('tool_name')['count'].sum().sort_values(ascending=False).index
+        tool_colors = {tool: color for tool, color in zip(tool_order, color_sequence)}
+
+        # Sort filtered_data by tool_name to ensure legend order
+        filtered_data['tool_name'] = pd.Categorical(filtered_data['tool_name'], categories=tool_order, ordered=True)
+        filtered_data = filtered_data.sort_values(['tool_name', 'crawl_date'])
+
         # Create line chart
         tool_trends_line_chart = px.line(
             filtered_data, 
             x='crawl_date', 
             y='count', 
             color='tool_name',
+            color_discrete_map=tool_colors,  # Apply the color mapping
             template='plotly_white',
         )
+
+        # Define the y-axis range and tick values to ensure 5 grid lines
+        y_max = filtered_data['count'].max()
+        y_ticks = [0, y_max / 4, y_max / 2, 3 * y_max / 4, y_max]
 
         # Update chart layout and style
         tool_trends_line_chart.update_layout(
             width=1200,
-            height=480,
+            height=400,
             margin=dict(l=70, r=20, t=0, b=50),
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
@@ -693,7 +709,7 @@ class CreateReportChart:
             legend=dict(
                 orientation="h",
                 x=-0.02,
-                y=-0.2,
+                y=-0.15,
                 xanchor="left",
                 yanchor="top"
             ),
@@ -702,25 +718,29 @@ class CreateReportChart:
                 showline=True,  # Show x-axis line
                 linewidth=1,
                 linecolor='lightgrey',
+                zeroline=False,  # Remove x-axis 0 line
                 tickfont=dict(
                     color='#737b8b'
                 )
             ),
             yaxis=dict(
                 showgrid=True,  # Show y-axis grid lines
-                showline=False,  # Show y-axis line
+                showline=False,  # Hide y-axis line
                 linewidth=1,
                 linecolor='lightgrey',
                 tickfont=dict(
                     color='#737b8b'
                 ),
-                showticklabels=False  # Hide y-axis tick labels
+                zeroline=False,
+                showticklabels=True,  # Show y-axis tick labels
+                tickvals=y_ticks,  # Set the y-axis tick values to ensure 5 grid lines
+                ticktext=['0', f'{y_max / 4:.0f}', f'{y_max / 2:.0f}', f'{3 * y_max / 4:.0f}', f'{y_max:.0f}']  # Set the tick text
             ),
             hoverlabel=dict(
-                bgcolor="#ffa726",
+                bgcolor="#2E2E48",
                 font_size=12,
                 font_color="white",
-                bordercolor="#ffa726"
+                bordercolor="#2E2E48"
             )
         )
 
@@ -728,11 +748,13 @@ class CreateReportChart:
             mode='lines+markers',
             line={'width': 2.5},
             showlegend=True,
-            hoverinfo='all',
-            hovertemplate='<span style="font-size:15px; font-weight:bold;">%{x|%Y-%m-%d}<br><br>Count : %{y}<extra></extra>',
+            hovertemplate=(
+                '<span style="font-size:15px; font-weight:bold;">%{fullData.name}</span>'
+                '<span style="font-size:15px; font-weight:bold;">: %{y}</span><br><br>'
+                '<span style="font-size:12px; font-weight:bold;">%{x|%Y-%m-%d}</span><extra></extra>'
+            ),
         )
 
-        # Update x-axis to show every week and only show 12 points
         tool_trends_line_chart.update_xaxes(
             dtick="M1",
             tickformat="%b %d",

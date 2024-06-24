@@ -325,7 +325,7 @@ def get_change_icon(value):
 def page_content():
     # Load data for the home page
     openings_statistics, historical_total_openings, data_role, data_tools, openings_company, taiepi_area_openings = load_home_page_data()
-
+    
     # Extract statistics
     stats = CreateReportChart.extract_openings_statistics(openings_statistics)
     tools_ranker = CreateReportChart.extract_tools_ranker(data_tools)
