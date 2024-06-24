@@ -729,10 +729,10 @@ class CreateReportChart:
                 showticklabels=False  # Hide y-axis tick labels
             ),
             hoverlabel=dict(
-                bgcolor="#ffa726",
+                bgcolor="#2E2E48",
                 font_size=12,
                 font_color="white",
-                bordercolor="#ffa726"
+                bordercolor="#2E2E48"
             )
         )
 
@@ -740,11 +740,13 @@ class CreateReportChart:
             mode='lines+markers',
             line={'width': 2.5},
             showlegend=True,
-            hoverinfo='all',
-            hovertemplate='<span style="font-size:15px; font-weight:bold;">%{x|%Y-%m-%d}<br><br>Count : %{y}<extra></extra>',
+            hovertemplate=(
+            '<span style="font-size:15px; font-weight:bold;">%{fullData.name}</span>'
+            '<span style="font-size:15px; font-weight:bold;">: %{y}</span><br><br>'
+            '<span style="font-size:15px; font-weight:bold;">%{x|%Y-%m-%d}</span><extra></extra>'
+            ),
         )
 
-        # Update x-axis to show every week and only show 12 points
         tool_trends_line_chart.update_xaxes(
             dtick="M1",
             tickformat="%b %d",
