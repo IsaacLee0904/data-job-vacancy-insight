@@ -1450,9 +1450,8 @@ Copy code .page .separator,
 .page .tool-popularity-bar-chart {
   width: 100%;
   height: 50%;
-  margin-top: 700px;
-  /* margin-left: -40px; */
-  margin-left: 200px;
+  margin-top: 520px;
+  margin-left: -40px;
   position: absolute;
   top: 50px;
   left: 10px;

@@ -797,7 +797,7 @@ class CreateReportChart:
         ))
 
         tool_popularity_bar_char.update_layout(
-            width=800,
+            width=1000,
             height=400,
             margin=dict(l=20, r=20, t=20, b=20),
             paper_bgcolor='rgba(0,0,0,0)',
