@@ -224,7 +224,10 @@ def page_content():
                                                 ),
                                                 html.P("Tool Trends", className="tool-trend-title"),
                                                 html.P("Tracking the trends of the most maintion tools in data-centric jobs", className="tool-trend-sub-title"),
-                                                dcc.Graph(id='line-chart', className="tool-trends-line-chart")
+                                                dcc.Graph(id='line-chart', className="tool-trends-line-chart"),
+                                                html.P("Top 5 Stacks with Most Openings", className="tool-broad-title"),
+                                                html.P("The companies that posted the highest number of job openings in the past week", className="tool-broad-sub-title"),
+                                                dcc.Graph(id='bar-chart', className="tool-popularity-bar-chart"),
                                             ]
                                         ),
                                     ]
@@ -246,10 +249,13 @@ layout = html.Div(
 
 # Define callback function
 @callback(
-    Output('line-chart', 'figure'),
+    [Output('line-chart', 'figure'),
+     Output('bar-chart', 'figure')],
     [Input('datarole-dropdown', 'value'),
      Input('category-dropdown', 'value')]
 )
-def update_line_chart(selected_datarole, selected_category):
+def update_charts(selected_datarole, selected_category):
     tool_by_data_role = load_stack_page_data()
-    return CreateReportChart.create_tool_trends_line_chart(tool_by_data_role, selected_datarole, selected_category)
+    line_chart = CreateReportChart.create_tool_trends_line_chart(tool_by_data_role, selected_datarole, selected_category)
+    bar_chart = CreateReportChart.create_tool_popularity_bar_chart(tool_by_data_role, selected_datarole, selected_category)
+    return line_chart, bar_chart

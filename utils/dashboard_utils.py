@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 import json
 import plotly.express as px
+import plotly.graph_objects as go
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -761,3 +762,84 @@ class CreateReportChart:
         )
 
         return tool_trends_line_chart
+    
+    def create_tool_popularity_bar_chart(tool_by_data_role, selected_datarole='All', selected_category='All'):
+        filtered_data = tool_by_data_role.copy()
+
+        # Handle the case where both selections are 'All'
+        if selected_datarole == 'All' and selected_category == 'All':
+            grouped_data = filtered_data.groupby('tool_name')['count'].sum().reset_index()
+            top_tools = grouped_data.nlargest(5, 'count')
+        # Handle the case where data_role is 'All' but category has a selected value
+        elif selected_datarole == 'All':
+            filtered_data = filtered_data[filtered_data['category'] == selected_category]
+            grouped_data = filtered_data.groupby('tool_name')['count'].sum().reset_index()
+            top_tools = grouped_data.nlargest(5, 'count')
+        # Handle the case where category is 'All' but data_role has a selected value
+        elif selected_category == 'All':
+            filtered_data = filtered_data[filtered_data['data_role'] == selected_datarole]
+            grouped_data = filtered_data.groupby('tool_name')['count'].sum().reset_index()
+            top_tools = grouped_data.nlargest(5, 'count')
+        # Handle the case where both selections are not 'All'
+        else:
+            filtered_data = filtered_data[(filtered_data['data_role'] == selected_datarole) & (filtered_data['category'] == selected_category)]
+            grouped_data = filtered_data.groupby('tool_name')['count'].sum().reset_index()
+            top_tools = grouped_data.nlargest(5, 'count')
+
+        # Create bar chart
+        tool_popularity_bar_chart = go.Figure()
+
+        tool_popularity_bar_chart.add_trace(go.Bar(
+            x=top_tools['count'],
+            y=top_tools['tool_name'],
+            orientation='h',
+            marker=dict(color='#2E2E48')
+        ))
+
+        tool_popularity_bar_chart.update_traces(width=0.7) # adjust bar size 
+
+        tool_popularity_bar_chart.update_layout(
+            width=1000,
+            height=300,
+            margin=dict(l=20, r=20, t=20, b=20),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            xaxis_title=None,
+            yaxis_title=None,
+            yaxis=dict(
+                categoryorder='total ascending'
+            ),
+            hoverlabel=dict(
+                bgcolor="#2E2E48",
+                font_size=12,
+                font_color="white",
+                bordercolor="#2E2E48"
+            ),
+            xaxis=dict(
+                showticklabels=False  # Hide the count axis at the bottom
+            )
+        )
+
+        # Add annotations for most and least popular in roles
+        annotations = []
+        for i, row in top_tools.iterrows():
+            tool_name = row['tool_name']
+            tool_data = filtered_data[filtered_data['tool_name'] == tool_name]
+            roles_count = tool_data.groupby('data_role')['count'].sum()
+
+            most_popular_roles = roles_count[roles_count == roles_count.max()].index.tolist()
+            least_popular_roles = roles_count[roles_count == roles_count.min()].index.tolist()
+
+            annotations.append(
+                dict(
+                    x=row['count'] + 5,
+                    y=tool_name,
+                    text=f"<b>Most popular in:</b> {', '.join(most_popular_roles)}<br><b>Least popular in:</b> {', '.join(least_popular_roles)}",
+                    showarrow=False,
+                    font=dict(color='#2E2E48', size=12)
+                )
+            )
+
+        tool_popularity_bar_chart.update_layout(annotations=annotations)
+
+        return tool_popularity_bar_chart
