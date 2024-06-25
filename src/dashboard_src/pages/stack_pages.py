@@ -224,7 +224,9 @@ def page_content():
                                                 ),
                                                 html.P("Tool Trends", className="tool-trend-title"),
                                                 html.P("Tracking the trends of the most maintion tools in data-centric jobs", className="tool-trend-sub-title"),
-                                                dcc.Graph(id='line-chart', className="tool-trends-line-chart")
+                                                dcc.Graph(id='line-chart', className="tool-trends-line-chart"),
+                                                html.P("Top 5 Stacks with Most Openings", className="tool-broad-title"),
+                                                html.P("The companies that posted the highest number of job openings in the past week", className="tool-broad-sub-title"),
                                             ]
                                         ),
                                     ]
