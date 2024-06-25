@@ -769,36 +769,38 @@ class CreateReportChart:
         # Handle the case where both selections are 'All'
         if selected_datarole == 'All' and selected_category == 'All':
             grouped_data = filtered_data.groupby('tool_name')['count'].sum().reset_index()
-            top_tools = grouped_data.nlargest(10, 'count')
+            top_tools = grouped_data.nlargest(5, 'count')
         # Handle the case where data_role is 'All' but category has a selected value
         elif selected_datarole == 'All':
             filtered_data = filtered_data[filtered_data['category'] == selected_category]
             grouped_data = filtered_data.groupby('tool_name')['count'].sum().reset_index()
-            top_tools = grouped_data.nlargest(10, 'count')
+            top_tools = grouped_data.nlargest(5, 'count')
         # Handle the case where category is 'All' but data_role has a selected value
         elif selected_category == 'All':
             filtered_data = filtered_data[filtered_data['data_role'] == selected_datarole]
             grouped_data = filtered_data.groupby('tool_name')['count'].sum().reset_index()
-            top_tools = grouped_data.nlargest(10, 'count')
+            top_tools = grouped_data.nlargest(5, 'count')
         # Handle the case where both selections are not 'All'
         else:
             filtered_data = filtered_data[(filtered_data['data_role'] == selected_datarole) & (filtered_data['category'] == selected_category)]
             grouped_data = filtered_data.groupby('tool_name')['count'].sum().reset_index()
-            top_tools = grouped_data.nlargest(10, 'count')
+            top_tools = grouped_data.nlargest(5, 'count')
 
         # Create bar chart
-        tool_popularity_bar_char = go.Figure()
+        tool_popularity_bar_chart = go.Figure()
 
-        tool_popularity_bar_char.add_trace(go.Bar(
+        tool_popularity_bar_chart.add_trace(go.Bar(
             x=top_tools['count'],
             y=top_tools['tool_name'],
             orientation='h',
             marker=dict(color='#2E2E48')
         ))
 
-        tool_popularity_bar_char.update_layout(
+        tool_popularity_bar_chart.update_traces(width=0.7) # adjust bar size 
+
+        tool_popularity_bar_chart.update_layout(
             width=1000,
-            height=400,
+            height=300,
             margin=dict(l=20, r=20, t=20, b=20),
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
@@ -812,6 +814,9 @@ class CreateReportChart:
                 font_size=12,
                 font_color="white",
                 bordercolor="#2E2E48"
+            ),
+            xaxis=dict(
+                showticklabels=False  # Hide the count axis at the bottom
             )
         )
 
@@ -821,7 +826,7 @@ class CreateReportChart:
             tool_name = row['tool_name']
             tool_data = filtered_data[filtered_data['tool_name'] == tool_name]
             roles_count = tool_data.groupby('data_role')['count'].sum()
-            
+
             most_popular_roles = roles_count[roles_count == roles_count.max()].index.tolist()
             least_popular_roles = roles_count[roles_count == roles_count.min()].index.tolist()
 
@@ -835,6 +840,6 @@ class CreateReportChart:
                 )
             )
 
-        tool_popularity_bar_char.update_layout(annotations=annotations)
+        tool_popularity_bar_chart.update_layout(annotations=annotations)
 
-        return tool_popularity_bar_char
+        return tool_popularity_bar_chart
