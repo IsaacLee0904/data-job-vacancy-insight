@@ -799,7 +799,7 @@ class CreateReportChart:
         tool_popularity_bar_chart.update_traces(width=0.7)  # adjust bar size 
 
         tool_popularity_bar_chart.update_layout(
-            width=1200,  # Adjust the width to shorten the bar chart
+            width=1000,  # Adjust the width to shorten the bar chart
             height=300,
             margin=dict(l=20, r=20, t=20, b=20),
             paper_bgcolor='rgba(0,0,0,0)',
@@ -822,6 +822,7 @@ class CreateReportChart:
 
         # Add annotations for most and least popular in roles
         annotations = []
+        max_count = top_tools['count'].max()
         for i, row in top_tools.iterrows():
             tool_name = row['tool_name']
             tool_data = filtered_data[filtered_data['tool_name'] == tool_name]
@@ -830,9 +831,12 @@ class CreateReportChart:
             most_popular_roles = roles_count[roles_count == roles_count.max()].index.tolist()
             least_popular_roles = roles_count[roles_count == roles_count.min()].index.tolist()
 
+            # Calculate the position based on the length of the bar
+            annotation_x = max_count + 100  # Adjust this offset as needed
+
             annotations.append(
                 dict(
-                    x=row['count'] + 3000,  # Adjust the x position to align with the bars
+                    x=annotation_x + 1700,  # Align to the right
                     y=tool_name,
                     text=f"{', '.join(most_popular_roles)}",
                     showarrow=False,
@@ -842,7 +846,7 @@ class CreateReportChart:
             )
             annotations.append(
                 dict(
-                    x=row['count'] + 5000,  # Adjust the x position further to the right for Least popular in
+                    x=annotation_x + 4000,  # Adjust the x position further to the right for Least popular in
                     y=tool_name,
                     text=f"{', '.join(least_popular_roles)}",
                     showarrow=False,
