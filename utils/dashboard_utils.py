@@ -832,11 +832,22 @@ class CreateReportChart:
 
             annotations.append(
                 dict(
-                    x=row['count'] + 3000,  # Move the annotation text further to the right
+                    x=row['count'] + 3000,  # Adjust the x position to align with the bars
                     y=tool_name,
-                    text=f"<b>Most popular in:</b> {', '.join(most_popular_roles)}<br><b>Least popular in:</b> {', '.join(least_popular_roles)}",
+                    text=f"{', '.join(most_popular_roles)}",
                     showarrow=False,
-                    font=dict(color='#2E2E48', size=12)
+                    font=dict(color='#2E2E48', size=12),
+                    align='left'
+                )
+            )
+            annotations.append(
+                dict(
+                    x=row['count'] + 5000,  # Adjust the x position further to the right for Least popular in
+                    y=tool_name,
+                    text=f"{', '.join(least_popular_roles)}",
+                    showarrow=False,
+                    font=dict(color='#2E2E48', size=12),
+                    align='left'
                 )
             )
 
