@@ -229,7 +229,7 @@ def page_content():
                                                 html.P("Tracking the trends of the most maintion tools in data-centric jobs", className="tool-trend-sub-title"),
                                                 dcc.Graph(id='line-chart', className="tool-trends-line-chart"),
                                                 html.P("Top 5 Stacks with Most Openings", className="tool-broad-title"),
-                                                html.P("The companies that posted the highest number of job openings in the past week", className="tool-broad-sub-title"),
+                                                html.P("Top 5 most maintioned technologies of all time", className="tool-broad-sub-title"),
                                                 html.P("Most popular in", className="most-popular-title"),
                                                 html.P("Least popular in", className="least-popular-title"),
                                                 dcc.Graph(figure=tool_popularity_bar_chart, className="tool-popularity-bar-chart"),
