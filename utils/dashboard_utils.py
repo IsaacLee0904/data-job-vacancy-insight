@@ -820,20 +820,20 @@ class CreateReportChart:
             annotation_x = max_count + 100  # Adjust this offset as needed
 
             annotations.append(
-                dict(
-                    x=annotation_x + 1700,  # Align to the right
-                    y=tool_name,
-                    text=f"{', '.join(most_popular_roles)}",
-                    showarrow=False,
-                    font=dict(color='#737B8B', size=14),
-                    align='left'
+            dict(
+                x=annotation_x + 1700,  
+                y=tool_name,
+                text=f"<b>{', '.join(most_popular_roles)}</b>",  
+                showarrow=False,
+                font=dict(color='#737B8B', size=14),
+                align='left'
                 )
             )
             annotations.append(
                 dict(
-                    x=annotation_x + 5000,  # Adjust the x position further to the right for Least popular in
+                    x=annotation_x + 5000,  
                     y=tool_name,
-                    text=f"{', '.join(least_popular_roles)}",
+                    text=f"<b>{', '.join(least_popular_roles)}</b>",  
                     showarrow=False,
                     font=dict(color='#737B8B', size=14),
                     align='left'
