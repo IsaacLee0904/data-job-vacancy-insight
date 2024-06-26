@@ -799,7 +799,7 @@ class CreateReportChart:
         tool_popularity_bar_chart.update_traces(width=0.7)  # adjust bar size 
 
         tool_popularity_bar_chart.update_layout(
-            width=1000,  # Adjust the width to shorten the bar chart
+            width=1100,  # Adjust the width to shorten the bar chart
             height=300,
             margin=dict(l=20, r=20, t=20, b=20),
             paper_bgcolor='rgba(0,0,0,0)',
@@ -846,7 +846,7 @@ class CreateReportChart:
             )
             annotations.append(
                 dict(
-                    x=annotation_x + 4000,  # Adjust the x position further to the right for Least popular in
+                    x=annotation_x + 5000,  # Adjust the x position further to the right for Least popular in
                     y=tool_name,
                     text=f"{', '.join(least_popular_roles)}",
                     showarrow=False,
