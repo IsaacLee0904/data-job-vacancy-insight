@@ -825,7 +825,7 @@ class CreateReportChart:
                     y=tool_name,
                     text=f"{', '.join(most_popular_roles)}",
                     showarrow=False,
-                    font=dict(color='#2E2E48', size=12),
+                    font=dict(color='#737B8B', size=14),
                     align='left'
                 )
             )
@@ -835,7 +835,7 @@ class CreateReportChart:
                     y=tool_name,
                     text=f"{', '.join(least_popular_roles)}",
                     showarrow=False,
-                    font=dict(color='#2E2E48', size=12),
+                    font=dict(color='#737B8B', size=14),
                     align='left'
                 )
             )
