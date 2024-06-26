@@ -778,7 +778,12 @@ class CreateReportChart:
             x=top_tools['count'],
             y=top_tools['tool_name'],
             orientation='h',
-            marker=dict(color='#2E2E48')
+            marker=dict(color='#2E2E48'),
+            text=top_tools['count'],  
+            texttemplate='%{text}  ',
+            textposition='inside',  
+            textfont=dict(color='white', size=14),
+            insidetextanchor='end',
         ))
 
         tool_popularity_bar_chart.update_traces(width=0.7)  # adjust bar size 
@@ -792,7 +797,7 @@ class CreateReportChart:
             xaxis_title=None,
             yaxis_title=None,
             yaxis=dict(
-                categoryorder='total ascending'
+                categoryorder='total ascending',
             ),
             hoverlabel=dict(
                 bgcolor="#2E2E48",
