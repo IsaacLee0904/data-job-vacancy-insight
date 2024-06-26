@@ -796,10 +796,10 @@ class CreateReportChart:
             marker=dict(color='#2E2E48')
         ))
 
-        tool_popularity_bar_chart.update_traces(width=0.7) # adjust bar size 
+        tool_popularity_bar_chart.update_traces(width=0.7)  # adjust bar size 
 
         tool_popularity_bar_chart.update_layout(
-            width=1000,
+            width=1200,  # Adjust the width to shorten the bar chart
             height=300,
             margin=dict(l=20, r=20, t=20, b=20),
             paper_bgcolor='rgba(0,0,0,0)',
@@ -832,7 +832,7 @@ class CreateReportChart:
 
             annotations.append(
                 dict(
-                    x=row['count'] + 5,
+                    x=row['count'] + 3000,  # Move the annotation text further to the right
                     y=tool_name,
                     text=f"<b>Most popular in:</b> {', '.join(most_popular_roles)}<br><b>Least popular in:</b> {', '.join(least_popular_roles)}",
                     showarrow=False,
