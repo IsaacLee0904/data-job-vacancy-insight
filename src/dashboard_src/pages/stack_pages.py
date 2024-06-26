@@ -185,6 +185,9 @@ def page_content():
     categories = [{'label': category, 'value': category} for category in tool_by_data_role['category'].unique()]
     categories.insert(0, {'label': 'All', 'value': 'All'})
 
+    # Create figture
+    tool_popularity_bar_chart = CreateReportChart.create_tool_popularity_bar_chart(tool_by_data_role)
+
     return html.Div(
             className="page",
             children=[
@@ -227,7 +230,9 @@ def page_content():
                                                 dcc.Graph(id='line-chart', className="tool-trends-line-chart"),
                                                 html.P("Top 5 Stacks with Most Openings", className="tool-broad-title"),
                                                 html.P("The companies that posted the highest number of job openings in the past week", className="tool-broad-sub-title"),
-                                                dcc.Graph(id='bar-chart', className="tool-popularity-bar-chart"),
+                                                html.P("Most popular in", className="most-popular-title"),
+                                                html.P("Least popular in", className="least-popular-title"),
+                                                dcc.Graph(figure=tool_popularity_bar_chart, className="tool-popularity-bar-chart"),
                                             ]
                                         ),
                                     ]
@@ -249,13 +254,11 @@ layout = html.Div(
 
 # Define callback function
 @callback(
-    [Output('line-chart', 'figure'),
-     Output('bar-chart', 'figure')],
+    Output('line-chart', 'figure'),
     [Input('datarole-dropdown', 'value'),
      Input('category-dropdown', 'value')]
 )
 def update_charts(selected_datarole, selected_category):
     tool_by_data_role = load_stack_page_data()
     line_chart = CreateReportChart.create_tool_trends_line_chart(tool_by_data_role, selected_datarole, selected_category)
-    bar_chart = CreateReportChart.create_tool_popularity_bar_chart(tool_by_data_role, selected_datarole, selected_category)
-    return line_chart, bar_chart
+    return line_chart

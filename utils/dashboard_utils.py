@@ -766,25 +766,10 @@ class CreateReportChart:
     def create_tool_popularity_bar_chart(tool_by_data_role, selected_datarole='All', selected_category='All'):
         filtered_data = tool_by_data_role.copy()
 
-        # Handle the case where both selections are 'All'
-        if selected_datarole == 'All' and selected_category == 'All':
-            grouped_data = filtered_data.groupby('tool_name')['count'].sum().reset_index()
-            top_tools = grouped_data.nlargest(5, 'count')
-        # Handle the case where data_role is 'All' but category has a selected value
-        elif selected_datarole == 'All':
-            filtered_data = filtered_data[filtered_data['category'] == selected_category]
-            grouped_data = filtered_data.groupby('tool_name')['count'].sum().reset_index()
-            top_tools = grouped_data.nlargest(5, 'count')
-        # Handle the case where category is 'All' but data_role has a selected value
-        elif selected_category == 'All':
-            filtered_data = filtered_data[filtered_data['data_role'] == selected_datarole]
-            grouped_data = filtered_data.groupby('tool_name')['count'].sum().reset_index()
-            top_tools = grouped_data.nlargest(5, 'count')
-        # Handle the case where both selections are not 'All'
-        else:
-            filtered_data = filtered_data[(filtered_data['data_role'] == selected_datarole) & (filtered_data['category'] == selected_category)]
-            grouped_data = filtered_data.groupby('tool_name')['count'].sum().reset_index()
-            top_tools = grouped_data.nlargest(5, 'count')
+        # Handle the data
+
+        grouped_data = filtered_data.groupby('tool_name')['count'].sum().reset_index()
+        top_tools = grouped_data.nlargest(5, 'count')
 
         # Create bar chart
         tool_popularity_bar_chart = go.Figure()
@@ -793,13 +778,18 @@ class CreateReportChart:
             x=top_tools['count'],
             y=top_tools['tool_name'],
             orientation='h',
-            marker=dict(color='#2E2E48')
+            marker=dict(color='#2E2E48'),
+            text=top_tools['count'],  
+            texttemplate='%{text}  ',
+            textposition='inside',  
+            textfont=dict(color='white', size=14),
+            insidetextanchor='end',
         ))
 
-        tool_popularity_bar_chart.update_traces(width=0.7) # adjust bar size 
+        tool_popularity_bar_chart.update_traces(width=0.7)  # adjust bar size 
 
         tool_popularity_bar_chart.update_layout(
-            width=1000,
+            width=1100,  # Adjust the width to shorten the bar chart
             height=300,
             margin=dict(l=20, r=20, t=20, b=20),
             paper_bgcolor='rgba(0,0,0,0)',
@@ -807,7 +797,7 @@ class CreateReportChart:
             xaxis_title=None,
             yaxis_title=None,
             yaxis=dict(
-                categoryorder='total ascending'
+                categoryorder='total ascending',
             ),
             hoverlabel=dict(
                 bgcolor="#2E2E48",
@@ -822,6 +812,7 @@ class CreateReportChart:
 
         # Add annotations for most and least popular in roles
         annotations = []
+        max_count = top_tools['count'].max()
         for i, row in top_tools.iterrows():
             tool_name = row['tool_name']
             tool_data = filtered_data[filtered_data['tool_name'] == tool_name]
@@ -830,13 +821,27 @@ class CreateReportChart:
             most_popular_roles = roles_count[roles_count == roles_count.max()].index.tolist()
             least_popular_roles = roles_count[roles_count == roles_count.min()].index.tolist()
 
+            # Calculate the position based on the length of the bar
+            annotation_x = max_count + 100  # Adjust this offset as needed
+
+            annotations.append(
+            dict(
+                x=annotation_x + 1700,  
+                y=tool_name,
+                text=f"<b>{', '.join(most_popular_roles)}</b>",  
+                showarrow=False,
+                font=dict(color='#737B8B', size=14),
+                align='left'
+                )
+            )
             annotations.append(
                 dict(
-                    x=row['count'] + 5,
+                    x=annotation_x + 5000,  
                     y=tool_name,
-                    text=f"<b>Most popular in:</b> {', '.join(most_popular_roles)}<br><b>Least popular in:</b> {', '.join(least_popular_roles)}",
+                    text=f"<b>{', '.join(least_popular_roles)}</b>",  
                     showarrow=False,
-                    font=dict(color='#2E2E48', size=12)
+                    font=dict(color='#737B8B', size=14),
+                    align='left'
                 )
             )
 
