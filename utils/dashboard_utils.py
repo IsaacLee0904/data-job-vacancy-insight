@@ -766,25 +766,10 @@ class CreateReportChart:
     def create_tool_popularity_bar_chart(tool_by_data_role, selected_datarole='All', selected_category='All'):
         filtered_data = tool_by_data_role.copy()
 
-        # Handle the case where both selections are 'All'
-        if selected_datarole == 'All' and selected_category == 'All':
-            grouped_data = filtered_data.groupby('tool_name')['count'].sum().reset_index()
-            top_tools = grouped_data.nlargest(5, 'count')
-        # Handle the case where data_role is 'All' but category has a selected value
-        elif selected_datarole == 'All':
-            filtered_data = filtered_data[filtered_data['category'] == selected_category]
-            grouped_data = filtered_data.groupby('tool_name')['count'].sum().reset_index()
-            top_tools = grouped_data.nlargest(5, 'count')
-        # Handle the case where category is 'All' but data_role has a selected value
-        elif selected_category == 'All':
-            filtered_data = filtered_data[filtered_data['data_role'] == selected_datarole]
-            grouped_data = filtered_data.groupby('tool_name')['count'].sum().reset_index()
-            top_tools = grouped_data.nlargest(5, 'count')
-        # Handle the case where both selections are not 'All'
-        else:
-            filtered_data = filtered_data[(filtered_data['data_role'] == selected_datarole) & (filtered_data['category'] == selected_category)]
-            grouped_data = filtered_data.groupby('tool_name')['count'].sum().reset_index()
-            top_tools = grouped_data.nlargest(5, 'count')
+        # Handle the data
+
+        grouped_data = filtered_data.groupby('tool_name')['count'].sum().reset_index()
+        top_tools = grouped_data.nlargest(5, 'count')
 
         # Create bar chart
         tool_popularity_bar_chart = go.Figure()
