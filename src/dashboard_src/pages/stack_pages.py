@@ -22,7 +22,7 @@ from utils.dashboard_utils import FetchReportData, CreateReportChart
 ## Load data
 # define fetch functions
     
-# Integrate the fetch functions into the load_home_page_data function
+# Integrate the fetch functions into the load_stack_page_data function
 def load_stack_page_data():
     """
     Load reporting data from the database for the dashboard stack page.
