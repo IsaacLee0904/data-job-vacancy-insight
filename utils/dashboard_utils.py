@@ -373,6 +373,34 @@ class FetchReportData:
             self.logger.error(f"Error fetching tool trend data: {str(e)}")
             return pd.DataFrame()  # Return an empty DataFrame in case of an error
 
+    def fetch_education_by_data_role(self):
+        """
+        Fetch education by data role data from the 'reporting_data' schema.
+        """
+        try:
+            # Prepare the SQL query to fetch the required data
+            query = """
+                SELECT 
+                    data_role,
+                    degree,
+                    count
+                FROM reporting_data.rpt_data_role_by_edu;
+            """
+            # Execute the query and fetch the result
+            data = self.execute_query(query)  # Use self.execute_query to call the local method
+
+            # Convert the data into a DataFrame if not empty
+            if data:
+                df = pd.DataFrame(data, columns=['data_role', 'degree', 'count'])
+                self.logger.info("Education by data role data converted to DataFrame successfully.")
+                return df
+            else:
+                self.logger.info("No education data found for data roles.")
+                return pd.DataFrame()  # Return an empty DataFrame if no data
+        except Exception as e:
+            self.logger.error(f"Error fetching education by data role data: {str(e)}")
+            return pd.DataFrame()  # Return an empty DataFrame in case of an error
+
 class CreateReportChart:
     # Create the data role pie chart
     def create_data_role_pie(data_role):
@@ -848,3 +876,7 @@ class CreateReportChart:
         tool_popularity_bar_chart.update_layout(annotations=annotations)
 
         return tool_popularity_bar_chart
+
+    def create_edu_heatmap(data_role):
+        
+        return data_role_pie
