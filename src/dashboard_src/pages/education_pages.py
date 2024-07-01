@@ -18,7 +18,26 @@ from utils.front_end_utils import load_css_files
 from utils.dashboard_utils import FetchReportData
 
 ## Load data
-# define fetch functions
+# Integrate the fetch functions into the load_home_page_data function
+def load_edu_page_data():
+    """
+    Load reporting data from the database for the dashboard edu page.
+    """
+    # Setup logger
+    logger = set_logger()
+
+    # Initialize the FetchReportData class to handle database operations
+    fetcher = FetchReportData(logger)
+
+    # load data for tool by data role
+    edu_by_data_role = FetchReportData.fetch_education_by_data_role(fetcher)
+
+    # Close the database connection safely
+    if fetcher.connection:
+        fetcher.connection.close()
+        logger.info("Database connection closed.")
+    
+    return edu_by_data_role
 
 def sidebar():
     return html.Div(
@@ -146,9 +165,45 @@ def sidebar():
         ]
     )
 
+def page_content():
+    # Load data for the stack page
+    edu_by_data_role = load_edu_page_data()
+    print(edu_by_data_role)
+
+    return html.Div(
+            className="page",
+            children=[
+                html.Div(
+                    className="div",
+                    children=[
+                        html.Div(
+                            className="overlap",
+                            children=[                          
+                                html.Div(
+                                    className="overlap-6",
+                                    children=[
+                                        html.Div(
+                                            className="dropdowns",
+                                            children=[                                            
+                                                html.P("Educational Requirements for Data Roles", className="edu-title"),
+                                                html.P("A Comprehensive Overview of the Academic Backgrounds Sought in Data-Centric Careers", className="edu-sub-title"),
+                                                # dcc.Graph(id='line-chart', className="tool-trends-line-chart"),
+                                            ]
+                                        ),
+                                    ]
+                                ),
+                            ]
+                        ),
+                        html.Div("Dashboard", className="title-page")
+                    ]
+                )
+            ]
+        )
+
 layout = html.Div(
     children=[
         sidebar(),
+        page_content()
     ]
 )
 
