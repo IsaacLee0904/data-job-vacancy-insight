@@ -15,7 +15,7 @@ sys.path.append(project_root)
 # import modules
 from utils.log_utils import set_logger
 from utils.front_end_utils import load_css_files
-from utils.dashboard_utils import FetchReportData
+from utils.dashboard_utils import FetchReportData, CreateReportChart
 
 ## Load data
 # Integrate the fetch functions into the load_home_page_data function
@@ -168,7 +168,8 @@ def sidebar():
 def page_content():
     # Load data for the stack page
     edu_by_data_role = load_edu_page_data()
-    print(edu_by_data_role)
+
+    edu_heatmap = CreateReportChart.create_education_heatmap(edu_by_data_role)
 
     return html.Div(
             className="page",
@@ -187,7 +188,7 @@ def page_content():
                                             children=[                                            
                                                 html.P("Educational Requirements for Data Roles", className="edu-title"),
                                                 html.P("A Comprehensive Overview of the Academic Backgrounds Sought in Data-Centric Careers", className="edu-sub-title"),
-                                                # dcc.Graph(id='line-chart', className="tool-trends-line-chart"),
+                                                dcc.Graph(figure=edu_heatmap, className="tool-trends-line-chart"),
                                             ]
                                         ),
                                     ]
