@@ -10,7 +10,7 @@ SELECT
     	WHEN BBB.degree = 'PhD' THEN 'PhD'
     	WHEN BBB.degree = 'Master Degree' THEN 'Master'
     	WHEN BBB.degree = 'Bachelor Degree' THEN 'Bachelor'
-    	WHEN BBB.degree = 'College Degree' THEN 'College Degree'
+    	WHEN BBB.degree = 'College Degree' THEN 'College'
     	WHEN BBB.degree = 'High School' THEN 'High School'
     	WHEN BBB.degree = 'Others' THEN 'Others'
     END degree
