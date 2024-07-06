@@ -192,7 +192,7 @@ def page_content():
                                             children=[                                            
                                                 html.P("Educational Requirements for Data Roles", className="edu-title"),
                                                 html.P("A Comprehensive Overview of the Academic Backgrounds Sought in Data-Centric Careers", className="edu-sub-title"),
-                                                dcc.Graph(figure=edu_heatmap, className="tool-trends-line-chart"),
+                                                dcc.Graph(figure=edu_heatmap, className="edu-heatmap"),
                                             ]
                                         ),
                                     ]
