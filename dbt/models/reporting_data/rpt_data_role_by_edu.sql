@@ -31,7 +31,8 @@ LEFT JOIN (
 ON AAA."degree" = BBB.degree_id
 GROUP BY
     AAA.data_role,
-    BBB.degree
+    BBB.degree,
+    AAA.crawl_date
 ORDER BY
     AAA.data_role,
     BBB.degree
