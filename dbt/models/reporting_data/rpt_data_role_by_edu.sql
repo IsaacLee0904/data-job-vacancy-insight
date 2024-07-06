@@ -1,5 +1,5 @@
 -- models/reporting_data/rpt_data_role_by_edu.sql
-{{ config(materialized='incremental', schema='reporting_data')}}
+{{ config(materialized='incremental', schema='reporting_data', unique_key='data_role || degree || crawl_date')}}
 
 SELECT
 	CASE
@@ -15,12 +15,14 @@ SELECT
     	WHEN BBB.degree = 'Others' THEN 'Others'
     END degree
     , COUNT(*) AS count
+    , AAA.crawl_date
 FROM (
     SELECT 
         AA.data_role,
         unnest(AA."degree") AS degree,
         AA.crawl_date
     FROM modeling_data.er_job AA
+    WHERE AA.crawl_date = '{{modules.datetime.date.today().strftime('%Y-%m-%d')}}'
 ) AAA
 LEFT JOIN (
     SELECT BB.degree_id, BB.degree
