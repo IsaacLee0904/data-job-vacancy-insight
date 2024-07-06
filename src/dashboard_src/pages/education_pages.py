@@ -29,8 +29,12 @@ def load_edu_page_data():
     # Initialize the FetchReportData class to handle database operations
     fetcher = FetchReportData(logger)
 
+    # Get the newest crawl date
+    newest_crawl_date = fetcher.get_newest_crawl_date()
+    print('this is the newest crawl date', newest_crawl_date)
+
     # load data for tool by data role
-    edu_by_data_role = FetchReportData.fetch_education_by_data_role(fetcher)
+    edu_by_data_role = FetchReportData.fetch_education_by_data_role(fetcher, newest_crawl_date)
 
     # Close the database connection safely
     if fetcher.connection:
