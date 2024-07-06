@@ -877,6 +877,48 @@ class CreateReportChart:
 
         return tool_popularity_bar_chart
 
-    def create_edu_heatmap(data_role):
-        
-        return data_role_pie
+    def create_education_heatmap(edu_by_data_role):
+    # Pivot the data for heatmap
+        heatmap_data = edu_by_data_role.pivot(index='data_role', columns='degree', values='count')
+
+        # Define colorscale
+        colorscale = [
+            [0, 'rgb(239,239,255)'],   # light color
+            [0.5, 'rgb(102,102,153)'], # medium color
+            [1, 'rgb(51,51,102)']      # dark color
+        ]
+
+        # Create heatmap
+        edu_heatmap = go.Figure(data=go.Heatmap(
+            z=heatmap_data.values,
+            x=heatmap_data.columns,
+            y=heatmap_data.index,
+            colorscale=colorscale,
+            showscale=False,
+            text=heatmap_data.values,
+            # texttemplate="%{text}",
+            # textfont={"size": 12}
+        ))
+
+        # Update layout
+        edu_heatmap.update_layout(
+            width=600,
+            height=400,
+            margin=dict(l=50, r=50, t=50, b=50),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            xaxis=dict(
+                title=None,
+                tickmode='array',
+                tickvals=heatmap_data.columns,
+                ticktext=heatmap_data.columns
+            ),
+            yaxis=dict(
+                title=None,
+                tickmode='array',
+                tickvals=heatmap_data.index,
+                ticktext=heatmap_data.index
+            )
+        )
+
+        return edu_heatmap
