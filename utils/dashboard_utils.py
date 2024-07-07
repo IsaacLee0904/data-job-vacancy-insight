@@ -920,8 +920,8 @@ class CreateReportChart:
             showscale=False,
             text=z_text,
             hovertemplate=
-            '<b>Data role :</b> <b>%{y}</b> <br>' +
-            '<b>Degree :</b> <b>%{x}</b> <br>' +
+            '<b>Data role :</b> <b>%{y}</b> <br><br>' +
+            '<b>Degree :</b> <b>%{x}</b> <br><br>' +
             '<b>Count :</b> <b>%{text}</b> <extra></extra>',
             hoverlabel=dict(
                 bgcolor='rgb(51,51,102)',
