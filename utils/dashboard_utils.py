@@ -901,6 +901,9 @@ class CreateReportChart:
         # Reindex the columns and rows to ensure the order
         heatmap_data = heatmap_data.reindex(index=data_role_order, columns=degree_order)
 
+        # Fill NaN values with 'No Data'
+        z_text = heatmap_data.fillna('No Data').values
+
         # Define colorscale
         colorscale = [
             [0, 'rgb(239,239,255)'],   # light color
@@ -915,7 +918,17 @@ class CreateReportChart:
             y=heatmap_data.index,
             colorscale=colorscale,
             showscale=False,
-            text=heatmap_data.values,
+            text=z_text,
+            hovertemplate=
+            '<b>Data role :</b> <b>%{y}</b> <br>' +
+            '<b>Degree :</b> <b>%{x}</b> <br>' +
+            '<b>Count :</b> <b>%{text}</b> <extra></extra>',
+            hoverlabel=dict(
+                bgcolor='rgb(51,51,102)',
+                font_size=14,
+                font_family='Arial, sans-serif',
+                font_color='white'
+            )
         ))
 
         # Update layout
