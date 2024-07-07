@@ -373,18 +373,19 @@ class FetchReportData:
             self.logger.error(f"Error fetching tool trend data: {str(e)}")
             return pd.DataFrame()  # Return an empty DataFrame in case of an error
 
-    def fetch_education_by_data_role(self):
+    def fetch_education_by_data_role(self, crawl_date):
         """
         Fetch education by data role data from the 'reporting_data' schema.
         """
         try:
             # Prepare the SQL query to fetch the required data
-            query = """
+            query = f"""
                 SELECT 
                     data_role,
                     degree,
                     count
-                FROM reporting_data.rpt_data_role_by_edu;
+                FROM reporting_data.rpt_data_role_by_edu
+                WHERE crawl_date = '{crawl_date}';
             """
             # Execute the query and fetch the result
             data = self.execute_query(query)  # Use self.execute_query to call the local method
@@ -878,8 +879,27 @@ class CreateReportChart:
         return tool_popularity_bar_chart
 
     def create_education_heatmap(edu_by_data_role):
-    # Pivot the data for heatmap
+        # Define the desired order for data roles and degrees
+        data_role_order = [
+            'MLE', 'Data Scientist', 'Data Engineer', 'Data Architect',  'Data Analyst',  'BI Engineer', 'Business Analyst',   
+        ]
+        degree_order = [
+            'PhD', 'Master', 'Bachelor', 'College', 'High School', 'Others'
+        ]
+
+        # Convert 'data_role' and 'degree' columns to categorical with the specified order
+        edu_by_data_role['data_role'] = pd.Categorical(
+            edu_by_data_role['data_role'], categories=data_role_order, ordered=True
+        )
+        edu_by_data_role['degree'] = pd.Categorical(
+            edu_by_data_role['degree'], categories=degree_order, ordered=True
+        )
+
+        # Pivot the data for heatmap
         heatmap_data = edu_by_data_role.pivot(index='data_role', columns='degree', values='count')
+
+        # Reindex the columns and rows to ensure the order
+        heatmap_data = heatmap_data.reindex(index=data_role_order, columns=degree_order)
 
         # Define colorscale
         colorscale = [
@@ -902,8 +922,8 @@ class CreateReportChart:
 
         # Update layout
         edu_heatmap.update_layout(
-            width=600,
-            height=400,
+            width=1100,
+            height=600,
             margin=dict(l=50, r=50, t=50, b=50),
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
