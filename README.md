@@ -44,7 +44,7 @@ A system that recommends data-centric jobs and provides insights, featuring a pe
             - Dash page content setup include html and CSS (**2024-05-24 to 2024-06-11**)
             - Dashboard figure creating(**2024-07-07**)
         - Geograph page
-            - Design Dashboard with Figma
+            - Design Dashboard with Figma(**2024-07-08**)
             - Data pipeline - Transfrom data in the data warehouse (reporting_data layer) for dashboard
             - Dash page content setup include html and CSS (**2024-05-24 to 2024-06-11**)
             - Dashboard figure creating
