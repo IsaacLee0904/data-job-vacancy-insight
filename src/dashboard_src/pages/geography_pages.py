@@ -146,9 +146,43 @@ def sidebar():
         ]
     )
 
+def page_content():
+    # Load data for the stack page
+
+    return html.Div(
+            className="page",
+            children=[
+                html.Div(
+                    className="div",
+                    children=[
+                        html.Div(
+                            className="overlap",
+                            children=[                          
+                                html.Div(
+                                    className="overlap-6",
+                                    children=[
+                                        html.Div(
+                                            className="dropdowns",
+                                            children=[                                            
+                                                html.P("Job Openings Across Taiwan Regions", className="tw-geo-title"),
+                                                html.P("A Detailed Analysis of Job Availability in Different Counties and Cities", className="tw-geo-sub-title"),
+                                                # dcc.Graph(figure=edu_heatmap, className="edu-heatmap"),
+                                            ]
+                                        ),
+                                    ]
+                                ),
+                            ]
+                        ),
+                        html.Div("Dashboard", className="title-page")
+                    ]
+                )
+            ]
+        )
+
 layout = html.Div(
     children=[
         sidebar(),
+        page_content()
     ]
 )
 
