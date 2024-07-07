@@ -881,7 +881,7 @@ class CreateReportChart:
     def create_education_heatmap(edu_by_data_role):
         # Define the desired order for data roles and degrees
         data_role_order = [
-            'MLE', 'Data Scientist', 'Data Engineer', 'Data Architect',  'Data Analyst',  'BI Engineer', 'Business Analyst',   
+            'MLE', 'Data Scientist', 'Data Engineer', 'Data Architect', 'Data Analyst', 'BI Engineer', 'Business Analyst'
         ]
         degree_order = [
             'PhD', 'Master', 'Bachelor', 'College', 'High School', 'Others'
@@ -916,8 +916,6 @@ class CreateReportChart:
             colorscale=colorscale,
             showscale=False,
             text=heatmap_data.values,
-            # texttemplate="%{text}",
-            # textfont={"size": 12}
         ))
 
         # Update layout
@@ -931,13 +929,23 @@ class CreateReportChart:
                 title=None,
                 tickmode='array',
                 tickvals=heatmap_data.columns,
-                ticktext=heatmap_data.columns
+                ticktext=heatmap_data.columns,
+                tickfont=dict(
+                    family='Arial, sans-serif',
+                    size=14,
+                    color='#737b8b',
+                )
             ),
             yaxis=dict(
                 title=None,
                 tickmode='array',
                 tickvals=heatmap_data.index,
-                ticktext=heatmap_data.index
+                ticktext=heatmap_data.index,
+                tickfont=dict(
+                    family='Arial, sans-serif',
+                    size=14,
+                    color='#737b8b',
+                )
             )
         )
 
