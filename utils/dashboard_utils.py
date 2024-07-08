@@ -410,19 +410,22 @@ class FetchReportData:
             # Prepare the SQL query to fetch the required data
             query = f"""
                 SELECT 
-                    county_name_eng, 
-                    district_name_eng, 
-                    openings_count, 
-                    crawl_date 
-                FROM reporting_data.rpt_job_openings_geograph  
-                WHERE crawl_date = '{crawl_date}';
+                    BBB.county_name_ch,
+                    AAA.county_name_eng, 
+                    AAA.district_name_eng, 
+                    AAA.openings_count, 
+                    AAA.crawl_date 
+                FROM reporting_data.rpt_job_openings_geograph AAA
+                LEFT JOIN(select BB.county_name_ch, BB.county_name_eng from modeling_data.er_county BB) BBB
+                ON AAA.county_name_eng = BBB.county_name_eng
+                WHERE AAA.crawl_date = '{crawl_date}';
             """
             # Execute the query and fetch the result
             data = self.execute_query(query)  # Use self.execute_query to call the local method
 
             # Convert the data into a DataFrame if not empty
             if data:
-                df = pd.DataFrame(data, columns=['county_name_eng', 'district_name_eng', 'openings_count', 'crawl_date'])
+                df = pd.DataFrame(data, columns=['county_name_ch', 'county_name_eng', 'district_name_eng', 'openings_count', 'crawl_date'])
                 self.logger.info("Job vacancy data for Taiwan converted to DataFrame successfully.")
                 return df
             else:
