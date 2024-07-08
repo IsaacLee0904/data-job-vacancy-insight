@@ -15,10 +15,33 @@ sys.path.append(project_root)
 # import modules
 from utils.log_utils import set_logger
 from utils.front_end_utils import load_css_files
-from utils.dashboard_utils import FetchReportData
+from utils.dashboard_utils import FetchReportData, CreateReportChart
 
 ## Load data
 # define fetch functions
+def load_geo_page_data():
+    """
+    Load reporting data from the database for the dashboard geo page.
+    """
+    # Setup logger
+    logger = set_logger()
+
+    # Initialize the FetchReportData class to handle database operations
+    fetcher = FetchReportData(logger)
+
+    # Get the newest crawl date
+    newest_crawl_date = fetcher.get_newest_crawl_date()
+    print('this is the newest crawl date', newest_crawl_date)
+
+    # load data for tool by data role
+    edu_by_data_role = FetchReportData.fetch_taiwan_openings(fetcher, newest_crawl_date)
+
+    # Close the database connection safely
+    if fetcher.connection:
+        fetcher.connection.close()
+        logger.info("Database connection closed.")
+    
+    return edu_by_data_role
 
 def sidebar():
     return html.Div(
@@ -148,6 +171,8 @@ def sidebar():
 
 def page_content():
     # Load data for the stack page
+    taiwan_openings = load_geo_page_data()
+    taiwan_openings_map = CreateReportChart.create_taiwan_openings_map(taiwan_openings)
 
     return html.Div(
             className="page",
@@ -166,7 +191,7 @@ def page_content():
                                             children=[                                            
                                                 html.P("Job Openings Across Taiwan Regions", className="tw-geo-title"),
                                                 html.P("A Detailed Analysis of Job Availability in Different Counties and Cities", className="tw-geo-sub-title"),
-                                                # dcc.Graph(figure=edu_heatmap, className="edu-heatmap"),
+                                                dcc.Graph(figure=taiwan_openings_map, className="geo-taiwan-map"),
                                             ]
                                         ),
                                     ]
