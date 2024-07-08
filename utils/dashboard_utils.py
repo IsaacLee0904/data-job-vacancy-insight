@@ -1002,15 +1002,28 @@ class CreateReportChart:
         with open('src/dashboard_src/assets/geo_data/county_geo_info.geojson', 'r') as file:
             geojson_data = json.load(file)
 
-        # Extract all districts from the GeoJSON data
+        # Extract all districts and counties from the GeoJSON data
         all_districts = [feature['properties']['TOWNENG'] for feature in geojson_data['features']]
+        all_counties = [feature['properties']['COUNTYNAME'] for feature in geojson_data['features']]
 
+        # Ensure taiwan_openings contains all districts and counties
+        all_districts_df = pd.DataFrame({'district_name_eng': all_districts, 'county_name_ch': all_counties})
+        taiwan_openings['county_name_ch'] = taiwan_openings['county_name_ch'].str.replace('台', '臺')  # Standardize county names
+        all_districts_df['county_name_ch'] = all_districts_df['county_name_ch'].str.replace('台', '臺')  # Standardize county names in GeoJSON
 
-        # Ensure taiwan_openings contains all districts
-        all_districts_df = pd.DataFrame({'district_name_eng': all_districts})
-        taiwan_openings = all_districts_df.merge(taiwan_openings, on='district_name_eng', how='left')
+        # Merge taiwan_openings with all_districts_df
+        taiwan_openings = all_districts_df.merge(taiwan_openings, on=['county_name_ch', 'district_name_eng'], how='left')
+
+        # Fill district_name_eng with county_name_eng if district_name_eng is null
+        taiwan_openings['district_name_eng'].fillna(taiwan_openings['county_name_ch'], inplace=True)
+
+        # Drop rows where both district_name_eng and county_name_ch are null
+        taiwan_openings.dropna(subset=['district_name_eng', 'county_name_ch'], how='all', inplace=True)
+
         taiwan_openings['openings_count'] = taiwan_openings['openings_count'].fillna(0)
         taiwan_openings['openings_count'] = taiwan_openings['openings_count'].astype(float)
+
+        print(taiwan_openings)
 
         # Define a custom color scale
         custom_color_scale = [
@@ -1035,11 +1048,11 @@ class CreateReportChart:
 
         # Update layout to ensure no other geographic information is shown
         taiwan_openings_map.update_traces(
-                marker_line_color='black', 
-                marker_line_width=1,  # Only show outlines
-                hovertemplate='<b><span style="font-size:15px;">%{location}</span></b><br><b><span style="font-size:12px;">Openings count: %{z}</span></b><extra></extra>'
-            )
-    
+            marker_line_color='black', 
+            marker_line_width=1,  # Only show outlines
+            hovertemplate='<b><span style="font-size:15px;">%{location}</span></b><br><b><span style="font-size:12px;">Openings count: %{z}</span></b><extra></extra>'
+        )
+
         taiwan_openings_map.update_layout(
             coloraxis_showscale=False,  # Hide the color bar
             showlegend=True,  # Show legend
