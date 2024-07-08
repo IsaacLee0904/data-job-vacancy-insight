@@ -401,6 +401,36 @@ class FetchReportData:
         except Exception as e:
             self.logger.error(f"Error fetching education by data role data: {str(e)}")
             return pd.DataFrame()  # Return an empty DataFrame in case of an error
+        
+    def fetch_taiwan_openings(self, crawl_date):
+        """
+        Fetch job vacancy data for specified areas from the 'reporting_data' schema for a specific crawl date.
+        """
+        try:
+            # Prepare the SQL query to fetch the required data
+            query = f"""
+                SELECT 
+                    county_name_eng, 
+                    district_name_eng, 
+                    openings_count, 
+                    crawl_date 
+                FROM reporting_data.rpt_job_openings_geograph  
+                WHERE crawl_date = '{crawl_date}';
+            """
+            # Execute the query and fetch the result
+            data = self.execute_query(query)  # Use self.execute_query to call the local method
+
+            # Convert the data into a DataFrame if not empty
+            if data:
+                df = pd.DataFrame(data, columns=['county_name_eng', 'district_name_eng', 'openings_count', 'crawl_date'])
+                self.logger.info("Job vacancy data for Taiwan converted to DataFrame successfully.")
+                return df
+            else:
+                self.logger.info("No job vacancy data found for the specified crawl date.")
+                return pd.DataFrame()  # Return an empty DataFrame if no data
+        except Exception as e:
+            self.logger.error(f"Error fetching job vacancy data: {str(e)}")
+            return pd.DataFrame()  # Return an empty DataFrame in case of an error
 
 class CreateReportChart:
     # Create the data role pie chart
@@ -963,3 +993,68 @@ class CreateReportChart:
         )
 
         return edu_heatmap
+    
+    def create_taiwan_openings_map(taiwan_openings):
+        # Load your GeoJSON file
+        with open('src/dashboard_src/assets/geo_data/county_geo_info.geojson', 'r') as file:
+            geojson_data = json.load(file)
+
+        # Extract all districts from the GeoJSON data
+        all_districts = [feature['properties']['TOWNENG'] for feature in geojson_data['features']]
+
+
+        # Ensure taiwan_openings contains all districts
+        all_districts_df = pd.DataFrame({'district_name_eng': all_districts})
+        taiwan_openings = all_districts_df.merge(taiwan_openings, on='district_name_eng', how='left')
+        taiwan_openings['openings_count'] = taiwan_openings['openings_count'].fillna(0)
+        taiwan_openings['openings_count'] = taiwan_openings['openings_count'].astype(float)
+
+        # Define a custom color scale
+        custom_color_scale = [
+            [0, '#E6ECFF'],    # low
+            [0.5, '#5A6ACF'],  # mid
+            [1, '#2E2E48']     # high
+        ]
+
+        # Generate the map
+        taiwan_openings_map = px.choropleth_mapbox(
+            taiwan_openings,
+            geojson=geojson_data,
+            locations='district_name_eng',  # Use 'district_name_eng' as location identifier
+            featureidkey="properties.TOWNENG",  # Match with 'TOWNENG' in GeoJSON
+            color='openings_count',  # Color by 'openings_count'
+            color_continuous_scale=custom_color_scale,  # Use custom color scale
+            range_color=(0, taiwan_openings['openings_count'].max()),  # Set color range
+            mapbox_style="white-bg",  # Use a plain white background
+            center={"lat": 23.6978, "lon": 120.9605},  # Centered around Taipei
+            zoom=8.1,  # Adjust the zoom level to fit the desired area
+        )
+
+        # Update layout to ensure no other geographic information is shown
+        taiwan_openings_map.update_traces(
+                marker_line_color='black', 
+                marker_line_width=1,  # Only show outlines
+                hovertemplate='<b><span style="font-size:15px;">%{location}</span></b><br><b><span style="font-size:12px;">Openings count: %{z}</span></b><extra></extra>'
+            )
+    
+        taiwan_openings_map.update_layout(
+            coloraxis_showscale=False,  # Hide the color bar
+            showlegend=True,  # Show legend
+            margin={"r":0,"t":0,"l":0,"b":0},
+            width=410,  # Adjust the width of the map to center it
+            height=300,  # Adjust the height of the map to center it
+            mapbox=dict(
+                center={"lat": 25.008216635689223, "lon": 121.641468398647703},
+                zoom=8.1  # Adjust zoom level as needed
+            ),
+            autosize=True,  # Automatically adjust the size of the map
+            hovermode='closest',  # Hover mode closest to the cursor
+            hoverlabel=dict(
+                bgcolor="#2E2E48", # setup hover label background color
+                font_size=12,      # setup hover label font size
+                font_color="white",# setup hover label font color
+                bordercolor="#2E2E48" # setup hover label border color
+            )
+        )
+
+        return taiwan_openings_map
