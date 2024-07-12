@@ -437,7 +437,7 @@ class FetchReportData:
         
     def fetch_major_city_openings(self, crawl_date):
         """
-        Fetch job vacancy data for specified areas from the 'reporting_data' schema for a specific crawl date.
+        Fetch job vacancy data for six major city openings data from the 'reporting_data' schema for a specific crawl date.
         """
         try:
             # Prepare the SQL query to fetch the required data
@@ -467,6 +467,33 @@ class FetchReportData:
             if data:
                 df = pd.DataFrame(data, columns=['#', 'County', 'Openings'])
                 self.logger.info("Job vacancy data for Taiwan six major city converted to DataFrame successfully.")
+                return df
+            else:
+                self.logger.info("No job vacancy data found for the specified crawl date.")
+                return pd.DataFrame()  # Return an empty DataFrame if no data
+        except Exception as e:
+            self.logger.error(f"Error fetching job vacancy data: {str(e)}")
+            return pd.DataFrame()  # Return an empty DataFrame in case of an error
+        
+    def fetch_taipei_historical_openings(self):
+        """
+        Fetch job vacancy data for taipei openings trend from the 'reporting_data' schema.
+        """
+        try:
+            # Prepare the SQL query to fetch the required data
+            query = f"""
+                select county_name_eng, sum(openings_count) AS openings, crawl_date 
+                FROM reporting_data.rpt_job_openings_geograph 
+                WHERE county_name_eng = 'Taipei City'
+                GROUP BY county_name_eng, crawl_date;
+            """
+            # Execute the query and fetch the result
+            data = self.execute_query(query)  # Use self.execute_query to call the local method
+
+            # Convert the data into a DataFrame if not empty
+            if data:
+                df = pd.DataFrame(data, columns=['county_name_eng', 'openings', 'crawl_date'])
+                self.logger.info("Job vacancy data for Taipei openings trend converted to DataFrame successfully.")
                 return df
             else:
                 self.logger.info("No job vacancy data found for the specified crawl date.")

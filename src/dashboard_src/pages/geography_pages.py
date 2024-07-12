@@ -36,13 +36,14 @@ def load_geo_page_data():
     # load data for tool by data role
     taiwan_openings = FetchReportData.fetch_taiwan_openings(fetcher, newest_crawl_date)
     six_major_city_openings = FetchReportData.fetch_major_city_openings(fetcher, newest_crawl_date)
+    taipei_openings_trend = FetchReportData.fetch_taipei_historical_openings(fetcher)
 
     # Close the database connection safely
     if fetcher.connection:
         fetcher.connection.close()
         logger.info("Database connection closed.")
     
-    return taiwan_openings, six_major_city_openings
+    return taiwan_openings, six_major_city_openings, taipei_openings_trend
 
 def sidebar():
     return html.Div(
@@ -172,9 +173,10 @@ def sidebar():
 
 def page_content():
     # Load data for the stack page
-    taiwan_openings ,six_major_city_openings = load_geo_page_data()
+    taiwan_openings ,six_major_city_openings, taipei_openings_trend = load_geo_page_data()
     taiwan_openings_map = CreateReportChart.create_taiwan_openings_map(taiwan_openings)
-    six_major_city_openings_table = CreateReportChart.create_county_openings_table(six_major_city_openings)    
+    six_major_city_openings_table = CreateReportChart.create_county_openings_table(six_major_city_openings)   
+    print(taipei_openings_trend) 
 
     return html.Div(
             className="page",
