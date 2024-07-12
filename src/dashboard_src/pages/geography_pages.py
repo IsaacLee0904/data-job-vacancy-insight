@@ -34,14 +34,15 @@ def load_geo_page_data():
     print('this is the newest crawl date', newest_crawl_date)
 
     # load data for tool by data role
-    edu_by_data_role = FetchReportData.fetch_taiwan_openings(fetcher, newest_crawl_date)
+    taiwan_openings = FetchReportData.fetch_taiwan_openings(fetcher, newest_crawl_date)
+    six_major_city_openings = FetchReportData.fetch_major_city_openings(fetcher, newest_crawl_date)
 
     # Close the database connection safely
     if fetcher.connection:
         fetcher.connection.close()
         logger.info("Database connection closed.")
     
-    return edu_by_data_role
+    return taiwan_openings, six_major_city_openings
 
 def sidebar():
     return html.Div(
@@ -171,7 +172,7 @@ def sidebar():
 
 def page_content():
     # Load data for the stack page
-    taiwan_openings = load_geo_page_data()
+    taiwan_openings ,six_major_city_openings = load_geo_page_data()
     taiwan_openings_map = CreateReportChart.create_taiwan_openings_map(taiwan_openings)
 
     return html.Div(
