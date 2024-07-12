@@ -442,28 +442,30 @@ class FetchReportData:
         try:
             # Prepare the SQL query to fetch the required data
             query = f"""
-                SELECT county_name_eng AS County, SUM(openings_count) AS Openings
+                SELECT 
+                    CASE county_name_eng
+                        WHEN 'Taipei City' THEN 1
+                        WHEN 'New Taipei City' THEN 2
+                        WHEN 'Taoyuan City' THEN 3
+                        WHEN 'Taichung City' THEN 4
+                        WHEN 'Tainan City' THEN 5
+                        WHEN 'Kaohsiung City' THEN 6
+                        ELSE NULL
+                    END AS "#",
+                    county_name_eng as County,  
+                    SUM(openings_count) as Openings
                 FROM reporting_data.rpt_job_openings_geograph rjog
                 WHERE crawl_date = '{crawl_date}'
                     AND county_name_eng IN ('Taipei City', 'New Taipei City', 'Taoyuan City', 'Taichung City', 'Tainan City', 'Kaohsiung City')
                 GROUP BY county_name_eng
-                ORDER BY 
-                CASE county_name_eng
-                    WHEN 'Taipei City' THEN 1
-                    WHEN 'New Taipei City' THEN 2
-                    WHEN 'Taoyuan City' THEN 3
-                    WHEN 'Taichung City' THEN 4
-                    WHEN 'Tainan City' THEN 5
-                    WHEN 'Kaohsiung City' THEN 6
-                    ELSE 7
-                END;
+                ORDER BY "#";
             """
             # Execute the query and fetch the result
             data = self.execute_query(query)  # Use self.execute_query to call the local method
 
             # Convert the data into a DataFrame if not empty
             if data:
-                df = pd.DataFrame(data, columns=['County', 'Openings'])
+                df = pd.DataFrame(data, columns=['#', 'County', 'Openings'])
                 self.logger.info("Job vacancy data for Taiwan six major city converted to DataFrame successfully.")
                 return df
             else:
@@ -1110,3 +1112,31 @@ class CreateReportChart:
         )
 
         return taiwan_openings_map
+    
+    def create_county_openings_table(six_major_city_openings):
+        # Create a figure with a table
+        major_city_table = go.Figure(data=[go.Table(
+            header=dict(
+                values=['#', 'County', 'Openings'],
+                fill_color='gray',
+                align='center',
+                font=dict(color='white', size=12)
+            ),
+            cells=dict(
+                values=[six_major_city_openings['#'], six_major_city_openings['County'], six_major_city_openings['Openings']],
+                fill_color='white',
+                align='center',
+                font=dict(color='black', size=11)
+            )
+        )])
+
+        # Update layout
+        major_city_table.update_layout(
+            width=500,
+            height=300,
+            margin=dict(l=0, r=0, t=0, b=0),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+        )
+
+        return major_city_table

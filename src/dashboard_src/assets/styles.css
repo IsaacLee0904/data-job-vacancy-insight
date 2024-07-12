@@ -1610,3 +1610,13 @@ Copy code .page .separator,
   letter-spacing: 0.5px;
   line-height: 22px;
 }
+
+.page .six-major-city-table {
+  width: 100%;
+  height: 50%;
+  margin-top: 27px;
+  margin-left: 690px;
+  position: absolute;
+  top: 50px;
+  left: 10px;
+}
