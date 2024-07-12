@@ -1556,3 +1556,57 @@ Copy code .page .separator,
   top: 50px;
   left: 10px;
 }
+
+.page .major-city-title {
+  position: absolute;
+  top: 10px;
+  left: 700px;
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 20px;
+  letter-spacing: 0.5px;
+  line-height: 21px;
+  white-space: nowrap;
+}
+
+.page .major-city-sub-title {
+  top: 40px;
+  position: absolute;
+  width: 420px;
+  left: 700px;
+  opacity: 0.5;
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  line-height: 22px;
+}
+
+.page .taipei-trend-title {
+  position: absolute;
+  top: 460px;
+  left: 700px;
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 20px;
+  letter-spacing: 0.5px;
+  line-height: 21px;
+  white-space: nowrap;
+}
+
+.page .taipei-trend-sub-title {
+  top: 490px;
+  position: absolute;
+  width: 420px;
+  left: 700px;
+  opacity: 0.5;
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  line-height: 22px;
+}

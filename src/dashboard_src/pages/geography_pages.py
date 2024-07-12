@@ -192,6 +192,10 @@ def page_content():
                                                 html.P("Job Openings Across Taiwan Regions", className="tw-geo-title"),
                                                 html.P("A Detailed Analysis of Job Availability in Different Counties and Cities", className="tw-geo-sub-title"),
                                                 dcc.Graph(figure=taiwan_openings_map, className="geo-taiwan-map"),
+                                                html.P("Job Opportunities in Taiwan's Six Major Cities", className="major-city-title"),
+                                                html.P("A Close Examination of Job Availability in the Six Leading Cities", className="major-city-sub-title"),
+                                                html.P("Recent Job Vacancy Trends in Taipei", className="taipei-trend-title"),
+                                                html.P("Examining the Changes in Job Openings Over the Last Three Months", className="taipei-trend-sub-title"),
                                             ]
                                         ),
                                     ]

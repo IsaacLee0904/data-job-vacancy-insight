@@ -1023,8 +1023,6 @@ class CreateReportChart:
         taiwan_openings['openings_count'] = taiwan_openings['openings_count'].fillna(0)
         taiwan_openings['openings_count'] = taiwan_openings['openings_count'].astype(float)
 
-        print(taiwan_openings)
-
         # Define a custom color scale
         custom_color_scale = [
             [0, '#E6ECFF'],    # low
@@ -1057,11 +1055,11 @@ class CreateReportChart:
             coloraxis_showscale=False,  # Hide the color bar
             showlegend=True,  # Show legend
             margin={"r":0,"t":0,"l":0,"b":0},
-            width=410,  # Adjust the width of the map to center it
-            height=300,  # Adjust the height of the map to center it
+            width=430,  # Adjust the width of the map to center it
+            height=780,  # Adjust the height of the map to center it
             mapbox=dict(
-                center={"lat": 25.008216635689223, "lon": 121.641468398647703},
-                zoom=8.1  # Adjust zoom level as needed
+                center={"lat": 23.6978, "lon": 120.9605},
+                zoom=7  # Adjust zoom level as needed
             ),
             autosize=True,  # Automatically adjust the size of the map
             hovermode='closest',  # Hover mode closest to the cursor
