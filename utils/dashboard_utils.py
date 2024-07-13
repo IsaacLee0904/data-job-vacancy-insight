@@ -410,22 +410,33 @@ class FetchReportData:
             # Prepare the SQL query to fetch the required data
             query = f"""
                 SELECT 
-                    BBB.county_name_ch,
-                    AAA.county_name_eng, 
-                    AAA.district_name_eng, 
-                    AAA.openings_count, 
-                    AAA.crawl_date 
-                FROM reporting_data.rpt_job_openings_geograph AAA
-                LEFT JOIN(select BB.county_name_ch, BB.county_name_eng from modeling_data.er_county BB) BBB
-                ON AAA.county_name_eng = BBB.county_name_eng
-                WHERE AAA.crawl_date = '{crawl_date}';
+                    AAAA.county_name_ch
+                    , AAAA.county_name_eng
+                    , AAAA.district_name_ch
+                    , AAAA.district_name_eng
+                    , CASE 
+                        WHEN CCCC.openings_count IS NULL THEN 0
+                        ELSE CCCC.openings_count
+                    END AS openings_count
+                FROM(
+                    SELECT 
+                        BBB.county_name_ch
+                        , BBB.county_name_eng
+                        , AAA.district_name_ch
+                        , AAA.district_name_eng	
+                    FROM modeling_data.er_district AAA
+                    LEFT JOIN(SELECT BB.county_id, BB.county_name_ch,  BB.county_name_eng FROM modeling_data.er_county BB)BBB
+                    ON AAA.county = BBB.county_id
+                )AAAA
+                LEFT JOIN (SELECT CC.* FROM reporting_data.rpt_job_openings_geograph CC WHERE CC.crawl_date = '{crawl_date}')CCCC
+                ON AAAA.county_name_eng = CCCC.county_name_eng AND AAAA.district_name_eng = CCCC.district_name_eng;
             """
             # Execute the query and fetch the result
             data = self.execute_query(query)  # Use self.execute_query to call the local method
 
             # Convert the data into a DataFrame if not empty
             if data:
-                df = pd.DataFrame(data, columns=['county_name_ch', 'county_name_eng', 'district_name_eng', 'openings_count', 'crawl_date'])
+                df = pd.DataFrame(data, columns=['county_name_ch', 'county_name_eng', 'district_name_ch', 'district_name_eng', 'openings_count'])
                 self.logger.info("Job vacancy data for Taiwan converted to DataFrame successfully.")
                 return df
             else:
