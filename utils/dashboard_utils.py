@@ -1080,17 +1080,14 @@ class CreateReportChart:
         with open('src/dashboard_src/assets/geo_data/county_geo_info.geojson', 'r') as file:
             geojson_data = json.load(file)
 
-        # Extract all districts and counties from the GeoJSON data
-        all_districts = [feature['properties']['TOWNENG'] for feature in geojson_data['features']]
-        all_counties = [feature['properties']['COUNTYNAME'] for feature in geojson_data['features']]
+        for feature in geojson_data['features']:
+            county = feature['properties']['COUNTYNAME']
+            town = feature['properties']['TOWNNAME']
+            feature['properties']['county_town'] = f"{county}{town}"
 
         # Ensure taiwan_openings contains all districts and counties
-        all_districts_df = pd.DataFrame({'district_name_eng': all_districts, 'county_name_ch': all_counties})
         taiwan_openings['county_name_ch'] = taiwan_openings['county_name_ch'].str.replace('台', '臺')  # Standardize county names
-        all_districts_df['county_name_ch'] = all_districts_df['county_name_ch'].str.replace('台', '臺')  # Standardize county names in GeoJSON
-
-        # Merge taiwan_openings with all_districts_df
-        taiwan_openings = all_districts_df.merge(taiwan_openings, on=['county_name_ch', 'district_name_eng'], how='left')
+        taiwan_openings['district_name_ch'] = taiwan_openings['district_name_ch'].str.replace('台', '臺')  # Standardize county names
 
         # Fill district_name_eng with county_name_eng if district_name_eng is null
         taiwan_openings['district_name_eng'].fillna(taiwan_openings['county_name_ch'], inplace=True)
@@ -1112,8 +1109,8 @@ class CreateReportChart:
         taiwan_openings_map = px.choropleth_mapbox(
             taiwan_openings,
             geojson=geojson_data,
-            locations='district_name_eng',  # Use 'district_name_eng' as location identifier
-            featureidkey="properties.TOWNENG",  # Match with 'TOWNENG' in GeoJSON
+            locations='district_name_ch',  # Use 'district_name_eng' as location identifier
+            featureidkey="properties.county_town",  # Match with 'county_town' in GeoJSON
             color='openings_count',  # Color by 'openings_count'
             color_continuous_scale=custom_color_scale,  # Use custom color scale
             range_color=(0, taiwan_openings['openings_count'].max()),  # Set color range
@@ -1177,4 +1174,4 @@ class CreateReportChart:
             plot_bgcolor='rgba(0,0,0,0)',
         )
 
-        return major_city_table
+        return major_city_table        

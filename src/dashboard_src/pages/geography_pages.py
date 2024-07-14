@@ -176,7 +176,6 @@ def page_content():
     taiwan_openings ,six_major_city_openings, taipei_openings_trend = load_geo_page_data()
     taiwan_openings_map = CreateReportChart.create_taiwan_openings_map(taiwan_openings)
     six_major_city_openings_table = CreateReportChart.create_county_openings_table(six_major_city_openings)   
-    print(taipei_openings_trend) 
 
     return html.Div(
             className="page",
