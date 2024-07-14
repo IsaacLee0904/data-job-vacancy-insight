@@ -175,7 +175,8 @@ def page_content():
     # Load data for the stack page
     taiwan_openings ,six_major_city_openings, taipei_openings_trend = load_geo_page_data()
     taiwan_openings_map = CreateReportChart.create_taiwan_openings_map(taiwan_openings)
-    six_major_city_openings_table = CreateReportChart.create_county_openings_table(six_major_city_openings)   
+    six_major_city_openings_table = CreateReportChart.create_county_openings_table(six_major_city_openings)  
+    taipei_openings_trend_chart = CreateReportChart.create_taipei_openings_trend_chart(taipei_openings_trend) 
 
     return html.Div(
             className="page",
@@ -200,6 +201,7 @@ def page_content():
                                                 dcc.Graph(figure=six_major_city_openings_table, className="six-major-city-table"),
                                                 html.P("Recent Job Vacancy Trends in Taipei", className="taipei-trend-title"),
                                                 html.P("Examining the Changes in Job Openings Over the Last Three Months", className="taipei-trend-sub-title"),
+                                                dcc.Graph(figure=taipei_openings_trend_chart, className="taipei_openings_trend_chart"),
                                             ]
                                         ),
                                     ]

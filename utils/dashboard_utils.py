@@ -493,7 +493,7 @@ class FetchReportData:
         try:
             # Prepare the SQL query to fetch the required data
             query = f"""
-                select county_name_eng, sum(openings_count) AS openings, crawl_date 
+                SELECT county_name_eng, sum(openings_count) AS openings, crawl_date 
                 FROM reporting_data.rpt_job_openings_geograph 
                 WHERE county_name_eng = 'Taipei City'
                 GROUP BY county_name_eng, crawl_date;
@@ -1178,3 +1178,84 @@ class CreateReportChart:
         )
 
         return major_city_table        
+
+    def create_taipei_openings_trend_chart(taipei_openings_trend):
+        # Sort the data by crawl_date
+        taipei_openings_trend = taipei_openings_trend.sort_values(by='crawl_date')
+
+        # Creating the line chart using Plotly Express
+        taipei_openings_trend_chart = px.line(
+            taipei_openings_trend, 
+            x='crawl_date', 
+            y='openings', 
+            labels={'crawl_date': 'Date', 'openings': 'Openings'},
+            color_discrete_sequence=['#ffa726'],
+        )
+
+        # Adding the bar chart
+        taipei_openings_trend_chart.add_bar(
+            x=taipei_openings_trend['crawl_date'], 
+            y=taipei_openings_trend['openings'], 
+            name="Openings in Taipei",
+            marker_color='rgba(46, 46, 72, 0.8)'  # Set the color of the bars
+        )
+
+        # Update layout
+        taipei_openings_trend_chart.update_layout(
+            width=650,
+            height=500,
+            margin=dict(l=95, r=20, t=143, b=50),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            legend=dict(
+                orientation="h",
+                x=-0.05,
+                y=-0.2,
+                xanchor="left",
+                yanchor="top"
+            ),
+            hoverlabel=dict(
+                font_size=12,
+                font_color="white"
+            ),
+            xaxis=dict(
+                title='',
+                tickvals=taipei_openings_trend['crawl_date'][::1],
+                tickformat="%b %d",
+                tickmode='array',
+                showgrid=False,
+                showline=True,
+                linewidth=1,
+                linecolor='lightgrey',
+                tickfont=dict(
+                    color='#737b8b'
+                )
+            ),
+            yaxis=dict(
+                title='',
+                showgrid=True,
+                showticklabels=False
+            ),
+            yaxis2=dict(
+                title='',
+                overlaying='y',
+                side='left',
+                showgrid=False,
+                showticklabels=True,
+                tickfont=dict(
+                    color='#737b8b'
+                )
+            )
+        )
+
+        # Update hover styles for bar chart and disable hover for line chart
+        taipei_openings_trend_chart.update_traces(
+            selector=dict(type='scatter'),
+            hoverinfo='skip'
+        )
+        taipei_openings_trend_chart.update_traces(
+            selector=dict(type='bar'),
+            hoverlabel=dict(bgcolor="#2E2E48", bordercolor="#2E2E48")
+        )
+
+        return taipei_openings_trend_chart
