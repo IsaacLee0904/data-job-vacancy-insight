@@ -1183,27 +1183,22 @@ class CreateReportChart:
 
         taipei_openings_trend = taipei_openings_trend.sort_values(by='crawl_date')
 
-        # Creating the bar chart
-        bar_chart = go.Bar(
-            x=taipei_openings_trend['crawl_date'], 
-            y=taipei_openings_trend['openings'],
-            name='Openings',
-            marker_color='rgba(46, 46, 72, 0.8)',
-            yaxis='y2',
+        # Creating the line chart using Plotly Express
+        taipei_openings_trend_chart = px.line(
+            taipei_openings_trend, 
+            x='crawl_date', 
+            y='openings', 
+            labels={'crawl_date': 'Date', 'openings': 'Openings'},
+            color_discrete_sequence=['#ffa726'],
         )
 
-        # Creating the line chart
-        line_chart = go.Scatter(
+        # Adding the bar chart
+        taipei_openings_trend_chart.add_bar(
             x=taipei_openings_trend['crawl_date'], 
-            y=taipei_openings_trend['openings'],
-            name='Total Openings Trend',
-            mode='lines+markers',
-            line=dict(color='#ffa726', width=2.5),
-            marker=dict(size=6),
+            y=taipei_openings_trend['openings'], 
+            name="Openings in Taipei",
+            marker_color='rgba(46, 46, 72, 0.8)'  # Set the color of the bars
         )
-
-        # Combine the charts, ensuring line chart is added last to be on top
-        taipei_openings_trend_chart = go.Figure(data=[bar_chart, line_chart])
 
         # Update layout
         taipei_openings_trend_chart.update_layout(
