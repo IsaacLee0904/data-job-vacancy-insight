@@ -1121,9 +1121,12 @@ class CreateReportChart:
 
         # Update layout to ensure no other geographic information is shown
         taiwan_openings_map.update_traces(
-            marker_line_color='black', 
-            marker_line_width=1,  # Only show outlines
-            hovertemplate='<b><span style="font-size:15px;">%{location}</span></b><br><b><span style="font-size:12px;">Openings count: %{z}</span></b><extra></extra>'
+            hovertemplate=(
+                '<b><span style="font-size:15px;">%{customdata[0]}</span></b><br>' +  # County name
+                '<b><span style="font-size:12px;">%{customdata[1]}</span></b><br>' +  # District name
+                '<b><span style="font-size:12px;">Openings count: %{z}</span></b><extra></extra>'
+            ),
+            customdata=taiwan_openings[['county_name_eng', 'district_name_eng']].to_numpy()
         )
 
         taiwan_openings_map.update_layout(
