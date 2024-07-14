@@ -1180,7 +1180,7 @@ class CreateReportChart:
         return major_city_table        
 
     def create_taipei_openings_trend_chart(taipei_openings_trend):
-
+        # Sort the data by crawl_date
         taipei_openings_trend = taipei_openings_trend.sort_values(by='crawl_date')
 
         # Creating the line chart using Plotly Express
@@ -1215,10 +1215,8 @@ class CreateReportChart:
                 yanchor="top"
             ),
             hoverlabel=dict(
-                bgcolor="#ffa726",
                 font_size=12,
-                font_color="white",
-                bordercolor="#ffa726"
+                font_color="white"
             ),
             xaxis=dict(
                 title='',
@@ -1248,6 +1246,16 @@ class CreateReportChart:
                     color='#737b8b'
                 )
             )
+        )
+
+        # Update hover styles for bar chart and disable hover for line chart
+        taipei_openings_trend_chart.update_traces(
+            selector=dict(type='scatter'),
+            hoverinfo='skip'
+        )
+        taipei_openings_trend_chart.update_traces(
+            selector=dict(type='bar'),
+            hoverlabel=dict(bgcolor="#2E2E48", bordercolor="#2E2E48")
         )
 
         return taipei_openings_trend_chart
