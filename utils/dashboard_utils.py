@@ -410,23 +410,101 @@ class FetchReportData:
             # Prepare the SQL query to fetch the required data
             query = f"""
                 SELECT 
-                    BBB.county_name_ch,
-                    AAA.county_name_eng, 
-                    AAA.district_name_eng, 
-                    AAA.openings_count, 
-                    AAA.crawl_date 
-                FROM reporting_data.rpt_job_openings_geograph AAA
-                LEFT JOIN(select BB.county_name_ch, BB.county_name_eng from modeling_data.er_county BB) BBB
-                ON AAA.county_name_eng = BBB.county_name_eng
-                WHERE AAA.crawl_date = '{crawl_date}';
+                    AAAA.county_name_ch
+                    , AAAA.county_name_eng
+                    , AAAA.district_name_ch
+                    , AAAA.district_name_eng
+                    , CASE 
+                        WHEN CCCC.openings_count IS NULL THEN 0
+                        ELSE CCCC.openings_count
+                    END AS openings_count
+                FROM(
+                    SELECT 
+                        BBB.county_name_ch
+                        , BBB.county_name_eng
+                        , AAA.district_name_ch
+                        , AAA.district_name_eng	
+                    FROM modeling_data.er_district AAA
+                    LEFT JOIN(SELECT BB.county_id, BB.county_name_ch,  BB.county_name_eng FROM modeling_data.er_county BB)BBB
+                    ON AAA.county = BBB.county_id
+                )AAAA
+                LEFT JOIN (SELECT CC.* FROM reporting_data.rpt_job_openings_geograph CC WHERE CC.crawl_date = '{crawl_date}')CCCC
+                ON AAAA.county_name_eng = CCCC.county_name_eng AND AAAA.district_name_eng = CCCC.district_name_eng;
             """
             # Execute the query and fetch the result
             data = self.execute_query(query)  # Use self.execute_query to call the local method
 
             # Convert the data into a DataFrame if not empty
             if data:
-                df = pd.DataFrame(data, columns=['county_name_ch', 'county_name_eng', 'district_name_eng', 'openings_count', 'crawl_date'])
+                df = pd.DataFrame(data, columns=['county_name_ch', 'county_name_eng', 'district_name_ch', 'district_name_eng', 'openings_count'])
                 self.logger.info("Job vacancy data for Taiwan converted to DataFrame successfully.")
+                return df
+            else:
+                self.logger.info("No job vacancy data found for the specified crawl date.")
+                return pd.DataFrame()  # Return an empty DataFrame if no data
+        except Exception as e:
+            self.logger.error(f"Error fetching job vacancy data: {str(e)}")
+            return pd.DataFrame()  # Return an empty DataFrame in case of an error
+        
+    def fetch_major_city_openings(self, crawl_date):
+        """
+        Fetch job vacancy data for six major city openings data from the 'reporting_data' schema for a specific crawl date.
+        """
+        try:
+            # Prepare the SQL query to fetch the required data
+            query = f"""
+                SELECT 
+                    CASE county_name_eng
+                        WHEN 'Taipei City' THEN 1
+                        WHEN 'New Taipei City' THEN 2
+                        WHEN 'Taoyuan City' THEN 3
+                        WHEN 'Taichung City' THEN 4
+                        WHEN 'Tainan City' THEN 5
+                        WHEN 'Kaohsiung City' THEN 6
+                        ELSE NULL
+                    END AS "#",
+                    county_name_eng as County,  
+                    SUM(openings_count) as Openings
+                FROM reporting_data.rpt_job_openings_geograph rjog
+                WHERE crawl_date = '{crawl_date}'
+                    AND county_name_eng IN ('Taipei City', 'New Taipei City', 'Taoyuan City', 'Taichung City', 'Tainan City', 'Kaohsiung City')
+                GROUP BY county_name_eng
+                ORDER BY "#";
+            """
+            # Execute the query and fetch the result
+            data = self.execute_query(query)  # Use self.execute_query to call the local method
+
+            # Convert the data into a DataFrame if not empty
+            if data:
+                df = pd.DataFrame(data, columns=['#', 'County', 'Openings'])
+                self.logger.info("Job vacancy data for Taiwan six major city converted to DataFrame successfully.")
+                return df
+            else:
+                self.logger.info("No job vacancy data found for the specified crawl date.")
+                return pd.DataFrame()  # Return an empty DataFrame if no data
+        except Exception as e:
+            self.logger.error(f"Error fetching job vacancy data: {str(e)}")
+            return pd.DataFrame()  # Return an empty DataFrame in case of an error
+        
+    def fetch_taipei_historical_openings(self):
+        """
+        Fetch job vacancy data for taipei openings trend from the 'reporting_data' schema.
+        """
+        try:
+            # Prepare the SQL query to fetch the required data
+            query = f"""
+                select county_name_eng, sum(openings_count) AS openings, crawl_date 
+                FROM reporting_data.rpt_job_openings_geograph 
+                WHERE county_name_eng = 'Taipei City'
+                GROUP BY county_name_eng, crawl_date;
+            """
+            # Execute the query and fetch the result
+            data = self.execute_query(query)  # Use self.execute_query to call the local method
+
+            # Convert the data into a DataFrame if not empty
+            if data:
+                df = pd.DataFrame(data, columns=['county_name_eng', 'openings', 'crawl_date'])
+                self.logger.info("Job vacancy data for Taipei openings trend converted to DataFrame successfully.")
                 return df
             else:
                 self.logger.info("No job vacancy data found for the specified crawl date.")
@@ -1002,17 +1080,14 @@ class CreateReportChart:
         with open('src/dashboard_src/assets/geo_data/county_geo_info.geojson', 'r') as file:
             geojson_data = json.load(file)
 
-        # Extract all districts and counties from the GeoJSON data
-        all_districts = [feature['properties']['TOWNENG'] for feature in geojson_data['features']]
-        all_counties = [feature['properties']['COUNTYNAME'] for feature in geojson_data['features']]
+        for feature in geojson_data['features']:
+            county = feature['properties']['COUNTYNAME']
+            town = feature['properties']['TOWNNAME']
+            feature['properties']['county_town'] = f"{county}{town}"
 
         # Ensure taiwan_openings contains all districts and counties
-        all_districts_df = pd.DataFrame({'district_name_eng': all_districts, 'county_name_ch': all_counties})
         taiwan_openings['county_name_ch'] = taiwan_openings['county_name_ch'].str.replace('台', '臺')  # Standardize county names
-        all_districts_df['county_name_ch'] = all_districts_df['county_name_ch'].str.replace('台', '臺')  # Standardize county names in GeoJSON
-
-        # Merge taiwan_openings with all_districts_df
-        taiwan_openings = all_districts_df.merge(taiwan_openings, on=['county_name_ch', 'district_name_eng'], how='left')
+        taiwan_openings['district_name_ch'] = taiwan_openings['district_name_ch'].str.replace('台', '臺')  # Standardize county names
 
         # Fill district_name_eng with county_name_eng if district_name_eng is null
         taiwan_openings['district_name_eng'].fillna(taiwan_openings['county_name_ch'], inplace=True)
@@ -1022,8 +1097,6 @@ class CreateReportChart:
 
         taiwan_openings['openings_count'] = taiwan_openings['openings_count'].fillna(0)
         taiwan_openings['openings_count'] = taiwan_openings['openings_count'].astype(float)
-
-        print(taiwan_openings)
 
         # Define a custom color scale
         custom_color_scale = [
@@ -1036,8 +1109,8 @@ class CreateReportChart:
         taiwan_openings_map = px.choropleth_mapbox(
             taiwan_openings,
             geojson=geojson_data,
-            locations='district_name_eng',  # Use 'district_name_eng' as location identifier
-            featureidkey="properties.TOWNENG",  # Match with 'TOWNENG' in GeoJSON
+            locations='district_name_ch',  # Use 'district_name_eng' as location identifier
+            featureidkey="properties.county_town",  # Match with 'county_town' in GeoJSON
             color='openings_count',  # Color by 'openings_count'
             color_continuous_scale=custom_color_scale,  # Use custom color scale
             range_color=(0, taiwan_openings['openings_count'].max()),  # Set color range
@@ -1048,20 +1121,23 @@ class CreateReportChart:
 
         # Update layout to ensure no other geographic information is shown
         taiwan_openings_map.update_traces(
-            marker_line_color='black', 
-            marker_line_width=1,  # Only show outlines
-            hovertemplate='<b><span style="font-size:15px;">%{location}</span></b><br><b><span style="font-size:12px;">Openings count: %{z}</span></b><extra></extra>'
+            hovertemplate=(
+                '<b><span style="font-size:15px;">%{customdata[0]}</span></b><br>' +  # County name
+                '<b><span style="font-size:12px;">%{customdata[1]}</span></b><br>' +  # District name
+                '<b><span style="font-size:12px;">Openings count: %{z}</span></b><extra></extra>'
+            ),
+            customdata=taiwan_openings[['county_name_eng', 'district_name_eng']].to_numpy()
         )
 
         taiwan_openings_map.update_layout(
             coloraxis_showscale=False,  # Hide the color bar
             showlegend=True,  # Show legend
             margin={"r":0,"t":0,"l":0,"b":0},
-            width=410,  # Adjust the width of the map to center it
-            height=300,  # Adjust the height of the map to center it
+            width=430,  # Adjust the width of the map to center it
+            height=780,  # Adjust the height of the map to center it
             mapbox=dict(
-                center={"lat": 25.008216635689223, "lon": 121.641468398647703},
-                zoom=8.1  # Adjust zoom level as needed
+                center={"lat": 23.6978, "lon": 120.9605},
+                zoom=7  # Adjust zoom level as needed
             ),
             autosize=True,  # Automatically adjust the size of the map
             hovermode='closest',  # Hover mode closest to the cursor
@@ -1074,3 +1150,31 @@ class CreateReportChart:
         )
 
         return taiwan_openings_map
+    
+    def create_county_openings_table(six_major_city_openings):
+        # Create a figure with a table
+        major_city_table = go.Figure(data=[go.Table(
+            header=dict(
+                values=['#', 'County', 'Openings'],
+                fill_color='gray',
+                align='center',
+                font=dict(color='white', size=12)
+            ),
+            cells=dict(
+                values=[six_major_city_openings['#'], six_major_city_openings['County'], six_major_city_openings['Openings']],
+                fill_color='white',
+                align='center',
+                font=dict(color='black', size=11)
+            )
+        )])
+
+        # Update layout
+        major_city_table.update_layout(
+            width=500,
+            height=300,
+            margin=dict(l=0, r=0, t=0, b=0),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+        )
+
+        return major_city_table        

@@ -34,14 +34,16 @@ def load_geo_page_data():
     print('this is the newest crawl date', newest_crawl_date)
 
     # load data for tool by data role
-    edu_by_data_role = FetchReportData.fetch_taiwan_openings(fetcher, newest_crawl_date)
+    taiwan_openings = FetchReportData.fetch_taiwan_openings(fetcher, newest_crawl_date)
+    six_major_city_openings = FetchReportData.fetch_major_city_openings(fetcher, newest_crawl_date)
+    taipei_openings_trend = FetchReportData.fetch_taipei_historical_openings(fetcher)
 
     # Close the database connection safely
     if fetcher.connection:
         fetcher.connection.close()
         logger.info("Database connection closed.")
     
-    return edu_by_data_role
+    return taiwan_openings, six_major_city_openings, taipei_openings_trend
 
 def sidebar():
     return html.Div(
@@ -171,8 +173,9 @@ def sidebar():
 
 def page_content():
     # Load data for the stack page
-    taiwan_openings = load_geo_page_data()
+    taiwan_openings ,six_major_city_openings, taipei_openings_trend = load_geo_page_data()
     taiwan_openings_map = CreateReportChart.create_taiwan_openings_map(taiwan_openings)
+    six_major_city_openings_table = CreateReportChart.create_county_openings_table(six_major_city_openings)   
 
     return html.Div(
             className="page",
@@ -192,6 +195,11 @@ def page_content():
                                                 html.P("Job Openings Across Taiwan Regions", className="tw-geo-title"),
                                                 html.P("A Detailed Analysis of Job Availability in Different Counties and Cities", className="tw-geo-sub-title"),
                                                 dcc.Graph(figure=taiwan_openings_map, className="geo-taiwan-map"),
+                                                html.P("Job Opportunities in Taiwan's Six Major Cities", className="major-city-title"),
+                                                html.P("A Close Examination of Job Availability in the Six Leading Cities", className="major-city-sub-title"),
+                                                dcc.Graph(figure=six_major_city_openings_table, className="six-major-city-table"),
+                                                html.P("Recent Job Vacancy Trends in Taipei", className="taipei-trend-title"),
+                                                html.P("Examining the Changes in Job Openings Over the Last Three Months", className="taipei-trend-sub-title"),
                                             ]
                                         ),
                                     ]
