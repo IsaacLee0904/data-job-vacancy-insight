@@ -38,7 +38,7 @@ Ensure your database and any necessary environment variables are correctly confi
 To start the dashboard application, run the following command:
 
 ```bash
-python python src/dashboard_src/dashboard_app.py
+python src/dashboard_src/dashboard_app.py
 ```
 Access the dashboard by visiting http://localhost:9100 in your web browser.
 
