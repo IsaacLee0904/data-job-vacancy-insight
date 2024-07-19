@@ -1,0 +1,1 @@
+-- models/training_data/train_user_recommendations.sql
