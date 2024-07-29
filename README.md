@@ -26,7 +26,7 @@ A system that recommends data-centric jobs and provides insights, featuring a pe
         - Data pipeline - ER modeling 
         - Data quality check 
         - Change data capture
-- Dashboard
+- Dashboard (https://data-job-vacancy-insight.onrender.com/)
     - Create dashboard
         - Home page
             - Design Dashboard with Figma (**2024-05-21 to 2024-05-22**)
@@ -47,8 +47,8 @@ A system that recommends data-centric jobs and provides insights, featuring a pe
             - Design Dashboard with Figma(**2024-07-08**)
             - Data pipeline - Transfrom data in the data warehouse (reporting_data layer) for dashboard (**2024-07-12**)
             - Dash page content setup include html and CSS (**2024-05-24 to 2024-06-11**)
-            - Dashboard figure creating (**2024-07-12 to 2024-06-15**)
-    - Deploy dashboard app into public web
+            - Dashboard figure creating (**2024-07-12 to 2024-07-15**)
+    - Deploy dashboard app into public web (**2024-07-15 to 2024-07-29**)
 
 ## Project Overview
 The "Data-Job-Vacancy-Insight" project is designed to streamline the job searching process for data professionals. By aggregating and analyzing job listings from multiple sources, it offers personalized job recommendations and valuable market insights directly through a user-friendly Telegram bot interface.
@@ -56,6 +56,7 @@ The "Data-Job-Vacancy-Insight" project is designed to streamline the job searchi
 ## Features
 - **Job Recommendations:** Tailored suggestions based on user's skills and preferences.
 - **Market Insights:** Analysis of current job market trends within the data field.
+    - deploy with render : https://data-job-vacancy-insight.onrender.com/
 - **User Profiles:** Customizable profiles that enhance job matching accuracy.
 - **Automated Reports:** Regular updates and reports delivered through Telegram.
 
