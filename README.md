@@ -26,7 +26,7 @@ A system that recommends data-centric jobs and provides insights, featuring a pe
         - Data pipeline - ER modeling 
         - Data quality check 
         - Change data capture
-- Dashboard (https://data-job-vacancy-insight.onrender.com/)
+- Dashboard (https://datawonderlust.onrender.com)
     - Create dashboard
         - Home page
             - Design Dashboard with Figma (**2024-05-21 to 2024-05-22**)
@@ -56,7 +56,7 @@ The "Data-Job-Vacancy-Insight" project is designed to streamline the job searchi
 ## Features
 - **Job Recommendations:** Tailored suggestions based on user's skills and preferences.
 - **Market Insights:** Analysis of current job market trends within the data field.
-    - deploy with render : https://data-job-vacancy-insight.onrender.com/
+    - deploy with render : https://datawonderlust.onrender.com
 - **User Profiles:** Customizable profiles that enhance job matching accuracy.
 - **Automated Reports:** Regular updates and reports delivered through Telegram.
 
