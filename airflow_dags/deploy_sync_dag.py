@@ -11,7 +11,7 @@ def notify_failure(context):
         task_id='send_failure_alert',
         telegram_conn_id='telegram_bot',
         chat_id='*********', # need to replace with your chat_id
-        text=f"🚨 Alert! Airflow weekly scheduled `job_vacancy_data_pipeline` has failed.\n\n🛠 Task: {context['task_instance_key_str']}\n📅 Execution Date: {context['execution_date']}\n❌ Status: Failed\n\nPlease check the logs and resolve the issues.",
+        text=f"🚨 Alert! Airflow weekly scheduled `job_vacancy_deploy_sync` has failed.\n\n🛠 Task: {context['task_instance_key_str']}\n📅 Execution Date: {context['execution_date']}\n❌ Status: Failed\n\nPlease check the logs and resolve the issues.",
         dag=dag
     )
     return failed_alert.execute(context=context)
@@ -21,7 +21,7 @@ def notify_success(context):
         task_id='send_success_alert',
         telegram_conn_id='telegram_bot',
         chat_id='*********', # need to replace with your chat_id
-        text="🎉 Congratulations! Airflow weekly scheduled `job_vacancy_data_pipeline` has successfully completed!\n\n🔍 Please review the results and ensure all data processing went smoothly.\n📅 Execution Date: {{ execution_date }}\n✅ Status: Success",
+        text="🎉 Congratulations! Airflow weekly scheduled `job_vacancy_deploy_sync` has successfully completed!\n\n🔍 Please review the results and ensure all data processing went smoothly.\n📅 Execution Date: {{ execution_date }}\n✅ Status: Success",
         dag=dag
     )
     return success_alert.execute(context=context)
