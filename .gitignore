@@ -5,3 +5,4 @@ logs/*
 dbt/logs/*
 dbt/dbt_packages/*
 dbt/target/*
+config/api_config.toml
