@@ -1,3 +1,5 @@
+import pandas as pd
+import numpy as np
 import openai
 import toml
 # LangChain Models
@@ -18,6 +20,10 @@ llm = ChatOpenAI(
     max_tokens=2000,
     openai_api_key=openai_api_key
 )
+
+df = pd.read_csv('data/job_description.csv')
+
+df['full_info'] = df.apply(lambda row: f"公司名稱：{row['company_name']}。\n職缺名稱：{row['job_title']}。\n需求年資:{row['experience']}。\n職務描述：{row['job_description']}，\n其他要求：{row['others']}。", axis=1)
 
 job_description = """
     1.建置與優化巨量結構化資料、半結構、非結構化資料的資料管線

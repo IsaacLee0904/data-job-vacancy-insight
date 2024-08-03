@@ -7,3 +7,4 @@ dbt/dbt_packages/*
 dbt/target/*
 config/api_config.toml
 src/training_src/testing.ipynb
+assets/resume/*
