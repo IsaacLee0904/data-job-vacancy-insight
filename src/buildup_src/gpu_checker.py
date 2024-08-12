@@ -6,7 +6,12 @@ project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(_
 sys.path.append(project_root)
 
 from utils.log_utils import set_logger
-from utils.gpu_utils import check_gpu_availability
+from utils.gpu_utils import check_device_availability
 
 logger = set_logger()
-check_gpu_availability(logger)
+
+# Example for Windows
+check_device_availability(logger, 'windows')
+
+# Example for macOS
+check_device_availability(logger, 'mac')
