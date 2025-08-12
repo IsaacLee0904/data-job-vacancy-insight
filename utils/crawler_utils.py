@@ -13,168 +13,160 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import threading
+from queue import Queue
 
 def setup_selenium_driver():
     """
-    Setup and return a configured Chrome WebDriver for Selenium
+    Setup and return a configured Chrome WebDriver for Selenium with performance optimizations
     """
     chrome_options = Options()
     chrome_options.add_argument('--headless')  # Run in background
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--disable-extensions')
+    chrome_options.add_argument('--disable-images')  # Don't load images (faster)
     chrome_options.add_argument('--window-size=1920,1080')
     chrome_options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
     
-    # Use webdriver-manager to auto-download ChromeDriver
+    # Performance optimizations
+    chrome_options.add_argument('--disable-background-timer-throttling')
+    chrome_options.add_argument('--disable-backgrounding-occluded-windows')
+    chrome_options.add_argument('--disable-renderer-backgrounding')
+    chrome_options.add_argument('--disable-features=TranslateUI')
+    chrome_options.page_load_strategy = 'eager'
+    
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
     
+    # Set timeouts for faster response
+    driver.set_page_load_timeout(10)
+    driver.implicitly_wait(2)
+    
     return driver
 
-def fetch_job_links(search_keywords, logger):
+def fetch_page_jobs(keyword, page_num, logger):
     """
-    Fetch job listing URLs from 104.com.tw using Selenium based on the provided keywords.
-
-    This function uses Selenium WebDriver to handle JavaScript-rendered content.
-    It iterates over keywords, paginates through search results, and extracts job URLs.
-
-    Parameters:
-    - search_keywords: list of str
-        A list of keywords to search for in job listings.
-    - logger: logging.Logger
-        A Logger object used for logging information and errors.
-
-    Returns:
-    - list of str
-        A list of URLs, each pointing to a job listing on 104.com.tw.
+    Fetch job URLs from a single page (thread-safe function)
     """
-    jobs_url_list = []
     driver = None
-    
     try:
         driver = setup_selenium_driver()
-        logger.info("Selenium WebDriver initialized successfully")
+        url = f'https://www.104.com.tw/jobs/search/?ro=0&kwop=1&keyword={keyword}&expansionType=job&order=14&asc=0&page={page_num}&mode=s&langFlag=0'
         
-        for keyword in search_keywords:
-            current_page = 1
-            logger.info(f"Fetching job listings for keyword: {keyword}")
-            
-            while current_page <= 20:  # Limit pagination to 20 pages
-                logger.info(f"Processing page {current_page} for keyword: {keyword}")
-                url = f'https://www.104.com.tw/jobs/search/?ro=0&kwop=1&keyword={keyword}&expansionType=job&order=14&asc=0&page={current_page}&mode=s&langFlag=0'
+        driver.get(url)
+        wait = WebDriverWait(driver, 5)
+        
+        # Try to find job elements
+        job_selectors = [
+            'a[href*="/job/"]',
+            'article[data-job-id]',
+            'div[data-job-id]'
+        ]
+        
+        job_elements = None
+        for selector in job_selectors:
+            try:
+                job_elements = wait.until(
+                    EC.presence_of_all_elements_located((By.CSS_SELECTOR, selector))
+                )
+                if job_elements:
+                    break
+            except TimeoutException:
+                continue
+        
+        if not job_elements:
+            logger.warning(f"No jobs found for {keyword} page {page_num}")
+            return []
+        
+        # Extract job URLs
+        job_urls = []
+        for element in job_elements:
+            try:
+                if element.tag_name == 'a':
+                    job_link = element
+                else:
+                    job_link = element.find_element(By.CSS_SELECTOR, 'a[href*="/job/"]')
                 
-                try:
-                    driver.get(url)
-                    
-                    # Wait for job listings to load
-                    wait = WebDriverWait(driver, 10)
-                    
-                    # Try multiple possible selectors for job items
-                    job_selectors = [
-                        'article[data-job-id]',
-                        'div[data-job-id]', 
-                        'article.js-job-item',
-                        'a[href*="/job/"]',
-                        '.job-item',
-                        '[data-jobno]'
-                    ]
-                    
-                    job_elements = None
-                    for selector in job_selectors:
-                        try:
-                            job_elements = wait.until(
-                                EC.presence_of_all_elements_located((By.CSS_SELECTOR, selector))
-                            )
-                            if job_elements:
-                                logger.info(f"Found {len(job_elements)} jobs using selector: {selector}")
-                                break
-                        except TimeoutException:
-                            continue
-                    
-                    if not job_elements:
-                        logger.info(f"No job listings found for keyword: {keyword} on page {current_page}")
-                        break
-                    
-                    # Extract job URLs
-                    page_job_count = 0
-                    for element in job_elements:
-                        try:
-                            # Try to find job link within the element
-                            job_link = None
-                            if element.tag_name == 'a':
-                                job_link = element
-                            else:
-                                job_link = element.find_element(By.CSS_SELECTOR, 'a[href*="/job/"]')
-                            
-                            if job_link:
-                                href = job_link.get_attribute('href')
-                                if href and '/job/' in href:
-                                    if not href.startswith('http'):
-                                        href = f"https://www.104.com.tw{href}"
-                                    jobs_url_list.append(href)
-                                    page_job_count += 1
-                        except NoSuchElementException:
-                            continue
-                    
-                    logger.info(f"Extracted {page_job_count} job URLs from page {current_page}")
-                    
-                    if page_job_count == 0:
-                        logger.info(f"No job URLs found on page {current_page}, stopping pagination")
-                        break
-                    
-                    current_page += 1
-                    sleep(2)  # Be respectful to the server
-                    
-                except TimeoutException:
-                    logger.error(f"Timeout while loading page {current_page} for keyword: {keyword}")
-                    break
-                except Exception as e:
-                    logger.error(f"Error processing page {current_page} for keyword {keyword}: {e}")
-                    break
+                if job_link:
+                    href = job_link.get_attribute('href')
+                    if href and '/job/' in href:
+                        if not href.startswith('http'):
+                            href = f"https://www.104.com.tw{href}"
+                        job_urls.append(href)
+            except NoSuchElementException:
+                continue
         
-        logger.info(f"Finished fetching job listings. Total URLs collected: {len(jobs_url_list)}")
+        logger.info(f"Thread {threading.current_thread().name}: Found {len(job_urls)} jobs on {keyword} page {page_num}")
+        return job_urls
         
     except Exception as e:
-        logger.error(f"Error initializing Selenium WebDriver: {e}")
+        logger.error(f"Error fetching {keyword} page {page_num}: {e}")
+        return []
     
     finally:
         if driver:
             driver.quit()
-            logger.info("Selenium WebDriver closed")
+
+def fetch_job_links(search_keywords, logger, max_pages=5, max_workers=4):
+    """
+    Fetch job listing URLs using multi-threading for better performance
+    """
+    jobs_url_list = []
+    
+    # Create tasks for thread pool
+    tasks = []
+    for keyword in search_keywords:
+        for page_num in range(1, max_pages + 1):
+            tasks.append((keyword, page_num))
+    
+    logger.info(f"Starting multi-threaded crawling with {max_workers} workers for {len(tasks)} tasks")
+    
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        # Submit all tasks
+        future_to_task = {
+            executor.submit(fetch_page_jobs, keyword, page_num, logger): (keyword, page_num)
+            for keyword, page_num in tasks
+        }
+        
+        # Collect results
+        for future in as_completed(future_to_task):
+            keyword, page_num = future_to_task[future]
+            try:
+                page_jobs = future.result()
+                jobs_url_list.extend(page_jobs)
+            except Exception as e:
+                logger.error(f"Task {keyword} page {page_num} failed: {e}")
+    
+    # Remove duplicates
+    jobs_url_list = list(set(jobs_url_list))
+    logger.info(f"Multi-threaded crawling completed. Total unique job URLs: {len(jobs_url_list)}")
     
     return jobs_url_list
-    
-def get_job_info(job_url, logger):
-    """
-    Fetch and parse job listing content using both Selenium and AJAX API.
 
-    Parameters:
-    - job_url (str): The URL of the job listing.
-    - logger (logging.Logger): A Logger object used for logging information and errors.
-
-    Returns:
-    - dict: A dictionary containing details of a job listing.
+def get_job_info_thread_safe(job_url, logger):
     """
-    # First try the AJAX API approach (faster if it works)
+    Thread-safe version of job info extraction
+    """
+    # First try AJAX API (faster)
     try:
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
             'Referer': 'https://www.104.com.tw/job/'
         }
 
-        # Extract job ID from URL and try AJAX endpoint
         job_id = job_url.split('/job/')[-1].split('?')[0]
         ajax_url = f'https://www.104.com.tw/job/ajax/content/{job_id}'
 
-        response = requests.get(ajax_url, headers=headers)
+        response = requests.get(ajax_url, headers=headers, timeout=10)
         
         if response.status_code == 200:
             json_data = response.json()
             
-            # Check if we have full job data
             if 'data' in json_data and 'jobDetail' in json_data['data']:
-                job_details = {
+                return {
                     'job_title': json_data['data']['header'].get('jobName', None),
                     'company_name': json_data['data']['header'].get('custName', None),
                     'salary': json_data['data']['jobDetail'].get('salary', None),
@@ -190,24 +182,18 @@ def get_job_info(job_url, logger):
                     'url': job_url,
                     'crawl_date': datetime.datetime.today().strftime('%Y%m%d')
                 }
-                logger.info(f"Successfully fetched job details via AJAX for {job_id}")
-                return job_details
     except Exception as e:
-        logger.warning(f"AJAX approach failed for {job_url}: {e}, trying Selenium")
+        logger.warning(f"AJAX failed for {job_url}: {e}")
     
-    # If AJAX fails, use Selenium to scrape the page
+    # Fallback to Selenium (if needed)
     driver = None
     try:
         driver = setup_selenium_driver()
         driver.get(job_url)
         
-        wait = WebDriverWait(driver, 10)
-        
-        # Wait for page to load
+        wait = WebDriverWait(driver, 8)
         wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-        sleep(3)  # Additional wait for dynamic content
         
-        # Extract job information using Selenium
         job_details = {
             'job_title': _safe_get_text(driver, ['h1[data-qa="jobName"]', 'h1', '.job-title']),
             'company_name': _safe_get_text(driver, ['[data-qa="companyName"]', '.company-name']),
@@ -225,17 +211,48 @@ def get_job_info(job_url, logger):
             'crawl_date': datetime.datetime.today().strftime('%Y%m%d')
         }
         
-        logger.info(f"Successfully scraped job details via Selenium for {job_url}")
+        return job_details
         
     except Exception as e:
-        logger.error(f"Failed to fetch job details via Selenium for {job_url}: {e}")
-        job_details = {}
+        logger.error(f"Selenium failed for {job_url}: {e}")
+        return {}
     
     finally:
         if driver:
             driver.quit()
+
+def get_job_info(job_url, logger):
+    """
+    Wrapper for backward compatibility
+    """
+    return get_job_info_thread_safe(job_url, logger)
+
+def get_all_job_details(job_urls, logger, max_workers=6):
+    """
+    Get all job details using multi-threading
+    """
+    all_job_details = []
     
-    return job_details
+    logger.info(f"Starting multi-threaded job detail extraction with {max_workers} workers for {len(job_urls)} jobs")
+    
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        future_to_url = {
+            executor.submit(get_job_info_thread_safe, job_url, logger): job_url
+            for job_url in job_urls
+        }
+        
+        for future in as_completed(future_to_url):
+            job_url = future_to_url[future]
+            try:
+                job_details = future.result()
+                if job_details:
+                    all_job_details.append(job_details)
+                    logger.info(f"Thread {threading.current_thread().name}: Extracted details for {job_details.get('job_title', 'Unknown')}")
+            except Exception as e:
+                logger.error(f"Failed to get details for {job_url}: {e}")
+    
+    logger.info(f"Multi-threaded job detail extraction completed. Total jobs: {len(all_job_details)}")
+    return all_job_details
 
 def _safe_get_text(driver, selectors):
     """
