@@ -11,4 +11,3 @@ from utils.database_utils import DatabaseConnector
 logger = set_logger()
 connector = DatabaseConnector(logger)
 datawarehouse_conn = connector.connect_to_db('datawarehouse')
-render_database_conn = connector.connect_to_db('render_deploy')
