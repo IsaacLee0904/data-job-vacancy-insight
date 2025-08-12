@@ -100,8 +100,8 @@ class RawDataProcessor:
                     '專案經理', '雲端工程師', '軟體工程研發高階主管', '顧問師']
 
         # Create a regex pattern to match any of the keywords, case insensitive
-        title_pattern = '|'.join([f"(?i){re.escape(keyword)}" for keyword in title_keywords])
-        type_pattern = '|'.join([f"(?i){re.escape(keyword)}" for keyword in type_keywords])
+        title_pattern = '(?i)' + '|'.join([re.escape(keyword) for keyword in title_keywords])
+        type_pattern = '(?i)' + '|'.join([re.escape(keyword) for keyword in type_keywords])
 
         # Filter df where 'job_titel' and 'job_type' matches the regex pattern
         filtered_df = df[
