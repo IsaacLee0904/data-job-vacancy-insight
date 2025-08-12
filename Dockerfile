@@ -1,4 +1,4 @@
-FROM python:3.8-slim-buster
+FROM python:3.11-slim
 
 # Set the working directory to /app inside the container
 WORKDIR /app
@@ -11,7 +11,9 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     libatlas-base-dev \
     tzdata \
-    git  # Add git here
+    git \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set the time zone
 RUN ln -fs /usr/share/zoneinfo/Asia/Taipei /etc/localtime && dpkg-reconfigure -f noninteractive tzdata
@@ -23,6 +25,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 80
 
 # Define an environment variable
-ENV NAME JobVacancyInsight
+ENV NAME=JobVacancyInsight
 
 CMD ["/bin/bash", "-c", "source activate env && python main.py"]
