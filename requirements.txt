@@ -8,7 +8,6 @@ psycopg2-binary>=2.9.5
 dbt-postgres>=1.4.0
 piperider>=0.41.0
 python-telegram-bot>=20.0
-graypy>=2.1.0
 toml>=0.10.2
 dash>=2.10.0
 dash-bootstrap-components>=1.4.0
