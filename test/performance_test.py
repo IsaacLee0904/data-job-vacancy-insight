@@ -11,9 +11,9 @@ from threading import Thread
 project_root = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(project_root)
 
-from utils.log_utils import set_logger
-from utils.crawler_utils import fetch_job_links as single_thread_fetch
-from utils.crawler_utils_multithread import fetch_job_links as multi_thread_fetch
+from src.core.log_utils import set_logger
+from src.core.crawler_utils import fetch_job_links as single_thread_fetch
+from src.core.crawler_utils_multithread import fetch_job_links as multi_thread_fetch
 
 def test_single_thread(keywords, logger):
     """Test single-thread performance"""

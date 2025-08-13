@@ -5,8 +5,8 @@ import torch
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(project_root)
 
-from utils.log_utils import set_logger
-from utils.gpu_utils import check_device_availability
+from src.core.log_utils import set_logger
+from src.core.gpu_utils import check_device_availability
 
 logger = set_logger()
 

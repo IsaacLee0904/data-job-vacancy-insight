@@ -13,9 +13,9 @@ project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(o
 sys.path.append(project_root)
 
 # import modules
-from utils.log_utils import set_logger
-from utils.front_end_utils import load_css_files
-from utils.dashboard_utils import FetchReportData, CreateReportChart
+from src.core.log_utils import set_logger
+from src.core.front_end_utils import load_css_files
+from src.core.dashboard_utils import FetchReportData, CreateReportChart
 
 ## Load data
 # define fetch functions

@@ -8,8 +8,8 @@ import time
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(project_root)
 
-from utils.log_utils import set_logger
-from utils.crawler_utils import fetch_job_links, get_all_job_details, save_jobs_to_json
+from src.core.log_utils import set_logger
+from src.core.crawler_utils import fetch_job_links, get_all_job_details, save_jobs_to_json
 
 def main():
     start_time = time.time()

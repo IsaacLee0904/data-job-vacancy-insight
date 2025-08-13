@@ -8,8 +8,8 @@ import plotly.graph_objects as go
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from utils.log_utils import set_logger
-from utils.database_utils import DatabaseConnector, DatabaseOperation
+from src.core.log_utils import set_logger
+from src.core.database_utils import DatabaseConnector, DatabaseOperation
 
 def connect_to_database(logger):
     """

@@ -1,31 +1,27 @@
 ## import packages
 # import necessary libraries
 import sys, os 
-import json
-from datetime import datetime, timedelta
 import pandas as pd
-# import geopandas as gpd
 import dash
-from dash import html, dcc, callback
+from dash import html, dcc
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
-import plotly.express as px
+from flask import Flask, send_from_directory
 
 # set up project root path
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 sys.path.append(project_root)
 
 # import modules
-from utils.log_utils import set_logger
-from utils.dashboard_utils import FetchReportData, CreateReportChart
+from src.core.log_utils import set_logger
+from src.core.front_end_utils import load_css_files
+from src.core.dashboard_utils import FetchReportData, CreateReportChart
 
 ## Load data
-# define fetch functions
-    
-# Integrate the fetch functions into the load_stack_page_data function
-def load_stack_page_data():
+# Integrate the fetch functions into the load_home_page_data function
+def load_edu_page_data():
     """
-    Load reporting data from the database for the dashboard stack page.
+    Load reporting data from the database for the dashboard edu page.
     """
     # Setup logger
     logger = set_logger()
@@ -33,17 +29,19 @@ def load_stack_page_data():
     # Initialize the FetchReportData class to handle database operations
     fetcher = FetchReportData(logger)
 
-    # Fetch the data for different metrics from the stack page
+    # Get the newest crawl date
+    newest_crawl_date = fetcher.get_newest_crawl_date()
+    print('this is the newest crawl date', newest_crawl_date)
 
     # load data for tool by data role
-    tool_by_data_role = FetchReportData.fetch_tool_by_data_role(fetcher)
+    edu_by_data_role = FetchReportData.fetch_education_by_data_role(fetcher, newest_crawl_date)
 
     # Close the database connection safely
     if fetcher.connection:
         fetcher.connection.close()
         logger.info("Database connection closed.")
     
-    return tool_by_data_role
+    return edu_by_data_role
 
 def sidebar():
     return html.Div(
@@ -173,20 +171,9 @@ def sidebar():
 
 def page_content():
     # Load data for the stack page
-    tool_by_data_role = load_stack_page_data()
+    edu_by_data_role = load_edu_page_data()
 
-    # Check for missing category values and handle them
-    tool_by_data_role['category'] = tool_by_data_role['category'].fillna('Others')
-
-    # Create dropdown options
-    data_roles = [{'label': role, 'value': role} for role in tool_by_data_role['data_role'].unique()]
-    data_roles.insert(0, {'label': 'All', 'value': 'All'})
-
-    categories = [{'label': category, 'value': category} for category in tool_by_data_role['category'].unique()]
-    categories.insert(0, {'label': 'All', 'value': 'All'})
-
-    # Create figture
-    tool_popularity_bar_chart = CreateReportChart.create_tool_popularity_bar_chart(tool_by_data_role)
+    edu_heatmap = CreateReportChart.create_education_heatmap(edu_by_data_role)
 
     return html.Div(
             className="page",
@@ -203,36 +190,9 @@ def page_content():
                                         html.Div(
                                             className="dropdowns",
                                             children=[                                            
-                                                html.Div(
-                                                    className="group-dropdown-item",
-                                                    children=[
-                                                        html.Label("Select Technology Group", className="group-label"),
-                                                        dcc.Dropdown(
-                                                            id='category-dropdown',
-                                                            options=categories,
-                                                            value='All'
-                                                        ),
-                                                    ]
-                                                ),
-                                                html.Div(
-                                                    className="role-dropdown-item",
-                                                    children=[
-                                                        html.Label("Select Data Role", className="role-label"),
-                                                        dcc.Dropdown(
-                                                            id='datarole-dropdown',
-                                                            options=data_roles,
-                                                            value='All'
-                                                        ),
-                                                    ]
-                                                ),
-                                                html.P("Tool Trends", className="tool-trend-title"),
-                                                html.P("Tracking the trends of the most maintion tools in data-centric jobs", className="tool-trend-sub-title"),
-                                                dcc.Graph(id='line-chart', className="tool-trends-line-chart"),
-                                                html.P("Top 5 Stacks with Most Openings", className="tool-broad-title"),
-                                                html.P("Top 5 most maintioned technologies of all time", className="tool-broad-sub-title"),
-                                                html.P("Most popular in", className="most-popular-title"),
-                                                html.P("Least popular in", className="least-popular-title"),
-                                                dcc.Graph(figure=tool_popularity_bar_chart, className="tool-popularity-bar-chart"),
+                                                html.P("Educational Requirements for Data Roles", className="edu-title"),
+                                                html.P("A Comprehensive Overview of the Academic Backgrounds Sought in Data-Centric Careers", className="edu-sub-title"),
+                                                dcc.Graph(figure=edu_heatmap, className="edu-heatmap"),
                                             ]
                                         ),
                                     ]
@@ -252,13 +212,6 @@ layout = html.Div(
     ]
 )
 
-# Define callback function
-@callback(
-    Output('line-chart', 'figure'),
-    [Input('datarole-dropdown', 'value'),
-     Input('category-dropdown', 'value')]
-)
-def update_charts(selected_datarole, selected_category):
-    tool_by_data_role = load_stack_page_data()
-    line_chart = CreateReportChart.create_tool_trends_line_chart(tool_by_data_role, selected_datarole, selected_category)
-    return line_chart
+# Run the server
+if __name__ == '__main__':
+    app.run_server(debug=True)

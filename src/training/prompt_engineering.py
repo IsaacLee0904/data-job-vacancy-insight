@@ -15,8 +15,8 @@ import toml
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(project_root)
 
-from utils.log_utils import set_logger
-from utils.recommender_utils import extract_text_from_pdf
+from src.core.log_utils import set_logger
+from src.core.recommender_utils import extract_text_from_pdf
 
 resume_text = extract_text_from_pdf('assets/resume/IsaacLee.pdf')
 
