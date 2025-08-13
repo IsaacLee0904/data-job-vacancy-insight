@@ -4,9 +4,9 @@ import datetime
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(project_root)
 
-from utils.log_utils import set_logger
-from utils.database_utils import DatabaseConnector, DatabaseOperation, create_stagedata_table
-from utils.etl_utils import GeneralDataProcessor, RawDataProcessor
+from src.core.log_utils import set_logger
+from src.core.database_utils import DatabaseConnector, DatabaseOperation, create_stagedata_table
+from src.core.etl_utils import GeneralDataProcessor, RawDataProcessor
 
 def connect_to_database(logger):
     """

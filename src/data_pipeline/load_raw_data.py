@@ -3,9 +3,9 @@ import os, sys
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(project_root)
 
-from utils.log_utils import set_logger
-from utils.etl_utils import GeneralDataProcessor
-from utils.database_utils import DatabaseConnector, DatabaseOperation, create_rawdata_table
+from src.core.log_utils import set_logger
+from src.core.etl_utils import GeneralDataProcessor
+from src.core.database_utils import DatabaseConnector, DatabaseOperation, create_rawdata_table
 
 def transform_data_type(df):
 

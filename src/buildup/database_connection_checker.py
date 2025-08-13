@@ -5,8 +5,8 @@ import toml
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(project_root)
 
-from utils.log_utils import set_logger
-from utils.database_utils import DatabaseConnector
+from src.core.log_utils import set_logger
+from src.core.database_utils import DatabaseConnector
 
 logger = set_logger()
 connector = DatabaseConnector(logger)
