@@ -18,14 +18,15 @@ sys.path.append(project_root)
 # import modules
 from src.core.log_utils import set_logger
 from src.core.dashboard_utils import FetchReportData, CreateReportChart
+from src.dashboard.api_client import DashboardDataService
+
+## Configuration
+USE_API = True  # Set to False to use database directly
 
 ## Load data
-# define fetch functions
-    
-# Integrate the fetch functions into the load_stack_page_data function
-def load_stack_page_data():
+def load_stack_page_data_from_database():
     """
-    Load reporting data from the database for the dashboard stack page.
+    Load reporting data from the database for the dashboard stack page (fallback).
     """
     # Setup logger
     logger = set_logger()
@@ -34,6 +35,7 @@ def load_stack_page_data():
     fetcher = FetchReportData(logger)
 
     # Fetch the data for different metrics from the stack page
+    logger.info("Database fallback - fetching tool by data role")
 
     # load data for tool by data role
     tool_by_data_role = FetchReportData.fetch_tool_by_data_role(fetcher)
@@ -44,6 +46,42 @@ def load_stack_page_data():
         logger.info("Database connection closed.")
     
     return tool_by_data_role
+
+def load_stack_page_data():
+    """
+    Load stack page data with API fallback to database
+    """
+    logger = set_logger()
+    
+    if USE_API:
+        logger.info("Attempting to load stack page data via API...")
+        try:
+            # Initialize API data service
+            data_service = DashboardDataService(api_base_url="http://localhost:8000", logger=logger)
+            
+            # Check API connection
+            if not data_service.check_api_connection():
+                logger.warning("API not available, falling back to database")
+                return load_stack_page_data_from_database()
+            
+            # Use tools-by-data-role specific API endpoint
+            tools_data = data_service.api_client.get_tools_by_data_role()
+            if tools_data:
+                logger.info("Successfully loaded tools by data role via API")
+                import pandas as pd
+                tool_by_data_role = pd.DataFrame(tools_data)
+                return tool_by_data_role
+            else:
+                logger.warning("No tools by data role data available from API, falling back to database")
+                return load_stack_page_data_from_database()
+            
+        except Exception as e:
+            logger.error(f"Error loading data via API: {e}")
+            logger.info("Falling back to database")
+            return load_stack_page_data_from_database()
+    else:
+        logger.info("Using database directly")
+        return load_stack_page_data_from_database()
 
 def sidebar():
     return html.Div(

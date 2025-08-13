@@ -16,12 +16,15 @@ sys.path.append(project_root)
 from src.core.log_utils import set_logger
 from src.core.front_end_utils import load_css_files
 from src.core.dashboard_utils import FetchReportData, CreateReportChart
+from src.dashboard.api_client import DashboardDataService
+
+## Configuration
+USE_API = True  # Set to False to use database directly
 
 ## Load data
-# Integrate the fetch functions into the load_home_page_data function
-def load_edu_page_data():
+def load_edu_page_data_from_database():
     """
-    Load reporting data from the database for the dashboard edu page.
+    Load reporting data from the database for the dashboard edu page (fallback).
     """
     # Setup logger
     logger = set_logger()
@@ -31,7 +34,7 @@ def load_edu_page_data():
 
     # Get the newest crawl date
     newest_crawl_date = fetcher.get_newest_crawl_date()
-    print('this is the newest crawl date', newest_crawl_date)
+    logger.info(f'Database fallback - newest crawl date: {newest_crawl_date}')
 
     # load data for tool by data role
     edu_by_data_role = FetchReportData.fetch_education_by_data_role(fetcher, newest_crawl_date)
@@ -42,6 +45,42 @@ def load_edu_page_data():
         logger.info("Database connection closed.")
     
     return edu_by_data_role
+
+def load_edu_page_data():
+    """
+    Load education page data with API fallback to database
+    """
+    logger = set_logger()
+    
+    if USE_API:
+        logger.info("Attempting to load education page data via API...")
+        try:
+            # Initialize API data service
+            data_service = DashboardDataService(api_base_url="http://localhost:8000", logger=logger)
+            
+            # Check API connection
+            if not data_service.check_api_connection():
+                logger.warning("API not available, falling back to database")
+                return load_edu_page_data_from_database()
+            
+            # Use education-specific API endpoint
+            education_data = data_service.api_client.get_education_by_data_role()
+            if education_data:
+                logger.info("Successfully loaded education data via API")
+                import pandas as pd
+                edu_by_data_role = pd.DataFrame(education_data)
+                return edu_by_data_role
+            else:
+                logger.warning("No education data available from API, falling back to database")
+                return load_edu_page_data_from_database()
+            
+        except Exception as e:
+            logger.error(f"Error loading data via API: {e}")
+            logger.info("Falling back to database")
+            return load_edu_page_data_from_database()
+    else:
+        logger.info("Using database directly")
+        return load_edu_page_data_from_database()
 
 def sidebar():
     return html.Div(
