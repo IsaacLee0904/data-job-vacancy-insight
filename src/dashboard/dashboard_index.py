@@ -21,4 +21,4 @@ def display_page(pathname):
         return home_pages.layout
 
 if __name__ == '__main__':
-    app.run_server(debug=True, host='0.0.0.0', port=9100)
+    app.run(debug=True, host='0.0.0.0', port=9100)

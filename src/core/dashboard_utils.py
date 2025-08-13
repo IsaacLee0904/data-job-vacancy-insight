@@ -648,7 +648,7 @@ class CreateReportChart:
     # Create the taiepi area openings map
     def create_openings_map(taiepi_area_openings):
         # Load your GeoJSON file
-        with open('src/dashboard_src/assets/geo_data/county_geo_info.geojson', 'r') as file:
+        with open('src/dashboard/assets/geo_data/county_geo_info.geojson', 'r') as file:
             geojson_data = json.load(file)
 
         # Filter features for 'COUNTYNAME' of '臺北市' or '新北市'
@@ -1077,7 +1077,7 @@ class CreateReportChart:
     
     def create_taiwan_openings_map(taiwan_openings):
         # Load your GeoJSON file
-        with open('src/dashboard_src/assets/geo_data/county_geo_info.geojson', 'r') as file:
+        with open('src/dashboard/assets/geo_data/county_geo_info.geojson', 'r') as file:
             geojson_data = json.load(file)
 
         for feature in geojson_data['features']:
@@ -1090,10 +1090,10 @@ class CreateReportChart:
         taiwan_openings['district_name_ch'] = taiwan_openings['district_name_ch'].str.replace('台', '臺')  # Standardize county names
 
         # Fill district_name_eng with county_name_eng if district_name_eng is null
-        taiwan_openings['district_name_eng'].fillna(taiwan_openings['county_name_ch'], inplace=True)
+        taiwan_openings['district_name_eng'] = taiwan_openings['district_name_eng'].fillna(taiwan_openings['county_name_ch'])
 
         # Drop rows where both district_name_eng and county_name_ch are null
-        taiwan_openings.dropna(subset=['district_name_eng', 'county_name_ch'], how='all', inplace=True)
+        taiwan_openings = taiwan_openings.dropna(subset=['district_name_eng', 'county_name_ch'], how='all')
 
         taiwan_openings['openings_count'] = taiwan_openings['openings_count'].fillna(0)
         taiwan_openings['openings_count'] = taiwan_openings['openings_count'].astype(float)
