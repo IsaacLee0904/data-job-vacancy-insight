@@ -2,7 +2,9 @@ version: '3'
 services:
   app:
     container_name: job_vacancy_insight_app
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.${DOCKER_ARCH:-amd64}
     ports:
       - "80:80" # for dbt documentation
       - "9100:9100" # for online dashboard
