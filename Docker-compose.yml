@@ -6,7 +6,7 @@ services:
     ports:
       - "80:80" # for dbt documentation
       - "9100:9100" # for online dashboard
-      - "5000:5000" # for API server
+      - "8000:8000" # for FastAPI server
     environment:
       NAME: JobVacancyInsight
     depends_on:
