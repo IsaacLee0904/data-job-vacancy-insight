@@ -8,7 +8,7 @@ import sys
 import os
 from datetime import datetime, date
 from typing import Optional, Dict, Any
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Depends
 from pydantic import BaseModel
 
 # Add project root to Python path  
@@ -17,9 +17,15 @@ sys.path.append(project_root)
 
 from src.core.log_utils import set_logger
 from src.core.dashboard_utils import FetchReportData
+from ..services.cache_service import DashboardCacheService
 
 router = APIRouter()
 logger = set_logger()
+
+# Dependency for cache service
+def get_cache_service():
+    """Get cache service instance"""
+    return DashboardCacheService(logger)
 
 # Response Models
 class ApiResponse(BaseModel):
@@ -64,13 +70,12 @@ async def dashboard_info():
     )
 
 @router.get("/latest-date")
-async def get_latest_crawl_date():
+async def get_latest_crawl_date(cache_service: DashboardCacheService = Depends(get_cache_service)):
     """
-    Get the latest data crawl date
+    Get the latest data crawl date (cached)
     """
     try:
-        data_fetcher = FetchReportData(logger)
-        latest_date = data_fetcher.get_newest_crawl_date()
+        latest_date = cache_service.get_or_fetch_latest_date()
         
         if not latest_date:
             raise HTTPException(status_code=404, detail="No data found")
@@ -88,33 +93,22 @@ async def get_latest_crawl_date():
 
 @router.get("/job-metrics")
 async def get_job_metrics(
-    crawl_date: Optional[str] = Query(None, description="Date in YYYY-MM-DD format, defaults to latest")
+    crawl_date: Optional[str] = Query(None, description="Date in YYYY-MM-DD format, defaults to latest"),
+    cache_service: DashboardCacheService = Depends(get_cache_service)
 ):
     """
-    Get job opening metrics for a specific date
+    Get job opening metrics for a specific date (cached)
     """
     try:
-        data_fetcher = FetchReportData(logger)
+        metrics = cache_service.get_or_fetch_job_metrics(crawl_date)
         
-        # Use latest date if not provided
-        if not crawl_date:
-            crawl_date = data_fetcher.get_newest_crawl_date()
-            if not crawl_date:
-                raise HTTPException(status_code=404, detail="No data available")
-        
-        # Fetch metrics
-        metrics_df = data_fetcher.fetch_openings_statistics_metrics(crawl_date)
-        
-        if metrics_df.empty:
-            raise HTTPException(status_code=404, detail=f"No metrics found for date {crawl_date}")
-        
-        # Convert DataFrame to dict
-        metrics = metrics_df.iloc[0].to_dict()
+        if not metrics:
+            raise HTTPException(status_code=404, detail=f"No metrics found for date {crawl_date or 'latest'}")
         
         return ApiResponse(
             success=True,
             data=metrics,
-            message=f"Job metrics retrieved for {crawl_date}",
+            message=f"Job metrics retrieved for {metrics.get('crawl_date', crawl_date or 'latest')}",
             timestamp=datetime.now()
         )
         
@@ -124,35 +118,28 @@ async def get_job_metrics(
 
 @router.get("/data-role-distribution")
 async def get_data_role_distribution(
-    crawl_date: Optional[str] = Query(None, description="Date in YYYY-MM-DD format, defaults to latest")
+    crawl_date: Optional[str] = Query(None, description="Date in YYYY-MM-DD format, defaults to latest"),
+    cache_service: DashboardCacheService = Depends(get_cache_service)
 ):
     """
-    Get data role distribution for pie chart
+    Get data role distribution for pie chart (cached)
     """
     try:
-        data_fetcher = FetchReportData(logger)
+        roles_data = cache_service.get_or_fetch_data_role_distribution(crawl_date)
         
-        # Use latest date if not provided
+        if not roles_data:
+            raise HTTPException(status_code=404, detail=f"No role data found for date {crawl_date or 'latest'}")
+        
+        # Get actual crawl_date if not provided
         if not crawl_date:
-            crawl_date = data_fetcher.get_newest_crawl_date()
-            if not crawl_date:
-                raise HTTPException(status_code=404, detail="No data available")
-        
-        # Fetch data role distribution
-        role_df = data_fetcher.fetch_data_role(crawl_date)
-        
-        if role_df.empty:
-            raise HTTPException(status_code=404, detail=f"No role data found for date {crawl_date}")
-        
-        # Convert DataFrame to list of dicts for frontend
-        roles_data = role_df.to_dict('records')
+            crawl_date = cache_service.get_or_fetch_latest_date()
         
         return ApiResponse(
             success=True,
             data={
                 "roles": roles_data,
                 "crawl_date": crawl_date,
-                "total_count": sum(role['count'] for role in roles_data)
+                "total_count": sum(role['count'] for role in roles_data) if roles_data else 0
             },
             message=f"Data role distribution retrieved for {crawl_date}",
             timestamp=datetime.now()
@@ -165,28 +152,21 @@ async def get_data_role_distribution(
 @router.get("/top-tools")
 async def get_top_tools(
     crawl_date: Optional[str] = Query(None, description="Date in YYYY-MM-DD format, defaults to latest"),
-    limit: int = Query(3, description="Number of top tools to return", ge=1, le=10)
+    limit: int = Query(3, description="Number of top tools to return", ge=1, le=10),
+    cache_service: DashboardCacheService = Depends(get_cache_service)
 ):
     """
-    Get top data tools
+    Get top data tools (cached)
     """
     try:
-        data_fetcher = FetchReportData(logger)
+        top_tools = cache_service.get_or_fetch_top_tools(crawl_date, limit)
         
-        # Use latest date if not provided
+        if not top_tools:
+            raise HTTPException(status_code=404, detail=f"No tools data found for date {crawl_date or 'latest'}")
+        
+        # Get actual crawl_date if not provided
         if not crawl_date:
-            crawl_date = data_fetcher.get_newest_crawl_date()
-            if not crawl_date:
-                raise HTTPException(status_code=404, detail="No data available")
-        
-        # Fetch top tools
-        tools_df = data_fetcher.fetch_data_tool(crawl_date)
-        
-        if tools_df.empty:
-            raise HTTPException(status_code=404, detail=f"No tools data found for date {crawl_date}")
-        
-        # Limit results and convert to list of dicts
-        top_tools = tools_df.head(limit).to_dict('records')
+            crawl_date = cache_service.get_or_fetch_latest_date()
         
         return ApiResponse(
             success=True,
@@ -206,28 +186,21 @@ async def get_top_tools(
 @router.get("/top-companies") 
 async def get_top_companies(
     crawl_date: Optional[str] = Query(None, description="Date in YYYY-MM-DD format, defaults to latest"),
-    limit: int = Query(5, description="Number of top companies to return", ge=1, le=10)
+    limit: int = Query(5, description="Number of top companies to return", ge=1, le=10),
+    cache_service: DashboardCacheService = Depends(get_cache_service)
 ):
     """
-    Get top companies by job openings
+    Get top companies by job openings (cached)
     """
     try:
-        data_fetcher = FetchReportData(logger)
+        top_companies = cache_service.get_or_fetch_top_companies(crawl_date, limit)
         
-        # Use latest date if not provided
+        if not top_companies:
+            raise HTTPException(status_code=404, detail=f"No companies data found for date {crawl_date or 'latest'}")
+        
+        # Get actual crawl_date if not provided
         if not crawl_date:
-            crawl_date = data_fetcher.get_newest_crawl_date()
-            if not crawl_date:
-                raise HTTPException(status_code=404, detail="No data available")
-        
-        # Fetch top companies
-        companies_df = data_fetcher.fetch_openings_company(crawl_date)
-        
-        if companies_df.empty:
-            raise HTTPException(status_code=404, detail=f"No companies data found for date {crawl_date}")
-        
-        # Limit results and convert to list of dicts
-        top_companies = companies_df.head(limit).to_dict('records')
+            crawl_date = cache_service.get_or_fetch_latest_date()
         
         return ApiResponse(
             success=True,
@@ -242,4 +215,29 @@ async def get_top_companies(
         
     except Exception as e:
         logger.error(f"Error getting top companies: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/summary")
+async def get_dashboard_summary(
+    crawl_date: Optional[str] = Query(None, description="Date in YYYY-MM-DD format, defaults to latest"),
+    cache_service: DashboardCacheService = Depends(get_cache_service)
+):
+    """
+    Get comprehensive dashboard summary with all key metrics (cached)
+    """
+    try:
+        summary = cache_service.get_or_fetch_dashboard_summary(crawl_date)
+        
+        if not summary:
+            raise HTTPException(status_code=404, detail=f"No dashboard data found for date {crawl_date or 'latest'}")
+        
+        return ApiResponse(
+            success=True,
+            data=summary,
+            message=f"Dashboard summary retrieved for {summary.get('crawl_date', 'latest')}",
+            timestamp=datetime.now()
+        )
+        
+    except Exception as e:
+        logger.error(f"Error getting dashboard summary: {e}")
         raise HTTPException(status_code=500, detail=str(e))

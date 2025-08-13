@@ -8,8 +8,9 @@ import os
 import uvicorn
 
 # Add project root to Python path
-project_root = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(project_root)
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(script_dir)  # Go up one level from scripts/
+sys.path.insert(0, project_root)  # Insert at beginning of path
 
 if __name__ == "__main__":
     print("🚀 Starting Job Vacancy Insight API...")

@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Application Configuration
 Environment variables and settings management

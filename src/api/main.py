@@ -18,7 +18,8 @@ sys.path.append(project_root)
 
 from src.core.log_utils import set_logger
 from src.api.core.config import settings
-from src.api.routers import health, dashboard
+from src.api.routers import health, dashboard, cache
+from src.api.middleware.cache_middleware import CacheMiddleware, CacheControlMiddleware
 
 # Set up logger
 logger = set_logger()
@@ -54,6 +55,10 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# Add cache middleware (temporarily disabled for startup)
+# app.add_middleware(CacheMiddleware, logger=logger)
+# app.add_middleware(CacheControlMiddleware, logger=logger)
+
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -83,6 +88,7 @@ async def general_exception_handler(request, exc):
 # Include routers
 app.include_router(health.router, prefix="/api/v1", tags=["Health"])
 app.include_router(dashboard.router, prefix="/api/v1", tags=["Dashboard"])
+app.include_router(cache.router, prefix="/api/v1/cache", tags=["Cache Management"])
 
 # Root endpoint
 @app.get("/")
