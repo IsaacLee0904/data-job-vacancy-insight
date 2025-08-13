@@ -19,6 +19,14 @@ sys.path.append(project_root)
 from src.core.log_utils import set_logger
 from src.core.dashboard_utils import FetchReportData, CreateReportChart
 
+# Import API client for new data fetching approach
+try:
+    from src.dashboard.api_client import DashboardDataService
+    USE_API = True
+except ImportError:
+    USE_API = False
+    print("⚠️ API client not available, falling back to direct database access")
+
 ## Load data
 # define fetch functions
 def fetch_openings_statistics_for_dashboard(fetcher, crawl_date):
@@ -148,9 +156,45 @@ def fetch_taiepi_area_openings_for_dashboard(fetcher, crawl_date):
 # Integrate the fetch functions into the load_home_page_data function
 def load_home_page_data():
     """
-    Load reporting data from the database for the dashboard home page.
+    Load reporting data for the dashboard home page.
+    Uses API if available, falls back to direct database access.
     """
-    # Setup logger
+    logger = set_logger()
+    
+    if USE_API:
+        logger.info("🚀 Loading home page data via API...")
+        try:
+            # Initialize API data service
+            data_service = DashboardDataService(api_base_url="http://localhost:8000", logger=logger)
+            
+            # Check API connectivity first
+            if not data_service.check_api_connection():
+                logger.warning("⚠️ API not available, falling back to database...")
+                return load_home_page_data_from_database()
+            
+            # Load data via API
+            result = data_service.load_home_page_data()
+            
+            if result[0] is not None:  # Check if we got valid data
+                logger.info("✅ Successfully loaded data via API")
+                return result
+            else:
+                logger.warning("⚠️ API returned no data, falling back to database...")
+                return load_home_page_data_from_database()
+                
+        except Exception as e:
+            logger.error(f"❌ API data loading failed: {e}")
+            logger.info("🔄 Falling back to database access...")
+            return load_home_page_data_from_database()
+    else:
+        logger.info("🗄️ Loading home page data from database...")
+        return load_home_page_data_from_database()
+
+
+def load_home_page_data_from_database():
+    """
+    Original database-based data loading function
+    """
     logger = set_logger()
 
     # Initialize the FetchReportData class to handle database operations
@@ -158,6 +202,14 @@ def load_home_page_data():
 
     # Get the newest crawl date
     newest_crawl_date = fetcher.get_newest_crawl_date()
+
+    # Initialize default values
+    openings_statistics = None
+    historical_total_openings = None
+    data_role = None
+    data_tools = None
+    openings_company = None
+    taiepi_area_openings = None
 
     # Fetch the data for different metrics from the home page
     if newest_crawl_date:
@@ -458,8 +510,8 @@ def page_content():
                                                 children=[
                                                     html.Span(
                                                         [
-                                                            get_change_icon(stats['total_openings_change']),
-                                                            html.Span(f"{stats['total_openings_change']:.1f}%", style={"color": "red" if stats['total_openings_change'] > 0 else "green"}),
+                                                            get_change_icon(float(stats['total_openings_change'])),
+                                                            html.Span(f"{float(stats['total_openings_change']):.1f}%", style={"color": "red" if float(stats['total_openings_change']) > 0 else "green"}),
                                                             html.Span(" vs last week")
                                                         ], 
                                                         className="element-vs-last-days"
@@ -479,8 +531,8 @@ def page_content():
                                                 children=[
                                                     html.Span(
                                                         [
-                                                            get_change_icon(stats['new_openings_change']),
-                                                            html.Span(f"{stats['new_openings_change']:.1f}%", style={"color": "red" if stats['new_openings_change'] > 0 else "green"}),
+                                                            get_change_icon(float(stats['new_openings_change'])),
+                                                            html.Span(f"{float(stats['new_openings_change']):.1f}%", style={"color": "red" if float(stats['new_openings_change']) > 0 else "green"}),
                                                             html.Span(" vs last week")
                                                         ], 
                                                         className="element-vs-last-days"
@@ -488,14 +540,14 @@ def page_content():
                                                 ]
                                             ),
                                             html.Div("Fill Rate", className="title-data-3"),
-                                            html.Div(f"{stats['fill_rate']:.2f} %", className="fill-rate-value"),
+                                            html.Div(f"{float(stats['fill_rate']):.2f} %", className="fill-rate-value"),
                                             html.Div(
                                                 className="div-wrapper",
                                                 children=[
                                                     html.Span(
                                                         [
-                                                            get_change_icon(stats['fill_rate_change']),
-                                                            html.Span(f"{stats['fill_rate_change']:.1f}%", style={"color": "red" if stats['fill_rate_change'] > 0 else "green"}),
+                                                            get_change_icon(float(stats['fill_rate_change'])),
+                                                            html.Span(f"{float(stats['fill_rate_change']):.1f}%", style={"color": "red" if float(stats['fill_rate_change']) > 0 else "green"}),
                                                             html.Span(" vs last week")
                                                         ], 
                                                         className="element-vs-last-days"
@@ -503,14 +555,14 @@ def page_content():
                                                 ]
                                             ),
                                             html.Div("ATTF", className="title-data-4"),
-                                            html.Div(f"{stats['attf']:.2f} Weeks", className="attf-value"),
+                                            html.Div(f"{float(stats['attf']):.2f} Weeks", className="attf-value"),
                                             html.Div(
                                                 className="percentage-info-2",
                                                 children=[
                                                     html.Span(
                                                         [
-                                                            get_change_icon(stats['attf_change']),
-                                                            html.Span(f"{stats['attf_change']:.1f}%", style={"color": "red" if stats['attf_change'] > 0 else "green"}),
+                                                            get_change_icon(float(stats['attf_change'])),
+                                                            html.Span(f"{float(stats['attf_change']):.1f}%", style={"color": "red" if float(stats['attf_change']) > 0 else "green"}),
                                                             html.Span(" vs last week")
                                                         ], 
                                                         className="element-vs-last-days"

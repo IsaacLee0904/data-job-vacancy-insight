@@ -287,3 +287,158 @@ class DashboardCacheService:
                 'error': str(e),
                 'service_status': 'unhealthy'
             }
+    
+    def get_or_fetch_education_by_data_role(self, crawl_date: Optional[str] = None) -> Optional[List[Dict[str, Any]]]:
+        """
+        Get education by data role with caching
+        """
+        if not crawl_date:
+            crawl_date = self.get_or_fetch_latest_date()
+            if not crawl_date:
+                return None
+        
+        cache_key = f"education_by_data_role_{crawl_date}"
+        
+        # Try cache first
+        cached_education = self.cache_manager.get('education_by_data_role', date=crawl_date, key=cache_key)
+        if cached_education:
+            self.logger.debug(f"Retrieved education by data role from cache for {crawl_date}")
+            return cached_education
+        
+        # Fetch from database
+        try:
+            education_df = self.data_fetcher.fetch_education_by_data_role(crawl_date)
+            if not education_df.empty:
+                education_data = education_df.to_dict('records')
+                
+                # Cache for 3 days (matches job_metrics TTL)
+                self.cache_manager.set('education_by_data_role', education_data, ttl=259200, date=crawl_date, key=cache_key)
+                self.logger.info(f"Cached education by data role for {crawl_date}")
+                return education_data
+            
+            return []
+        except Exception as e:
+            self.logger.error(f"Error fetching education by data role for {crawl_date}: {e}")
+            return None
+    
+    def get_or_fetch_taiwan_openings(self, crawl_date: Optional[str] = None) -> Optional[List[Dict[str, Any]]]:
+        """
+        Get Taiwan openings geographic data with caching
+        """
+        if not crawl_date:
+            crawl_date = self.get_or_fetch_latest_date()
+            if not crawl_date:
+                return None
+        
+        cache_key = f"taiwan_openings_{crawl_date}"
+        
+        # Try cache first
+        cached_taiwan = self.cache_manager.get('taiwan_openings', date=crawl_date, key=cache_key)
+        if cached_taiwan:
+            self.logger.debug(f"Retrieved Taiwan openings from cache for {crawl_date}")
+            return cached_taiwan
+        
+        # Fetch from database
+        try:
+            taiwan_df = self.data_fetcher.fetch_taiwan_openings(crawl_date)
+            if not taiwan_df.empty:
+                taiwan_data = taiwan_df.to_dict('records')
+                
+                # Cache for 3 days (geographic data changes weekly)
+                self.cache_manager.set('taiwan_openings', taiwan_data, ttl=259200, date=crawl_date, key=cache_key)
+                self.logger.info(f"Cached Taiwan openings for {crawl_date}")
+                return taiwan_data
+            
+            return []
+        except Exception as e:
+            self.logger.error(f"Error fetching Taiwan openings for {crawl_date}: {e}")
+            return None
+    
+    def get_or_fetch_major_city_openings(self, crawl_date: Optional[str] = None) -> Optional[List[Dict[str, Any]]]:
+        """
+        Get major city openings data with caching
+        """
+        if not crawl_date:
+            crawl_date = self.get_or_fetch_latest_date()
+            if not crawl_date:
+                return None
+        
+        cache_key = f"major_city_openings_{crawl_date}"
+        
+        # Try cache first
+        cached_cities = self.cache_manager.get('major_city_openings', date=crawl_date, key=cache_key)
+        if cached_cities:
+            self.logger.debug(f"Retrieved major city openings from cache for {crawl_date}")
+            return cached_cities
+        
+        # Fetch from database
+        try:
+            cities_df = self.data_fetcher.fetch_major_city_openings(crawl_date)
+            if not cities_df.empty:
+                cities_data = cities_df.to_dict('records')
+                
+                # Cache for 3 days (geographic data changes weekly)
+                self.cache_manager.set('major_city_openings', cities_data, ttl=259200, date=crawl_date, key=cache_key)
+                self.logger.info(f"Cached major city openings for {crawl_date}")
+                return cities_data
+            
+            return []
+        except Exception as e:
+            self.logger.error(f"Error fetching major city openings for {crawl_date}: {e}")
+            return None
+    
+    def get_or_fetch_taipei_historical_openings(self) -> Optional[List[Dict[str, Any]]]:
+        """
+        Get Taipei historical openings trend with caching
+        """
+        cache_key = "taipei_historical_openings"
+        
+        # Try cache first
+        cached_taipei_trend = self.cache_manager.get('taipei_historical', key=cache_key)
+        if cached_taipei_trend:
+            self.logger.debug("Retrieved Taipei historical openings from cache")
+            return cached_taipei_trend
+        
+        # Fetch from database
+        try:
+            taipei_df = self.data_fetcher.fetch_taipei_historical_openings()
+            if not taipei_df.empty:
+                taipei_data = taipei_df.to_dict('records')
+                
+                # Cache for 7 days (historical trend data changes weekly)
+                self.cache_manager.set('taipei_historical', taipei_data, ttl=604800, key=cache_key)
+                self.logger.info("Cached Taipei historical openings")
+                return taipei_data
+            
+            return []
+        except Exception as e:
+            self.logger.error(f"Error fetching Taipei historical openings: {e}")
+            return None
+    
+    def get_or_fetch_tool_by_data_role(self) -> Optional[List[Dict[str, Any]]]:
+        """
+        Get tool by data role data with caching (for stack analysis)
+        """
+        cache_key = "tool_by_data_role"
+        
+        # Try cache first
+        cached_tools = self.cache_manager.get('tool_by_data_role', key=cache_key)
+        if cached_tools:
+            self.logger.debug("Retrieved tool by data role from cache")
+            return cached_tools
+        
+        # Fetch from database
+        try:
+            tools_df = self.data_fetcher.fetch_tool_by_data_role()
+            if not tools_df.empty:
+                tools_data = tools_df.to_dict('records')
+                
+                # Cache for 3 days (tool trends change weekly)
+                self.cache_manager.set('tool_by_data_role', tools_data, ttl=259200, key=cache_key)
+                self.logger.info("Cached tool by data role data")
+                return tools_data
+            
+            return []
+        except Exception as e:
+            self.logger.error(f"Error fetching tool by data role: {e}")
+            return None

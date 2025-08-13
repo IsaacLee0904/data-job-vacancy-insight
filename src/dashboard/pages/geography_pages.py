@@ -16,12 +16,15 @@ sys.path.append(project_root)
 from src.core.log_utils import set_logger
 from src.core.front_end_utils import load_css_files
 from src.core.dashboard_utils import FetchReportData, CreateReportChart
+from src.dashboard.api_client import DashboardDataService
+
+## Configuration
+USE_API = True  # Set to False to use database directly
 
 ## Load data
-# define fetch functions
-def load_geo_page_data():
+def load_geo_page_data_from_database():
     """
-    Load reporting data from the database for the dashboard geo page.
+    Load reporting data from the database for the dashboard geo page (fallback).
     """
     # Setup logger
     logger = set_logger()
@@ -31,9 +34,9 @@ def load_geo_page_data():
 
     # Get the newest crawl date
     newest_crawl_date = fetcher.get_newest_crawl_date()
-    print('this is the newest crawl date', newest_crawl_date)
+    logger.info(f'Database fallback - newest crawl date: {newest_crawl_date}')
 
-    # load data for tool by data role
+    # load data for geography analysis
     taiwan_openings = FetchReportData.fetch_taiwan_openings(fetcher, newest_crawl_date)
     six_major_city_openings = FetchReportData.fetch_major_city_openings(fetcher, newest_crawl_date)
     taipei_openings_trend = FetchReportData.fetch_taipei_historical_openings(fetcher)
@@ -44,6 +47,47 @@ def load_geo_page_data():
         logger.info("Database connection closed.")
     
     return taiwan_openings, six_major_city_openings, taipei_openings_trend
+
+def load_geo_page_data():
+    """
+    Load geography page data with API fallback to database
+    """
+    logger = set_logger()
+    
+    if USE_API:
+        logger.info("Attempting to load geography page data via API...")
+        try:
+            # Initialize API data service
+            data_service = DashboardDataService(api_base_url="http://localhost:8000", logger=logger)
+            
+            # Check API connection
+            if not data_service.check_api_connection():
+                logger.warning("API not available, falling back to database")
+                return load_geo_page_data_from_database()
+            
+            # Use geography-specific API endpoints
+            taiwan_data = data_service.api_client.get_taiwan_openings()
+            cities_data = data_service.api_client.get_major_city_openings()
+            taipei_historical_data = data_service.api_client.get_taipei_historical_openings()
+            
+            if taiwan_data is not None and cities_data is not None and taipei_historical_data is not None:
+                logger.info("Successfully loaded geography data via API")
+                import pandas as pd
+                taiwan_openings = pd.DataFrame(taiwan_data)
+                six_major_city_openings = pd.DataFrame(cities_data)
+                taipei_openings_trend = pd.DataFrame(taipei_historical_data)
+                return taiwan_openings, six_major_city_openings, taipei_openings_trend
+            else:
+                logger.warning("Some geography data not available from API, falling back to database")
+                return load_geo_page_data_from_database()
+            
+        except Exception as e:
+            logger.error(f"Error loading data via API: {e}")
+            logger.info("Falling back to database")
+            return load_geo_page_data_from_database()
+    else:
+        logger.info("Using database directly")
+        return load_geo_page_data_from_database()
 
 def sidebar():
     return html.Div(

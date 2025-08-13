@@ -241,3 +241,156 @@ async def get_dashboard_summary(
     except Exception as e:
         logger.error(f"Error getting dashboard summary: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/education-by-data-role")
+async def get_education_by_data_role(
+    crawl_date: Optional[str] = Query(None, description="Date in YYYY-MM-DD format, defaults to latest"),
+    cache_service: DashboardCacheService = Depends(get_cache_service)
+):
+    """
+    Get education data by data role (cached)
+    """
+    try:
+        education_data = cache_service.get_or_fetch_education_by_data_role(crawl_date)
+        
+        if education_data is None:
+            raise HTTPException(status_code=404, detail=f"No education data found for date {crawl_date or 'latest'}")
+        
+        # Get actual crawl_date if not provided
+        if not crawl_date:
+            crawl_date = cache_service.get_or_fetch_latest_date()
+        
+        return ApiResponse(
+            success=True,
+            data={
+                "education_data": education_data,
+                "crawl_date": crawl_date,
+                "count": len(education_data)
+            },
+            message=f"Education by data role retrieved for {crawl_date}",
+            timestamp=datetime.now()
+        )
+        
+    except Exception as e:
+        logger.error(f"Error getting education by data role: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/geography/taiwan-openings")
+async def get_taiwan_openings(
+    crawl_date: Optional[str] = Query(None, description="Date in YYYY-MM-DD format, defaults to latest"),
+    cache_service: DashboardCacheService = Depends(get_cache_service)
+):
+    """
+    Get Taiwan geographic openings data (cached)
+    """
+    try:
+        taiwan_data = cache_service.get_or_fetch_taiwan_openings(crawl_date)
+        
+        if taiwan_data is None:
+            raise HTTPException(status_code=404, detail=f"No Taiwan openings data found for date {crawl_date or 'latest'}")
+        
+        # Get actual crawl_date if not provided
+        if not crawl_date:
+            crawl_date = cache_service.get_or_fetch_latest_date()
+        
+        return ApiResponse(
+            success=True,
+            data={
+                "taiwan_openings": taiwan_data,
+                "crawl_date": crawl_date,
+                "count": len(taiwan_data)
+            },
+            message=f"Taiwan openings data retrieved for {crawl_date}",
+            timestamp=datetime.now()
+        )
+        
+    except Exception as e:
+        logger.error(f"Error getting Taiwan openings: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/geography/major-cities")
+async def get_major_city_openings(
+    crawl_date: Optional[str] = Query(None, description="Date in YYYY-MM-DD format, defaults to latest"),
+    cache_service: DashboardCacheService = Depends(get_cache_service)
+):
+    """
+    Get major city openings data (cached)
+    """
+    try:
+        cities_data = cache_service.get_or_fetch_major_city_openings(crawl_date)
+        
+        if cities_data is None:
+            raise HTTPException(status_code=404, detail=f"No major city openings data found for date {crawl_date or 'latest'}")
+        
+        # Get actual crawl_date if not provided
+        if not crawl_date:
+            crawl_date = cache_service.get_or_fetch_latest_date()
+        
+        return ApiResponse(
+            success=True,
+            data={
+                "major_cities": cities_data,
+                "crawl_date": crawl_date,
+                "count": len(cities_data)
+            },
+            message=f"Major city openings retrieved for {crawl_date}",
+            timestamp=datetime.now()
+        )
+        
+    except Exception as e:
+        logger.error(f"Error getting major city openings: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/geography/taipei-historical")
+async def get_taipei_historical_openings(
+    cache_service: DashboardCacheService = Depends(get_cache_service)
+):
+    """
+    Get Taipei historical openings trend (cached)
+    """
+    try:
+        taipei_data = cache_service.get_or_fetch_taipei_historical_openings()
+        
+        if taipei_data is None:
+            raise HTTPException(status_code=404, detail="No Taipei historical data found")
+        
+        return ApiResponse(
+            success=True,
+            data={
+                "taipei_historical": taipei_data,
+                "count": len(taipei_data)
+            },
+            message="Taipei historical openings retrieved",
+            timestamp=datetime.now()
+        )
+        
+    except Exception as e:
+        logger.error(f"Error getting Taipei historical openings: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/tools-by-data-role")
+async def get_tools_by_data_role(
+    cache_service: DashboardCacheService = Depends(get_cache_service)
+):
+    """
+    Get tools by data role for stack analysis (cached)
+    """
+    try:
+        tools_data = cache_service.get_or_fetch_tool_by_data_role()
+        
+        if tools_data is None:
+            raise HTTPException(status_code=404, detail="No tools by data role data found")
+        
+        return ApiResponse(
+            success=True,
+            data={
+                "tools_by_data_role": tools_data,
+                "count": len(tools_data)
+            },
+            message="Tools by data role retrieved for stack analysis",
+            timestamp=datetime.now()
+        )
+        
+    except Exception as e:
+        logger.error(f"Error getting tools by data role: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

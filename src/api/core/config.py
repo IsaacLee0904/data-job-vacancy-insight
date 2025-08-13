@@ -40,7 +40,7 @@ class Settings(BaseSettings):
     DB_PASSWORD: Optional[str] = None
     
     # Redis Settings
-    REDIS_HOST: str = "localhost"
+    REDIS_HOST: str = "job_vacancy_insight_redis"
     REDIS_PORT: int = 6379
     REDIS_DB: int = 0
     REDIS_PASSWORD: Optional[str] = None

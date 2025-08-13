@@ -540,7 +540,13 @@ class CreateReportChart:
                                                 '<span style="font-size:15px; color:white; font-weight:bold;">%{percent} (%{customdata[0][1]})</span><extra></extra>')
 
         # count date for the pie chart title
-        crawl_date = data_role['crawl_date'][0]
+        crawl_date_str = data_role['crawl_date'][0]
+        # Convert string to datetime if needed
+        if isinstance(crawl_date_str, str):
+            from datetime import datetime
+            crawl_date = datetime.strptime(crawl_date_str, '%Y-%m-%d')
+        else:
+            crawl_date = crawl_date_str
         next_monday = crawl_date + timedelta(days=(7 - crawl_date.weekday()))
 
         title_text = f"From {crawl_date.strftime('%d')} - {next_monday.strftime('%d %B, %Y')}"
@@ -573,6 +579,19 @@ class CreateReportChart:
 
     # Create the historical total openings line chart
     def create_historical_total_openings_line_chart(historical_total_openings):
+        # Check if DataFrame is empty or missing required columns
+        if historical_total_openings.empty or 'crawl_date' not in historical_total_openings.columns:
+            # Return empty figure if no data
+            import plotly.graph_objects as go
+            fig = go.Figure()
+            fig.update_layout(
+                title="Historical Total Openings (No Data Available)",
+                xaxis_title="Date",
+                yaxis_title="Total Openings",
+                template='plotly_white'
+            )
+            return fig
+            
         historical_total_openings_line = px.line(
             historical_total_openings, 
             x='crawl_date', 
@@ -662,9 +681,18 @@ class CreateReportChart:
         # Extract all districts from the GeoJSON data
         all_districts = [feature['properties']['TOWNENG'] for feature in filtered_features]
 
-        # Ensure taiepi_area_openings contains all districts
-        all_districts_df = pd.DataFrame({'district_name_eng': all_districts})
-        taiepi_area_openings = all_districts_df.merge(taiepi_area_openings, on='district_name_eng', how='left')
+        # Check if taiepi_area_openings is empty or missing required columns
+        if taiepi_area_openings.empty or 'district_name_eng' not in taiepi_area_openings.columns:
+            # Create empty data structure if no data available
+            all_districts_df = pd.DataFrame({
+                'district_name_eng': all_districts,
+                'openings_count': [0] * len(all_districts)
+            })
+            taiepi_area_openings = all_districts_df
+        else:
+            # Ensure taiepi_area_openings contains all districts
+            all_districts_df = pd.DataFrame({'district_name_eng': all_districts})
+            taiepi_area_openings = all_districts_df.merge(taiepi_area_openings, on='district_name_eng', how='left')
         taiepi_area_openings['openings_count'] = taiepi_area_openings['openings_count'].fillna(0)
         taiepi_area_openings['openings_count'] = taiepi_area_openings['openings_count'].astype(float)
 
